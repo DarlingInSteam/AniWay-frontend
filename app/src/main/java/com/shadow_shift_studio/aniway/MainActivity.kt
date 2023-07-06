@@ -16,12 +16,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.bottomnav.Constants
 import com.shadow_shift_studio.aniway.bottomnav.NavBarItem
 import com.shadow_shift_studio.aniway.screen.CatalogScreen
@@ -35,16 +37,23 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AniWayTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
+                val navController = rememberNavController()
+
+                Surface(color = Color.White) {
+                    Scaffold(
+                        bottomBar = {
+                            BottomNavigationBar(navController = navController)
+                        },
+                        content = { padding ->
+                            NavHostContainer(navController = navController, padding = padding)
+                        }
+                    )
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun NavHostContainer(
