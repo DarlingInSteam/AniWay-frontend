@@ -4,7 +4,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.LocalFireDepartment
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Segment
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.shadow_shift_studio.aniway.CatalogButtonName
 import com.shadow_shift_studio.aniway.MyButtonName
@@ -26,7 +30,7 @@ object Constants {
         ),
         NavBarItem(
             title = TopsButtonName,
-            icon = Icons.Default.List,
+            icon = Icons.Filled.LocalFireDepartment,
             route = "tops"
         ),
         NavBarItem(

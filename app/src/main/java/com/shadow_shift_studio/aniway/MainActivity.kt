@@ -21,21 +21,21 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
 import com.shadow_shift_studio.aniway.bottomnav.Constants
 import com.shadow_shift_studio.aniway.screen.CatalogScreen
 import com.shadow_shift_studio.aniway.screen.MyScreen
 import com.shadow_shift_studio.aniway.screen.ProfileScreen
 import com.shadow_shift_studio.aniway.screen.TopsScreen
-import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AniWayTheme(darkTheme = true) {
+            AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
 
-                Surface(color = Color.Black) {
+                Surface() {
                     Scaffold(
                         bottomBar = {
                             BottomNavigationBar(navController = navController)
@@ -89,7 +89,7 @@ fun NavHostContainer(
 fun BottomNavigationBar(navController: NavHostController) {
 
     NavigationBar(
-        Modifier.background(Color.White)
+
     ) {
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
