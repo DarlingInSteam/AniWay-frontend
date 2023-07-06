@@ -1,19 +1,25 @@
 package com.shadow_shift_studio.aniway
 
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavHostController
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.shadow_shift_studio.aniway.bottomnav.Constants
@@ -77,9 +83,8 @@ fun NavHostContainer(
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
 
-    BottomNavigation(
-
-        backgroundColor = Color(0xFF201a18)
+    NavigationBar(
+        Modifier.background(Color.Black)
     ) {
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -88,23 +93,23 @@ fun BottomNavigationBar(navController: NavHostController) {
 
         Constants.BottomNavItems.forEach { navItem ->
 
-            NavBarItem(
+                NavigationBarItem(
+                    selected = currentRoute == navItem.route,
 
-                selected = currentRoute == navItem.route,
+                    onClick = {
+                        navController.navigate(navItem.route)
+                    },
 
-                onClick = {
-                    navController.navigate(navItem.route)
-                },
+                    icon = {
+                        Icon(imageVector = navItem.icon, contentDescription = navItem.title)
+                    },
 
-                icon = {
-                    Icon(imageVector = navItem.icon, contentDescription = navItem.title)
-                },
+                    label = {
+                        Text(text = navItem.title)
+                    },
+                    alwaysShowLabel = false
+                )
 
-                title = {
-                    Text(text = navItem.title)
-                },
-                alwaysShowLabel = false
-            )
         }
     }
 }

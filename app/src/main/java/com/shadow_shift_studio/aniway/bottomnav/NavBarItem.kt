@@ -1,7 +1,10 @@
 package com.shadow_shift_studio.aniway.bottomnav
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.shadow_shift_studio.aniway.CatalogButtonName
 import com.shadow_shift_studio.aniway.MyButtonName
@@ -22,17 +25,17 @@ object Constants {
         ),
         NavBarItem(
             title = TopsButtonName,
-            icon = Local_fire_department,
+            icon = Icons.Default.Notifications,
             route = "tops"
         ),
         NavBarItem(
             title = MyButtonName,
-            icon = Icons.Default.star_border,
+            icon = Icons.Default.Star,
             route = "my"
         ),
         NavBarItem(
             title = ProfileButtonName,
-            icon = Icons.Default.account_circle_filled_24px,
+            icon = Icons.Default.AccountCircle,
             route = "profile"
         )
     )

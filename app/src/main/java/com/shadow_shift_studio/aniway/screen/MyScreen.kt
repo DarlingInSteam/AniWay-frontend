@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -22,7 +23,7 @@ fun MyScreen(){
         verticalArrangement = Arrangement.Center
     ) {
         Icon(
-            imageVector = Icons.Default.star_border,
+            imageVector = Icons.Default.Star,
             contentDescription = "Моё",
             tint = Color(0xFF0F9D58)
         )
