@@ -11,21 +11,17 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.bottomnav.Constants
-import com.shadow_shift_studio.aniway.bottomnav.NavBarItem
 import com.shadow_shift_studio.aniway.screen.CatalogScreen
 import com.shadow_shift_studio.aniway.screen.MyScreen
 import com.shadow_shift_studio.aniway.screen.ProfileScreen
@@ -36,10 +32,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            AniWayTheme {
+            AniWayTheme(darkTheme = true) {
                 val navController = rememberNavController()
 
-                Surface(color = Color.White) {
+                Surface(color = Color.Black) {
                     Scaffold(
                         bottomBar = {
                             BottomNavigationBar(navController = navController)
@@ -93,7 +89,7 @@ fun NavHostContainer(
 fun BottomNavigationBar(navController: NavHostController) {
 
     NavigationBar(
-        Modifier.background(Color.Black)
+        Modifier.background(Color.White)
     ) {
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -116,7 +112,8 @@ fun BottomNavigationBar(navController: NavHostController) {
                     label = {
                         Text(text = navItem.title)
                     },
-                    alwaysShowLabel = false
+
+                    alwaysShowLabel = true
                 )
 
         }
