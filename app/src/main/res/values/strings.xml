@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">AniWay</string>
+    <string name="catalog_search_bar_text">Что хотите найти?</string>
+    <string name="catalog_sorting_button_text">Сортировка</string>
 </resources>
