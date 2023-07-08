@@ -1,32 +1,30 @@
 package com.shadow_shift_studio.aniway
 
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
 import com.shadow_shift_studio.aniway.bottomnav.Constants
 import com.shadow_shift_studio.aniway.screen.CatalogScreen
 import com.shadow_shift_studio.aniway.screen.MyScreen
 import com.shadow_shift_studio.aniway.screen.ProfileScreen
 import com.shadow_shift_studio.aniway.screen.TopsScreen
+import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +33,7 @@ class MainActivity : ComponentActivity() {
             AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
 
-                Surface() {
+                Surface {
                     Scaffold(
                         bottomBar = {
                             BottomNavigationBar(navController = navController)
@@ -88,9 +86,7 @@ fun NavHostContainer(
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
 
-    NavigationBar(
-
-    ) {
+    NavigationBar {
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 

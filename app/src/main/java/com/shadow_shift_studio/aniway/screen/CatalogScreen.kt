@@ -1,16 +1,12 @@
 package com.shadow_shift_studio.aniway.screen
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,15 +28,13 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -56,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import com.shadow_shift_studio.aniway.manga_card.MangaPreviewCard
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
 
 @Preview
 @Composable
@@ -257,7 +252,7 @@ fun SortingBottomSheet(onClose: () -> Unit) {
 
 @Composable
 fun ButtonsForSorting(onClose: () -> Unit) {
-    Column() {
+    Column {
         Button(
             shape = RoundedCornerShape(7.dp),
             onClick = {/*TODO*/

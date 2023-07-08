@@ -1,7 +1,5 @@
 package com.shadow_shift_studio.aniway.manga_card
 
-import android.provider.MediaStore.Images
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

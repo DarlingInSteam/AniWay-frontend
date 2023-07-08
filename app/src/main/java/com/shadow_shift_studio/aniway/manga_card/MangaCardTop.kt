@@ -138,7 +138,7 @@ fun Image(rating: String) {
                 .align(Alignment.TopStart)
                 .clip(RoundedCornerShape(bottomEnd = 10.dp))
                 .background(md_theme_dark_background)) {
-            Row() {
+            Row {
                 Text(
                     text = rating,
                     color = Color.White,
