@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -41,27 +42,32 @@ fun MangaPreviewCard() {
     androidx.compose.material3.Card(
         modifier = Modifier
             .width(108.dp)
+            .widthIn(108.dp, 108.dp)
             .height(220.dp)
             .clickable { },
         colors = CardColors(md_theme_dark_background, md_theme_dark_background, md_theme_dark_background, md_theme_dark_background)
     ) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.fillMaxWidth().width(108.dp)) {
             Box(
                 modifier = Modifier
-                    .width(108.dp)
+                    .widthIn(108.dp, 108.dp)
                     .height(150.dp)
                     .clip(RoundedCornerShape(17.dp))
+
             ) {
                 AsyncImage(
                     model = "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",
                     contentDescription = "PreviewImage",
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .align(Alignment.Center)
                 )
                 Row(
                     modifier = Modifier
                         .align(Alignment.TopStart)
                         .clip(RoundedCornerShape(bottomEnd = 10.dp))
-                        .background(md_theme_dark_background)
+                        .background(md_theme_dark_background),
+                    horizontalArrangement = Arrangement.Center
                 ) {
                     Text(
                         text = rating,
@@ -82,34 +88,41 @@ fun MangaPreviewCard() {
                 }
 
             }
-            Row(
+            Column(
                 modifier = Modifier
+                    .widthIn(108.dp, 108.dp)
                     .fillMaxWidth()
-                    .padding(start = 8.dp),
-                horizontalArrangement = Arrangement.Center
             ) {
-                Text(
-                    text = titleName,
-                    color = Color.White,
-                    modifier = Modifier.width(108.dp),
-                    fontSize = 14.sp,
-                    overflow = TextOverflow.Ellipsis,
-                    maxLines = 2
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = titleName,
+                        color = Color.White,
+                        modifier = Modifier.width(108.dp),
+                        fontSize = 14.sp,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2
+                    )
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 4.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = titleType,
+                        color = md_theme_dark_onSurfaceVariant,
+                        modifier = Modifier.width(108.dp),
+                        fontSize = 12.sp
+                    )
+                }
             }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 8.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = titleType,
-                    color = md_theme_dark_onSurfaceVariant,
-                    modifier = Modifier.width(108.dp),
-                    fontSize = 12.sp
-                )
-            }
+
         }
     }
 }

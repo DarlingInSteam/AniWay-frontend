@@ -201,12 +201,14 @@ fun CardsList() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 27.dp)
     ) {
         LazyVerticalGrid(
-            GridCells.Fixed(3),
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
+            GridCells.FixedSize(108.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(start = 23.dp, end = 23.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 25) { index ->
                 MangaPreviewCard()
