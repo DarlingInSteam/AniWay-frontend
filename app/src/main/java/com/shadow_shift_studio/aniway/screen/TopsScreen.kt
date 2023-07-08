@@ -52,35 +52,35 @@ fun TopsScreen(){
         Column(Modifier.fillMaxSize()) {
             TabScreen()
             TopCheckBox()
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                content = {
-                    items(count = 25) { index ->
-                        Row(verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .padding(bottom = 12.dp, end = 23.dp)
-                                .fillMaxWidth()
-                        ) {
-                            Text(
-                                text = (index + 1).toString(),
-                                modifier = Modifier
-                                    .align(Alignment.CenterVertically)
-                                    .padding(start = 15.dp, end = 15.dp)
-                                    .widthIn(min = 20.dp, max = 20.dp),
-                                textAlign = TextAlign.Center
-                            )
-                            MangaCardTop()
-                        }
-                    }
-                }
-            )
+            TopCards()
         }
     }
 }
 
 @Composable
 fun TopCards() {
-
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        content = {
+            items(count = 25) { index ->
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 12.dp, end = 23.dp)
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = (index + 1).toString(),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .padding(start = 15.dp, end = 15.dp)
+                            .widthIn(min = 20.dp, max = 20.dp),
+                        textAlign = TextAlign.Center
+                    )
+                    MangaCardTop()
+                }
+            }
+        }
+    )
 }
 
 @Composable
