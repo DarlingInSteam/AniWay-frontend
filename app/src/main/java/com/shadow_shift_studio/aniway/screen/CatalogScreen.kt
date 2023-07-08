@@ -201,7 +201,7 @@ fun CardsList() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 13.dp)
+            .padding(horizontal = 27.dp)
     ) {
         LazyVerticalGrid(
             GridCells.Fixed(3),
@@ -359,7 +359,7 @@ fun FilterButtonSheet(onClose: () -> Unit) {
                         modifier = Modifier
                             .fillMaxWidth(),
                     ) {
-                        
+
                     }
                 }
             }
