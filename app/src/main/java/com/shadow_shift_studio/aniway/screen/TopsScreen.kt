@@ -26,6 +26,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,7 +57,9 @@ fun TopsScreen(){
                 content = {
                     items(count = 25) { index ->
                         Row(verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(bottom = 12.dp, end = 23.dp).fillMaxWidth()
+                            modifier = Modifier
+                                .padding(bottom = 12.dp, end = 23.dp)
+                                .fillMaxWidth()
                         ) {
                             Text(
                                 text = (index + 1).toString(),
