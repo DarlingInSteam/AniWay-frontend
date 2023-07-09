@@ -42,10 +42,10 @@ fun MyScreen(){
             .fillMaxSize(),
     ) {
         Column(Modifier.fillMaxSize()) {
+            MyScreenSearchBar("Поиск в \"$selectedTabTitle\"")
             TabMyScreen(onTabSelected = { tabTitle ->
                 selectedTabTitle = tabTitle
             })
-            MyScreenSearchBar("Поиск в \"$selectedTabTitle\"")
             Spacer(modifier = Modifier.height(12.dp))
             MyScreenCards()
         }
