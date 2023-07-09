@@ -33,19 +33,9 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_outlineVariant
 
 @Composable
 fun AchievementCard() {
-    val titleName = "Реинкарнация короля демонов, убивающего богов"
-    val titleType = "Манхва"
-    val description =
-        "Предоставьте управление своим подчиненным и живите жизнью мечты! С такими амбициями Джоруссия - демон низкого ранга, стал мастером подземелья. Однако, поскольку место, где было построено подземелье, является особым местом, называемым Землей Хаоса, талантливый демон приходит работать секретаршей, а темный бог приходит в гости. Кроме того, несколько авантюрист... "
-    val chapters = "60 Глав"
-    val views = "1.5M"
-    val likes = "21K"
-    val rating = "4,9"
-
     androidx.compose.material3.Card(
         modifier = Modifier
-            .height(90.dp)
-            .clickable { },
+            .height(90.dp),
         colors = CardColors(
             md_theme_dark_background,
             md_theme_dark_background,
