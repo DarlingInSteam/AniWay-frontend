@@ -1,11 +1,9 @@
 package com.shadow_shift_studio.aniway.screen
 
-import android.media.Image
+import CommentCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -24,13 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
@@ -45,12 +36,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shadow_shift_studio.aniway.R
-import com.shadow_shift_studio.aniway.manga_card.MangaPreviewCard
+import com.shadow_shift_studio.aniway.cards.AchievementCard
+import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
@@ -83,12 +73,38 @@ fun Balance() {
 
 @Composable
 fun Comments() {
-
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().height(450.dp),
+        content = {
+            items(count = 25) { index ->
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
+                        .fillMaxWidth()
+                ) {
+                    CommentCard()
+                }
+            }
+        }
+    )
 }
 
 @Composable
 fun Achievements() {
-
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().height(450.dp),
+        content = {
+            items(count = 25) { index ->
+                Row(verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
+                        .fillMaxWidth()
+                ) {
+                    AchievementCard()
+                }
+            }
+        }
+    )
 }
 
 @Composable
@@ -242,7 +258,7 @@ fun Wallpaper() {
                 Image(
                     painter = painterResource(R.drawable.wallpaper),
                     contentDescription = "avatar",
-                    contentScale = ContentScale.Crop,            // crop the image if it's not a square
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .height(200.dp)
                         .fillMaxWidth()
@@ -258,7 +274,7 @@ fun Wallpaper() {
         }
 
         Image(
-            painter = painterResource(R.drawable.sample_avatar),
+            painter = painterResource(R.drawable.ava),
             contentDescription = "avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier

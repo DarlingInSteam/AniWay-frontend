@@ -47,7 +47,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.shadow_shift_studio.aniway.manga_card.MangaPreviewCard
+import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high

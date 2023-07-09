@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.manga_card
+package com.shadow_shift_studio.aniway.cards
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
