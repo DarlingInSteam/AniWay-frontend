@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -21,6 +22,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -74,7 +84,9 @@ fun Balance() {
 @Composable
 fun Comments() {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().height(450.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .height(450.dp),
         content = {
             items(count = 25) { index ->
                 Row(verticalAlignment = Alignment.CenterVertically,
@@ -92,7 +104,9 @@ fun Comments() {
 @Composable
 fun Achievements() {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().height(450.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .height(450.dp),
         content = {
             items(count = 25) { index ->
                 Row(verticalAlignment = Alignment.CenterVertically,
@@ -118,7 +132,7 @@ fun Favorites() {
             GridCells.FixedSize(108.dp),
             modifier = Modifier
                 .fillMaxSize()
-                .padding(start = 14.dp, end = 14 .dp),
+                .padding(start = 14.dp, end = 14.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -243,6 +257,7 @@ fun NickAndBadge() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Wallpaper() {
     Box(modifier = Modifier
@@ -263,12 +278,6 @@ fun Wallpaper() {
                         .height(200.dp)
                         .fillMaxWidth()
                 )
-                Row(verticalAlignment = Alignment.Top,
-                    modifier = Modifier
-                        .background(Color.White)
-                        .align(Alignment.TopEnd)
-                ) {
-                }
             }
 
         }
@@ -283,5 +292,35 @@ fun Wallpaper() {
                 .border(2.dp, Color.Gray, CircleShape)
                 .align(Alignment.BottomCenter)
         )
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(bottom = 14.dp, end = 4.dp),
+        ) {
+            IconButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .height(32.dp)
+                    .width(32.dp)
+            ) {
+                Icon(Icons.Outlined.Notifications, "asd", tint = Color.White)
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(bottom = 14.dp, start = 4.dp),
+        ) {
+            IconButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .height(32.dp)
+                    .width(32.dp)
+            ) {
+                Icon(Icons.Outlined.Settings, "asd", tint = Color.White)
+            }
+        }
     }
 }
