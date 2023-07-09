@@ -1,10 +1,12 @@
 package com.shadow_shift_studio.aniway.screen
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
@@ -19,8 +21,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
@@ -28,6 +34,7 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
@@ -42,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
@@ -350,18 +358,495 @@ fun FilterButtonSheet(onClose: () -> Unit) {
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize(),
+                        .fillMaxSize()
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                    ) {
-
-                    }
+                    FilterButtons()
                 }
             }
         }
     ) {}
 }
 
+@Composable
+fun FilterButtons() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+    ) {
+        ButtonsType()
+        Spacer(modifier = Modifier.height(12.dp))
+        ButtonsGenres()
+        Spacer(modifier = Modifier.height(12.dp))
+        ButtonsCategory()
+        Spacer(modifier = Modifier.height(12.dp))
+        ButtonsTitleStatus()
+        Spacer(modifier = Modifier.height(12.dp))
+        ButtonsAge()
+    }
+}
 
+@Composable
+fun ButtonsGenres() {
+    val isGenresExpanded = remember { mutableStateOf(false) }
+    val scrollState = rememberScrollState()
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 23.dp, end = 23.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(md_theme_dark_bottom_sheet_bottoms)
+        .verticalScroll(scrollState, isGenresExpanded.value)
+    ) {
+        Button(
+            onClick = { isGenresExpanded.value = !isGenresExpanded.value },
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Жанры")
+                if (!isGenresExpanded.value) Icon(Icons.Default.ArrowRight, contentDescription = "")
+                else Icon(Icons.Default.ArrowDropDown, contentDescription = "")
+            }
+        }
+        AnimatedVisibility(
+            visible = isGenresExpanded.value,
+            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
+            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize()
+                ) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Романтика")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Комедия")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Драма")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Фэнтези")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Приключения")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Повседневность")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun ButtonsType() {
+    val isTypeExpanded = remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 23.dp, end = 23.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(md_theme_dark_bottom_sheet_bottoms)
+    ) {
+        Button(
+            onClick = { isTypeExpanded.value = !isTypeExpanded.value },
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Типы")
+                if (!isTypeExpanded.value) Icon(Icons.Default.ArrowRight, contentDescription = "")
+                else Icon(Icons.Default.ArrowDropDown, contentDescription = "")
+            }
+        }
+        AnimatedVisibility(
+            visible = isTypeExpanded.value,
+            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
+            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize()
+                ) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Манга")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Манхва")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Маньхуа")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun ButtonsCategory() {
+    val isCategoryExpanded = remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 23.dp, end = 23.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(md_theme_dark_bottom_sheet_bottoms)
+    ) {
+        Button(
+            onClick = { isCategoryExpanded.value = !isCategoryExpanded.value },
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Категории")
+                if (!isCategoryExpanded.value) Icon(Icons.Default.ArrowRight, contentDescription = "")
+                else Icon(Icons.Default.ArrowDropDown, contentDescription = "")
+            }
+        }
+        AnimatedVisibility(
+            visible = isCategoryExpanded.value,
+            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
+            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize()
+                ) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Веб")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "В цвете")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Хентай!")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun ButtonsTitleStatus() {
+    val isTitleStatusExpanded = remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 23.dp, end = 23.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(md_theme_dark_bottom_sheet_bottoms)
+    ) {
+        Button(
+            onClick = { isTitleStatusExpanded.value = !isTitleStatusExpanded.value },
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Статус проекта")
+                if (!isTitleStatusExpanded.value) Icon(Icons.Default.ArrowRight, contentDescription = "")
+                else Icon(Icons.Default.ArrowDropDown, contentDescription = "")
+            }
+        }
+        AnimatedVisibility(
+            visible = isTitleStatusExpanded.value,
+            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
+            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize()
+                ) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Закончен")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Продолжается")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Заморожен")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Анонс")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun ButtonsAge() {
+    val isAgeExpanded = remember { mutableStateOf(false) }
+
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(start = 23.dp, end = 23.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(md_theme_dark_bottom_sheet_bottoms)
+    ) {
+        Button(
+            onClick = { isAgeExpanded.value = !isAgeExpanded.value },
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Возрастной рейтинг")
+                if (!isAgeExpanded.value) Icon(Icons.Default.ArrowRight, contentDescription = "")
+                else Icon(Icons.Default.ArrowDropDown, contentDescription = "")
+            }
+        }
+        AnimatedVisibility(
+            visible = isAgeExpanded.value,
+            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
+            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            content = {
+                Column(
+                    modifier = Modifier
+                        .animateContentSize()
+                ) {
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "Для всех")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "16+")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                    ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                            Text(text = "18+")
+                            Checkbox(checked = false, onCheckedChange = {})
+                        }
+                    }
+                }
+            }
+        )
+    }
+}
