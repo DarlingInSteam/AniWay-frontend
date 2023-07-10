@@ -55,6 +55,10 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
@@ -65,18 +69,28 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_h
 fun CatalogScreen() {
     var sortingBottomSheetVisible by remember { mutableStateOf(false) }
     var filterBottomSheetVisible by remember { mutableStateOf(false) }
+    val navController = rememberNavController()
 
     Column(modifier = Modifier
         .fillMaxSize()
     ) {
-            SearchBar()
-            Spacer(modifier = Modifier.height(0.dp))
-            CatalogButtons(
-                changeButtonSheetSortVisible = { sortingBottomSheetVisible = true },
-                changeButtonSheetFilterVisible = { filterBottomSheetVisible = true }
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            CardsList()
+        NavHost(navController = navController, startDestination = "main") {
+            composable("main") {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    SearchBar()
+                    Spacer(modifier = Modifier.height(0.dp))
+                    CatalogButtons(
+                        changeButtonSheetSortVisible = { sortingBottomSheetVisible = true },
+                        changeButtonSheetFilterVisible = { filterBottomSheetVisible = true }
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    CardsList(navController = navController)
+                }
+            }
+            composable("fullScreen") {
+                MangaPage(navController = navController)
+            }
+        }
     }
     AnimatedVisibility(
         visible = sortingBottomSheetVisible,
@@ -200,7 +214,7 @@ fun SearchBar() {
 }
 
 @Composable
-fun CardsList() {
+fun CardsList(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -214,7 +228,7 @@ fun CardsList() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 25) { index ->
-                MangaPreviewCard()
+                MangaPreviewCard(navController)
             }
         }
     }

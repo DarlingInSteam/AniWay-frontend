@@ -137,7 +137,7 @@ fun Favorites() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 6) { index ->
-                MangaPreviewCard()
+//                MangaPreviewCard()
             }
         }
     }

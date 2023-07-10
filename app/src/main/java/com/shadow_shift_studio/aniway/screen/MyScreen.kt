@@ -67,7 +67,7 @@ fun MyScreenCards() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 25) { index ->
-                MangaPreviewCard()
+//                MangaPreviewCard()
             }
         }
     }
