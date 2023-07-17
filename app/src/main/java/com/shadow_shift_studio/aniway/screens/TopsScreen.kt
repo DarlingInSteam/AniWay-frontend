@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.screen
+package com.shadow_shift_studio.aniway.screens
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

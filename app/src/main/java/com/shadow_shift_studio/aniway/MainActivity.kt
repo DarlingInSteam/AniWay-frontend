@@ -20,10 +20,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.bottomnav.Constants
-import com.shadow_shift_studio.aniway.screen.CatalogScreen
-import com.shadow_shift_studio.aniway.screen.MyScreen
-import com.shadow_shift_studio.aniway.screen.ProfileScreen
-import com.shadow_shift_studio.aniway.screen.TopsScreen
+import com.shadow_shift_studio.aniway.screens.CatalogScreen
+import com.shadow_shift_studio.aniway.screens.MyScreen
+import com.shadow_shift_studio.aniway.screens.ProfileScreen
+import com.shadow_shift_studio.aniway.screens.TopsScreen
 import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
 
 class MainActivity : ComponentActivity() {

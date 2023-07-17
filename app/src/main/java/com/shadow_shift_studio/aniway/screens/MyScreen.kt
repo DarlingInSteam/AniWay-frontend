@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.screen
+package com.shadow_shift_studio.aniway.screens
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
@@ -29,7 +29,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 

@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.screen
+package com.shadow_shift_studio.aniway.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -60,6 +60,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
+import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
