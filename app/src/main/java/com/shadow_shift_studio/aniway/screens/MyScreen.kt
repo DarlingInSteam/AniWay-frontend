@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
@@ -29,30 +30,43 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
+import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 
 @Composable
 fun MyScreen(){
     var selectedTabTitle by remember { mutableStateOf("") }
+    val navController = rememberNavController()
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
+    Column(modifier = Modifier
+        .fillMaxSize()
     ) {
-        Column(Modifier.fillMaxSize()) {
-            MyScreenSearchBar("Поиск в \"$selectedTabTitle\"")
-            TabMyScreen(onTabSelected = { tabTitle ->
-                selectedTabTitle = tabTitle
-            })
-            Spacer(modifier = Modifier.height(12.dp))
-            MyScreenCards()
+        NavHost(navController = navController, startDestination = "main") {
+            composable("main") {
+                Column(Modifier.fillMaxSize()) {
+                    MyScreenSearchBar("Поиск в \"$selectedTabTitle\"")
+                    TabMyScreen(onTabSelected = { tabTitle ->
+                        selectedTabTitle = tabTitle
+                    })
+                    Spacer(modifier = Modifier.height(12.dp))
+                    MyScreenCards(navController)
+                }
+            }
+            composable("fullScreen") {
+                MangaPage(navController)
+            }
         }
     }
 }
 
 @Composable
-fun MyScreenCards() {
+fun MyScreenCards(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -66,7 +80,7 @@ fun MyScreenCards() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 25) { index ->
-//                MangaPreviewCard()
+                MangaPreviewCard(navController)
             }
         }
     }

@@ -17,6 +17,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -43,7 +44,7 @@ fun MangaCardTop() {
     val likes = "21K"
     val rating = "4,9"
 
-    androidx.compose.material3.Card(
+    Card(
         modifier = Modifier
             .height(160.dp)
             .clickable { },

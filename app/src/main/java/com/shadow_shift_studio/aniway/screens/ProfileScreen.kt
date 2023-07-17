@@ -45,8 +45,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.cards.AchievementCard
+import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
+import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
@@ -54,23 +61,35 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 @Composable
 fun ProfileScreen(){
     val scrollState = rememberScrollState()
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(scrollState)
+    val navController = rememberNavController()
+    Column(modifier = Modifier
+        .fillMaxSize()
     ) {
-        Wallpaper()
-        Spacer(modifier = Modifier.height(15.dp))
-        NickAndBadge()
-        Spacer(modifier = Modifier.height(15.dp))
-        LvLFragment()
-        Spacer(modifier = Modifier.height(35.dp))
-        InformationAboutUser()
-        Spacer(modifier = Modifier.height(20.dp))
-        UserTab()
+        NavHost(navController = navController, startDestination = "main") {
+            composable("main") {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                ) {
+                    Wallpaper()
+                    Spacer(modifier = Modifier.height(15.dp))
+                    NickAndBadge()
+                    Spacer(modifier = Modifier.height(15.dp))
+                    LvLFragment()
+                    Spacer(modifier = Modifier.height(35.dp))
+                    InformationAboutUser()
+                    Spacer(modifier = Modifier.height(20.dp))
+                    UserTab(navController)
+                }
+            }
+            composable("fullScreen") {
+                    MangaPage(navController)
+                }
+            }
+        }
     }
-}
+
 
 @Composable
 fun Balance() {
@@ -118,7 +137,7 @@ fun Achievements() {
 }
 
 @Composable
-fun Favorites() {
+fun Favorites(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -133,14 +152,14 @@ fun Favorites() {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 6) { index ->
-//                MangaPreviewCard()
+                MangaPreviewCard(navController)
             }
         }
     }
 }
 
 @Composable
-fun UserTab() {
+fun UserTab(navController: NavController) {
     val tabTitles = listOf("Любимое", "Ачивки", "Комментарии", "Баланс")
     var selectedTabIndex by remember { mutableStateOf(0) }
 
@@ -175,7 +194,7 @@ fun UserTab() {
         Spacer(modifier = Modifier.height(20.dp))
 
         if(selectedTabIndex == 0) {
-            Favorites()
+            Favorites(navController)
         }
         else if(selectedTabIndex == 1) {
             Achievements()
@@ -246,7 +265,7 @@ fun NickAndBadge() {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Читать F ранга",
+            text = "Читатель F ранга",
             color = md_theme_dark_onSurfaceVariant,
             fontSize = 14.sp
         )

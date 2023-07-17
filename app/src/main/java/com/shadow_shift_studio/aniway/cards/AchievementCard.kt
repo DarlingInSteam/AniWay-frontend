@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,7 +34,7 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_outlineVariant
 
 @Composable
 fun AchievementCard() {
-    androidx.compose.material3.Card(
+    Card(
         modifier = Modifier
             .height(90.dp),
         colors = CardColors(
