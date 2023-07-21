@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.screens.secondary_screens
 
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -9,32 +10,93 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDirection.Companion.Content
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.shadow_shift_studio.aniway.AddBookmarkButtonText
+import com.shadow_shift_studio.aniway.ChaptersButtonText
+import com.shadow_shift_studio.aniway.ReadButtonText
+import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onPrimary
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSecondaryContainer
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_primary
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_secondaryContainer
 
+@Composable
+fun GradientImage(startColor: Color, endColor: Color) {
+    val coverHeightPx = 273
+    Box(modifier = Modifier.fillMaxSize()) {
+        AsyncImage(
+            model = "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",
+            contentDescription = "",
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .clip(
+                    RoundedCornerShape(
+                        topStart = 17.dp,
+                        topEnd = 17.dp,
+                        bottomStart = 17.dp,
+                        bottomEnd = 17.dp
+                    )
+                )
+                .height(coverHeightPx.dp)
+                .width(412.dp)
+        )
+
+        Box(
+            modifier = Modifier
+                .drawBehind {
+                    val gradientBrush = Brush.verticalGradient(
+                        colors = listOf(startColor, endColor),
+                        startY = size.height - size.width,
+                        endY = size.height
+                    )
+
+                    drawRect(brush = gradientBrush)
+                }
+                .padding(top = (coverHeightPx).dp)
+                .fillMaxWidth()
+                .wrapContentSize(Alignment.BottomCenter)
+                .background(Color.Transparent)
+        )
+    }
+}
 @Composable
 fun MangaPage(
     navController: NavController
@@ -47,6 +109,12 @@ fun MangaPage(
     var likes = "21K"
     var bookMarks = "12K"
     var rating = "4,9"
+    var description = "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
+
+    GradientImage(
+        startColor = Color.Transparent,
+        endColor = md_theme_dark_background
+    )
 
     Column(
         modifier = Modifier
@@ -57,8 +125,17 @@ fun MangaPage(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            IconButton(
-                onClick = { navController.popBackStack() }
+
+            Button(
+                onClick = { navController.popBackStack() },
+                modifier = Modifier
+                    .background(md_theme_dark_background),
+                colors = ButtonColors(
+                    Color.White,
+                    md_theme_dark_background,
+                    Color.White,
+                    Color.White
+                )
             ) {
                 Icon(Icons.Default.ArrowBack, "")
             }
@@ -67,22 +144,23 @@ fun MangaPage(
                 modifier = Modifier
                     .background(md_theme_dark_background),
                 colors = ButtonColors(
+                    Color.White,
                     md_theme_dark_background,
                     Color.White,
-                    Color.White,
-                    Color.White)
+                    Color.White
+                )
             ) {
                 Icon(
                     Icons.Default.Add, ""
                 )
                 Text(
-                    text = "В закладки"
+                    text = AddBookmarkButtonText
                 )
             }
         }
         Spacer(
             modifier = Modifier
-                .height(34.dp)
+                .height(100.dp)
         )
         Row(
             modifier = Modifier
@@ -95,14 +173,14 @@ fun MangaPage(
                 modifier = Modifier
                     .clip(
                         RoundedCornerShape(
-                            topStart = 17.dp,
-                            topEnd = 17.dp,
-                            bottomStart = 17.dp,
-                            bottomEnd = 17.dp
+                            topStart = 25.dp,
+                            topEnd = 25.dp,
+                            bottomStart = 25.dp,
+                            bottomEnd = 25.dp
                         )
                     )
-                    .height(210.dp)
-                    .width(120.dp)
+                    .height(202.dp)
+                    .width(132.dp)
             )
         }
         Row(
@@ -195,8 +273,80 @@ fun MangaPage(
                 )
             }
         }
-        Row() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
 
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .padding(start=92.dp)
+                    .width(113.dp)
+                    .background(md_theme_dark_background),
+                colors = ButtonColors(
+                    md_theme_dark_primary,
+                    md_theme_dark_onPrimary,
+                    Color.White,
+                    Color.White
+                )
+            ) {
+                Icon(Icons.Default.Menu, "")
+                Text(
+                    text = ChaptersButtonText,
+                    fontSize = 14.sp
+                )
+                }
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .width(113.dp)
+                    .background(md_theme_dark_background),
+                colors = ButtonColors(
+                    md_theme_dark_secondaryContainer,
+                    md_theme_dark_onSecondaryContainer,
+                    Color.White,
+                    Color.White
+                )
+            ) {
+                Text(
+                    text = ReadButtonText,
+                    fontSize = 14.sp
+                )
+            }
         }
+        Row()
+        {
+            //место для тегов
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+        ){
+            Text(
+                modifier = Modifier
+                    .padding(start=10.dp, end=10.dp)
+                    .fillMaxWidth(),
+                textAlign = TextAlign.Justify,
+                maxLines = 5,
+                overflow = TextOverflow.Ellipsis,
+                text = description
+            )
+        }
+        Row(
+            modifier = Modifier
+                .padding(vertical =10.dp)
+        )
+        {
+            Text(
+                modifier = Modifier
+                    .padding(start=10.dp),
+                text = SimilarWorksText,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Left
+            )
+        }
+
     }
 }

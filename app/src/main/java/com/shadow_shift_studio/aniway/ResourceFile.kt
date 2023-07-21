@@ -10,4 +10,8 @@ val TopsButtonName: String = "Топы"
 val MyButtonName: String = "Моё"
 
 val ProfileButtonName: String = "Профиль"
+val AddBookmarkButtonText: String = "В закладки"
+val ChaptersButtonText: String = "Главы"
+val ReadButtonText: String = "Читать"
+val SimilarWorksText: String = "Похожие произведения"
 
