@@ -33,7 +33,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
-
                 Surface {
                     Scaffold(
                         bottomBar = {
