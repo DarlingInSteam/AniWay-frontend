@@ -1,9 +1,14 @@
 package com.shadow_shift_studio.aniway.screens.secondary_screens
 
+import android.content.res.Resources.Theme
+import android.widget.ListView
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +21,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -26,34 +41,51 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.google.android.material.chip.ChipGroup
 import com.shadow_shift_studio.aniway.AddBookmarkButtonText
 import com.shadow_shift_studio.aniway.ChaptersButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
+import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onPrimary
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSecondaryContainer
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_secondaryContainer
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun GradientImage(startColor: Color, endColor: Color) {
@@ -280,6 +312,10 @@ fun MangaPage( navController: NavController)
                 )
             }
         }
+        
+        Spacer(modifier = Modifier.height(11.dp))
+
+
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -322,10 +358,11 @@ fun MangaPage( navController: NavController)
                 )
             }
         }
-        Row()
-        {
-            //место для тегов
-        }
+
+        Spacer(modifier = Modifier.height(11.dp))
+
+        Genres(listOf("Мистика", "Приключения", "Фэнтези", "В цвете", "Демоны", "Зверолюди", "Магия", "Антигерой", "Заебал", "Ты меня"))
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -356,3 +393,70 @@ fun MangaPage( navController: NavController)
 
     }
 }
+
+@Composable
+fun Genres(genresList: List<String>) {
+    val maxGenresPerRow = 3
+    val maxRows = 2
+    val totalGenres = genresList.size
+    val remainingGenres = remember { mutableStateOf(genresList.drop(maxGenresPerRow * maxRows)) }
+    val showRemainingGenres = remember { mutableStateOf(false) }
+
+    Column (modifier = Modifier.padding(start = 18.dp, end = 18.dp)){
+        for (rowIndex in 0 until maxRows) {
+            val startIdx = rowIndex * maxGenresPerRow
+            val endIdx = minOf((rowIndex + 1) * maxGenresPerRow, genresList.size)
+            Row {
+                for (index in startIdx until endIdx) {
+                    GenreButton(genresList[index])
+                }
+            }
+        }
+
+        if (showRemainingGenres.value) {
+            val chunkedGenres = remainingGenres.value.chunked(maxGenresPerRow)
+            chunkedGenres.forEach { rowGenres ->
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    rowGenres.forEach { genre ->
+                        GenreButton(genre)
+                    }
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextButton(
+                    onClick = { showRemainingGenres.value = false },
+                    modifier = Modifier.padding(top = 8.dp)
+                ) {
+                    Text(text = "Скрыть")
+                }
+            }
+        } else if (remainingGenres.value.isNotEmpty()) {
+            TextButton(
+                onClick = { showRemainingGenres.value = true },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(text = "Показать ${remainingGenres.value.size} жанров")
+            }
+        }
+    }
+}
+
+
+@Composable
+fun GenreButton(genre: String) {
+    Button(
+        modifier = Modifier
+            .height(40.dp)
+            .padding(4.dp),
+        onClick = {},
+        colors = ButtonColors(md_theme_dark_onSurface, Color.White, Color.White, Color.White)
+    ) {
+        Text(text = genre)
+    }
+}
+
