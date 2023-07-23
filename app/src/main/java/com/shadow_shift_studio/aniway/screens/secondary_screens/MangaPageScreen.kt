@@ -3,7 +3,11 @@ package com.shadow_shift_studio.aniway.screens.secondary_screens
 import android.content.res.Resources.Theme
 import android.widget.ListView
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,10 +35,13 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
@@ -61,11 +68,14 @@ import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -79,6 +89,7 @@ import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onPrimary
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSecondaryContainer
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
@@ -362,6 +373,7 @@ fun MangaPage( navController: NavController)
         Spacer(modifier = Modifier.height(11.dp))
 
         Genres(listOf("Мистика", "Приключения", "Фэнтези", "В цвете", "Демоны", "Зверолюди", "Магия", "Антигерой", "Заебал", "Ты меня"))
+        Spacer(modifier = Modifier.height(11.dp))
 
         Row(
             modifier = Modifier
@@ -396,67 +408,92 @@ fun MangaPage( navController: NavController)
 
 @Composable
 fun Genres(genresList: List<String>) {
-    val maxGenresPerRow = 3
-    val maxRows = 2
-    val totalGenres = genresList.size
-    val remainingGenres = remember { mutableStateOf(genresList.drop(maxGenresPerRow * maxRows)) }
-    val showRemainingGenres = remember { mutableStateOf(false) }
+    var currentRow by remember { mutableStateOf(0) }
+    var expended by remember { mutableStateOf(false) }
+    val isGenreExpanded = remember { mutableStateOf(false) }
 
-    Column (modifier = Modifier.padding(start = 18.dp, end = 18.dp)){
-        for (rowIndex in 0 until maxRows) {
-            val startIdx = rowIndex * maxGenresPerRow
-            val endIdx = minOf((rowIndex + 1) * maxGenresPerRow, genresList.size)
-            Row {
-                for (index in startIdx until endIdx) {
-                    GenreButton(genresList[index])
-                }
+    Column(modifier = Modifier.fillMaxWidth().padding(start = 4.dp, end = 4.dp)) {
+        Button(
+            onClick = { isGenreExpanded.value = !isGenreExpanded.value },
+            modifier = Modifier
+                .fillMaxWidth(),
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                Text(text = "Жанры")
+                if (!isGenreExpanded.value) Icon(Icons.Default.ArrowRight, contentDescription = "")
+                else Icon(Icons.Default.ArrowDropDown, contentDescription = "")
             }
         }
-
-        if (showRemainingGenres.value) {
-            val chunkedGenres = remainingGenres.value.chunked(maxGenresPerRow)
-            chunkedGenres.forEach { rowGenres ->
-                Row(
-                    modifier = Modifier.fillMaxWidth()
+        AnimatedVisibility(
+            visible = isGenreExpanded.value,
+            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
+            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            content = {
+                ChipVerticalGrid(
+                    spacing = 7.dp,
+                    modifier = Modifier
+                        .padding(7.dp),
+                    onRowChange = { newCurrentRow ->
+                        currentRow = newCurrentRow
+                        if (currentRow == 2) expended = true
+                    }
                 ) {
-                    rowGenres.forEach { genre ->
-                        GenreButton(genre)
+                    genresList.forEach { word ->
+                        Text(
+                            word,
+                            modifier = Modifier
+                                .background(color = Color.Gray, shape = CircleShape)
+                                .padding(vertical = 3.dp, horizontal = 5.dp)
+                                .clickable { }
+                        )
                     }
                 }
             }
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                TextButton(
-                    onClick = { showRemainingGenres.value = false },
-                    modifier = Modifier.padding(top = 8.dp)
-                ) {
-                    Text(text = "Скрыть")
-                }
-            }
-        } else if (remainingGenres.value.isNotEmpty()) {
-            TextButton(
-                onClick = { showRemainingGenres.value = true },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(text = "Показать ${remainingGenres.value.size} жанров")
-            }
-        }
+        )
     }
 }
 
-
 @Composable
-fun GenreButton(genre: String) {
-    Button(
-        modifier = Modifier
-            .height(40.dp)
-            .padding(4.dp),
-        onClick = {},
-        colors = ButtonColors(md_theme_dark_onSurface, Color.White, Color.White, Color.White)
-    ) {
-        Text(text = genre)
+fun ChipVerticalGrid(
+    modifier: Modifier = Modifier,
+    spacing: Dp,
+    onRowChange: (Int) -> Unit,
+    content: @Composable () -> Unit,
+) {
+    var currentRow = 0
+
+    Layout(
+        content = content,
+        modifier = modifier
+    ) { measurables, constraints ->
+        var currentOrigin = IntOffset.Zero
+        val spacingValue = spacing.toPx().toInt()
+        val placeables = measurables.map { measurable ->
+            val placeable = measurable.measure(constraints)
+
+            if (currentOrigin.x > 0f && currentOrigin.x + placeable.width > constraints.maxWidth) {
+                currentRow += 1
+                onRowChange(currentRow) // Вызываем функцию высшего порядка для передачи текущего значения currentRow
+
+                currentOrigin = currentOrigin.copy(x = 0, y = currentOrigin.y + placeable.height + spacingValue)
+            }
+
+            placeable to currentOrigin.also {
+                currentOrigin = it.copy(x = it.x + placeable.width + spacingValue)
+            }
+        }
+
+
+        layout(
+            width = constraints.maxWidth,
+            height = placeables.lastOrNull()?.run { first.height + second.y } ?: 0
+        ) {
+            placeables.forEach {
+                val (placeable, origin) = it
+                placeable.place(origin.x, origin.y)
+            }
+        }
     }
 }
 
