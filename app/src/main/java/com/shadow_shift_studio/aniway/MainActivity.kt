@@ -25,6 +25,7 @@ import com.shadow_shift_studio.aniway.screens.MyScreen
 import com.shadow_shift_studio.aniway.screens.ProfileScreen
 import com.shadow_shift_studio.aniway.screens.TopsScreen
 import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,7 +87,7 @@ fun NavHostContainer(
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
 
-    NavigationBar {
+    NavigationBar(containerColor = md_theme_dark_background) {
 
         val navBackStackEntry by navController.currentBackStackEntryAsState()
 

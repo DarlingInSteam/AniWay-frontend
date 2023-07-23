@@ -5,14 +5,20 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.displayCutout
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -23,6 +29,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,15 +45,24 @@ import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.key.Key.Companion.Window
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection.Companion.Content
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.WindowCompat
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.shadow_shift_studio.aniway.AddBookmarkButtonText
 import com.shadow_shift_studio.aniway.ChaptersButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
@@ -97,10 +113,10 @@ fun GradientImage(startColor: Color, endColor: Color) {
         )
     }
 }
+
 @Composable
-fun MangaPage(
-    navController: NavController
-) {
+fun MangaPage( navController: NavController)
+{
     var titleName = "Токийские мстители"
     var titleType = "Манга"
     var year = "2018"
@@ -111,6 +127,8 @@ fun MangaPage(
     var rating = "4,9"
     var description = "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
 
+    var systemUiController = rememberSystemUiController()
+    systemUiController.setStatusBarColor(color = Color.Transparent)
     GradientImage(
         startColor = Color.Transparent,
         endColor = md_theme_dark_background
@@ -119,42 +137,53 @@ fun MangaPage(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.displayCutout)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+
+
         ) {
 
             Button(
                 onClick = { navController.popBackStack() },
                 modifier = Modifier
-                    .background(md_theme_dark_background),
+                    .background(Color.Transparent)
+                    .clip(RoundedCornerShape(100)),
+                shape = RoundedCornerShape(28.dp),
                 colors = ButtonColors(
                     Color.White,
                     md_theme_dark_background,
                     Color.White,
                     Color.White
-                )
+                ),
+                contentPadding = PaddingValues(0.dp)
             ) {
-                Icon(Icons.Default.ArrowBack, "")
+                Icon(Icons.Default.ArrowBack, ""       )
             }
-            Button(
+            ExtendedFloatingActionButton(
                 onClick = { /*TODO*/ },
+                shape = RoundedCornerShape(28.dp),
                 modifier = Modifier
-                    .background(md_theme_dark_background),
-                colors = ButtonColors(
-                    Color.White,
-                    md_theme_dark_background,
-                    Color.White,
-                    Color.White
-                )
+                    .height(40.dp),
+                containerColor = Color.White,
+                contentColor = md_theme_dark_background
             ) {
                 Icon(
-                    Icons.Default.Add, ""
+                    Icons.Default.Add, "",
+                    modifier = Modifier
+                        .width(20.dp)
+                        .height(20.dp)
+                )
+                Spacer(
+                    modifier = Modifier
+                        .width(8.dp)
                 )
                 Text(
-                    text = AddBookmarkButtonText
+                    text = AddBookmarkButtonText,
                 )
             }
         }
