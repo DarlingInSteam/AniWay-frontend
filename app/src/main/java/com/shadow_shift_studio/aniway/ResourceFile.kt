@@ -14,4 +14,5 @@ val AddBookmarkButtonText: String = "В закладки"
 val ChaptersButtonText: String = "Главы"
 val ReadButtonText: String = "Читать"
 val SimilarWorksText: String = "Похожие произведения"
+val GenresButtonText: String = "Жанры"
 

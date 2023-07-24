@@ -64,6 +64,7 @@ import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
 
 @Preview
 @Composable
@@ -127,7 +128,8 @@ fun CatalogButtons(changeButtonSheetSortVisible: () -> Unit, changeButtonSheetFi
             modifier = Modifier
                 .width(146.dp)
                 .height(40.dp),
-            containerColor = md_theme_dark_surface_container_high
+            containerColor = md_theme_dark_surface_container_high,
+            contentColor = md_theme_light_surfaceVariant
         ) {
             Icon(
                 Icons.Default.Sort,
@@ -147,7 +149,8 @@ fun CatalogButtons(changeButtonSheetSortVisible: () -> Unit, changeButtonSheetFi
             modifier = Modifier
                 .width(127.dp)
                 .height(40.dp),
-            containerColor = md_theme_dark_surface_container_high
+            containerColor = md_theme_dark_surface_container_high,
+            contentColor = md_theme_light_surfaceVariant
         ) {
             Icon(
                 Icons.Default.FilterList,
@@ -247,6 +250,7 @@ fun SortingBottomSheet(onClose: () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         sheetPeekHeight = 400.dp,
         sheetContainerColor = md_theme_dark_bottom_sheet_background,
+        sheetContentColor = md_theme_light_surfaceVariant,
         sheetContent = {
             Box(
                 Modifier
@@ -284,7 +288,7 @@ fun ButtonsForSorting(onClose: () -> Unit) {
             modifier = Modifier
                 .padding(start = 23.dp, end = 23.dp)
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Text(text = "По популярности")
         }
@@ -296,7 +300,7 @@ fun ButtonsForSorting(onClose: () -> Unit) {
             modifier = Modifier
                 .padding(start = 23.dp, end = 23.dp)
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Text(text = "По рейтингу")
         }
@@ -308,7 +312,7 @@ fun ButtonsForSorting(onClose: () -> Unit) {
             modifier = Modifier
                 .padding(start = 23.dp, end = 23.dp)
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Text(text = "По последним обновлениям")
         }
@@ -320,7 +324,7 @@ fun ButtonsForSorting(onClose: () -> Unit) {
             modifier = Modifier
                 .padding(start = 23.dp, end = 23.dp)
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Text(text = "По новизне")
         }
@@ -332,7 +336,7 @@ fun ButtonsForSorting(onClose: () -> Unit) {
             modifier = Modifier
                 .padding(start = 23.dp, end = 23.dp)
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Text(text = "По количеству лайков")
         }
@@ -352,6 +356,7 @@ fun FilterButtonSheet(onClose: () -> Unit) {
         modifier = Modifier.fillMaxWidth(),
         sheetPeekHeight = 400.dp,
         sheetContainerColor = md_theme_dark_bottom_sheet_background,
+        sheetContentColor = md_theme_light_surfaceVariant,
         sheetContent = {
             Column(
                 Modifier
@@ -364,7 +369,6 @@ fun FilterButtonSheet(onClose: () -> Unit) {
                             if (change != null && dragAmount.y.dp > 50.dp) {
                                 if (delta > touchSlop) {
                                     onClose()
-                                } else {
                                     offsetY.value = 0f
                                 }
                             }
@@ -415,7 +419,7 @@ fun ButtonsGenres() {
             onClick = { isGenresExpanded.value = !isGenresExpanded.value },
             modifier = Modifier
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Жанры")
@@ -435,7 +439,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Романтика")
@@ -445,7 +449,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Комедия")
@@ -455,7 +459,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Драма")
@@ -465,7 +469,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Фэнтези")
@@ -475,7 +479,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Приключения")
@@ -485,7 +489,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -495,7 +499,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -505,7 +509,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -515,7 +519,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -525,7 +529,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -535,7 +539,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -545,7 +549,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -555,7 +559,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -565,7 +569,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -575,7 +579,7 @@ fun ButtonsGenres() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Повседневность")
@@ -602,7 +606,7 @@ fun ButtonsType() {
             onClick = { isTypeExpanded.value = !isTypeExpanded.value },
             modifier = Modifier
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Типы")
@@ -622,7 +626,7 @@ fun ButtonsType() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Манга")
@@ -632,7 +636,7 @@ fun ButtonsType() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Манхва")
@@ -642,7 +646,7 @@ fun ButtonsType() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Маньхуа")
@@ -669,7 +673,7 @@ fun ButtonsCategory() {
             onClick = { isCategoryExpanded.value = !isCategoryExpanded.value },
             modifier = Modifier
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Категории")
@@ -689,7 +693,7 @@ fun ButtonsCategory() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Веб")
@@ -699,7 +703,7 @@ fun ButtonsCategory() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "В цвете")
@@ -709,7 +713,7 @@ fun ButtonsCategory() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Хентай!")
@@ -736,7 +740,7 @@ fun ButtonsTitleStatus() {
             onClick = { isTitleStatusExpanded.value = !isTitleStatusExpanded.value },
             modifier = Modifier
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Статус проекта")
@@ -756,7 +760,7 @@ fun ButtonsTitleStatus() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Закончен")
@@ -766,7 +770,7 @@ fun ButtonsTitleStatus() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Продолжается")
@@ -776,7 +780,7 @@ fun ButtonsTitleStatus() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Заморожен")
@@ -786,7 +790,7 @@ fun ButtonsTitleStatus() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Анонс")
@@ -813,7 +817,7 @@ fun ButtonsAge() {
             onClick = { isAgeExpanded.value = !isAgeExpanded.value },
             modifier = Modifier
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
         ) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                 Text(text = "Возрастной рейтинг")
@@ -833,7 +837,7 @@ fun ButtonsAge() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "Для всех")
@@ -843,7 +847,7 @@ fun ButtonsAge() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "16+")
@@ -853,7 +857,7 @@ fun ButtonsAge() {
                     Button(
                         onClick = { },
                         modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+                        colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
                     ) {
                         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
                             Text(text = "18+")
