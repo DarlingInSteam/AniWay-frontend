@@ -54,12 +54,13 @@ import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.cards.AchievementCard
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
+import com.shadow_shift_studio.aniway.screens.secondary_screens.Settings
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 
 @Composable
-fun ProfileScreen(){
+fun ProfileScreen() {
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
     Column(modifier = Modifier
@@ -72,7 +73,7 @@ fun ProfileScreen(){
                         .fillMaxSize()
                         .verticalScroll(scrollState)
                 ) {
-                    Wallpaper()
+                    Wallpaper(navController)
                     Spacer(modifier = Modifier.height(15.dp))
                     NickAndBadge()
                     Spacer(modifier = Modifier.height(15.dp))
@@ -84,8 +85,11 @@ fun ProfileScreen(){
                 }
             }
             composable("fullScreen") {
-                    MangaPage(navController)
-                }
+                MangaPage(navController)
+            }
+            composable("settings") {
+                Settings(navController)
+            }
             }
         }
     }
@@ -274,7 +278,7 @@ fun NickAndBadge() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Wallpaper() {
+fun Wallpaper(navController: NavController) {
     Box(modifier = Modifier
         .fillMaxWidth()
         .height(250.dp)) {
@@ -329,7 +333,7 @@ fun Wallpaper() {
                 .padding(bottom = 14.dp, start = 4.dp),
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("settings") },
                 modifier = Modifier
                     .height(32.dp)
                     .width(32.dp)
