@@ -46,7 +46,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -54,7 +53,7 @@ import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.cards.AchievementCard
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
-import com.shadow_shift_studio.aniway.screens.secondary_screens.Settings
+import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.Settings
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
