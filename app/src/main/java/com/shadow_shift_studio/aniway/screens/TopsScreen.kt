@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -27,27 +28,52 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.cards.MangaCardTop
+import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
+import com.shadow_shift_studio.aniway.screens.secondary_screens.NotifyList
+import com.shadow_shift_studio.aniway.screens.secondary_screens.NotifyTop
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TopsScreen(){
+    val navControllerTop = rememberNavController()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
     ) {
         Column(Modifier.fillMaxSize()) {
-            TabScreen()
-            TopCheckBox()
-            TopCards()
+            NavHost(
+                navController = navControllerTop,
+                startDestination = "main"
+            ) {
+                composable("main") {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                    ) {
+                        TabScreen()
+                        TopCheckBox()
+                        TopCards(navControllerTop)
+                    }
+                }
+
+                composable("fullScreen") {
+                    MangaPage(navController = navControllerTop)
+                }
+            }
         }
     }
 }
 
 @Composable
-fun TopCards() {
+fun TopCards(navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
         content = {
@@ -65,7 +91,7 @@ fun TopCards() {
                             .widthIn(min = 20.dp, max = 20.dp),
                         textAlign = TextAlign.Center
                     )
-                    MangaCardTop()
+                    MangaCardTop(navController)
                 }
             }
         }

@@ -29,13 +29,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_tertiaryContainer
 
 @Composable
-fun MangaCardTop() {
+fun MangaCardTop(navController: NavController) {
     val titleName = "Реинкарнация короля демонов, убивающего богов"
     val titleType = "Манхва"
     val description = "Предоставьте управление своим подчиненным и живите жизнью мечты! С такими амбициями Джоруссия - демон низкого ранга, стал мастером подземелья. Однако, поскольку место, где было построено подземелье, является особым местом, называемым Землей Хаоса, талантливый демон приходит работать секретаршей, а темный бог приходит в гости. Кроме того, несколько авантюрист... "
@@ -47,7 +48,7 @@ fun MangaCardTop() {
     Card(
         modifier = Modifier
             .height(160.dp)
-            .clickable { },
+            .clickable {navController.navigate("fullScreen") },
         colors = CardColors(md_theme_dark_background, md_theme_dark_background, md_theme_dark_background, md_theme_dark_background)
     ) {
         Row(modifier = Modifier.fillMaxWidth()){
