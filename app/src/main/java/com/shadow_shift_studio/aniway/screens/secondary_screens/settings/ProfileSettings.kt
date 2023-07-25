@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -88,7 +89,7 @@ fun ProfileSettingsButtons(navController: NavController) {
                     .height(28.dp)
                     .width(28.dp))
         }
-        Text(text = "Настройки профиля", fontSize = 18.sp)
+        Text(text = "Настройки профиля", fontSize = 18.sp, color = md_theme_dark_onSurfaceVariant)
     }
     Column(modifier = Modifier
         .fillMaxSize()
@@ -103,7 +104,7 @@ fun ProfileSettingsButtons(navController: NavController) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
             ) {
-                Text("Никнейм", fontSize = 18.sp)
+                Text("Никнейм", fontSize = 18.sp, color = md_theme_dark_onSurfaceVariant)
             }
             Spacer(modifier = Modifier.height(5.dp))
             Row(
@@ -131,7 +132,7 @@ fun ProfileSettingsButtons(navController: NavController) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
             ) {
-                Text("Звание", fontSize = 18.sp)
+                Text("Звание", fontSize = 18.sp, color = md_theme_dark_onSurfaceVariant)
             }
             Spacer(modifier = Modifier.height(5.dp))
             Row(
@@ -154,7 +155,7 @@ fun ProfileSettingsButtons(navController: NavController) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
             ) {
-                Text("Пол", fontSize = 18.sp)
+                Text("Пол", fontSize = 18.sp, color = md_theme_dark_onSurfaceVariant)
             }
             Spacer(modifier = Modifier.height(5.dp))
             Row(
@@ -169,7 +170,7 @@ fun ProfileSettingsButtons(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Изменить аватар", modifier = Modifier)
+            Text(text = "Изменить аватар", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(Icons.Default.Edit, "")
             }
@@ -178,7 +179,7 @@ fun ProfileSettingsButtons(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Изменить фон профиля", modifier = Modifier)
+            Text(text = "Изменить фон профиля", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(Icons.Default.Edit, "")
             }
@@ -187,21 +188,21 @@ fun ProfileSettingsButtons(navController: NavController) {
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Скрыть яой", modifier = Modifier)
+            Text(text = "Скрыть яой", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
             Switch(checked = yaoi, onCheckedChange = {yaoi = !yaoi})
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Скрыть хентай", modifier = Modifier)
+            Text(text = "Скрыть хентай", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
             Switch(checked = hentai, onCheckedChange = {hentai = !hentai})
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Скрыть йури", modifier = Modifier)
+            Text(text = "Скрыть йури", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
             Switch(checked = yuri, onCheckedChange = {yuri = !yuri})
         }
     }
@@ -238,7 +239,7 @@ fun DropdownTextField(items: List<String>) {
                 value = TextFieldValue(selectedItem ?: ""),
                 enabled = false,
                 onValueChange = { /* Disable editing */ },
-                textStyle = TextStyle(color = Color.White, fontSize = 16.sp, textAlign = TextAlign.Start),
+                textStyle = TextStyle(color = md_theme_dark_onSurfaceVariant, fontSize = 16.sp, textAlign = TextAlign.Start),
             )
             Icon( if (expanded) iconBefore else iconAfter,  "",modifier = Modifier
                 .align(Alignment.CenterEnd)

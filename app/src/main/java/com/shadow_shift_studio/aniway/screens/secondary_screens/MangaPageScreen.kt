@@ -58,6 +58,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -74,6 +75,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextAlign
@@ -107,50 +109,69 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
 import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
-fun MangaPage( navController: NavController)
-{
+fun MangaPage( navController: NavController) {
     val scrollState = rememberScrollState()
-
-    GradientImage(
-        startColor = Color.Transparent,
-        endColor = md_theme_dark_background
-    )
-
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-
     ) {
-        TopMangaBar(navController = navController)
 
-        Spacer(
-            modifier = Modifier
-                .height(100.dp)
-        )
+        Box(modifier = Modifier
+            .fillMaxWidth()) {
 
-        MangaInfo()
+            Row(modifier = Modifier) {
+                GradientImage(
+                    startColor = Color.Transparent,
+                    endColor = md_theme_dark_background
+                )}
+            Row(){
+                TopMangaBar(navController = navController)
+            }
+            Spacer(
+                modifier = Modifier
+                    .height(100.dp)
+            )
+            Row(
+                modifier = Modifier
+                    .padding(top = 120.dp)
+            ) {
+                MangaInfo()
+            }
+        }
+            Spacer(
+                modifier = Modifier.height(11.dp)
+            )
 
-        Spacer(
-            modifier = Modifier.height(11.dp)
-        )
+            MangaActionsButtons(navController = navController)
 
-        MangaActionsButtons(navController = navController)
+            Spacer(
+                modifier = Modifier.height(11.dp)
+            )
 
-        Spacer(
-            modifier = Modifier.height(11.dp)
-        )
+            Genres(
+                listOf(
+                    "Мистика",
+                    "Приключения",
+                    "Фэнтези",
+                    "В цвете",
+                    "Демоны",
+                    "Зверолюди",
+                    "Кто",
+                    "Прочитал",
+                    "Тот",
+                    "Лапочка"
+                )
+            )
+            Spacer(modifier = Modifier.height(11.dp))
 
-        Genres(listOf("Мистика", "Приключения", "Фэнтези", "В цвете", "Демоны", "Зверолюди", "Кто", "Прочитал", "Тот", "Лапочка"))
-        Spacer(modifier = Modifier.height(11.dp))
+            Description()
 
-        Description()
+            Spacer(modifier = Modifier.height(11.dp))
 
-        Spacer(modifier = Modifier.height(11.dp))
+            SimilarWorks(navController)
 
-        SimilarWorks(navController)
-
-    }
+        }
 }
 
 @Composable
@@ -193,31 +214,30 @@ fun GradientImage(startColor: Color, endColor: Color) {
     }
 }
 
+
 @Composable
 fun TopMangaBar(navController: NavController)
 {
     Row(
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(top = 10.dp, start = 23.dp, end = 23.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.Top
 
 
     ) {
 
-        Button(
+        ExtendedFloatingActionButton(
             onClick = { navController.popBackStack() },
             modifier = Modifier
+                .height(40.dp)
+                .width(60.dp)
                 .background(Color.Transparent)
-                .clip(RoundedCornerShape(100))
-                .padding(23.dp),
+                .clip(RoundedCornerShape(100)),
             shape = RoundedCornerShape(28.dp),
-            colors = ButtonColors(
-                Color.White,
-                md_theme_dark_background,
-                Color.White,
-                Color.White
-            )
+            containerColor = Color.White,
+            contentColor = md_theme_dark_background
         ) {
             Icon(Icons.Default.ArrowBack, "" ,
                 modifier = Modifier
@@ -228,8 +248,7 @@ fun TopMangaBar(navController: NavController)
             onClick = { /*TODO*/ },
             shape = RoundedCornerShape(28.dp),
             modifier = Modifier
-                .height(40.dp)
-                .padding(end = 23.dp),
+                .height(40.dp),
             containerColor = Color.White,
             contentColor = md_theme_dark_background
         ) {
@@ -261,7 +280,7 @@ fun MangaInfo()
     var likes = "21K"
     var bookMarks = "12K"
     var rating = "4,9"
-
+Column() {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -373,6 +392,7 @@ fun MangaInfo()
             )
         }
     }
+}
 }
 
 @Composable
@@ -553,7 +573,7 @@ fun Description() {
             overflow = TextOverflow.Ellipsis,
             text = description,
             color = Color.White,
-            fontSize = 18.sp
+            fontSize = 16.sp
         )
     }
 }
