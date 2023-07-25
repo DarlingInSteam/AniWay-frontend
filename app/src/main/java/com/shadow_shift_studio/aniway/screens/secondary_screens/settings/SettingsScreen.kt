@@ -60,13 +60,13 @@ fun Settings(navController: NavController) {
                 ProfileSettings(navControllerSettings)
             }
             composable("safetySettings") {
-
+                SafetySettings(navControllerSettings)
             }
             composable("notifySettings") {
-
+                NotifySettings(navControllerSettings)
             }
             composable("visualSettings") {
-
+                VisualStyleSettings(navControllerSettings)
             }
         }
 
