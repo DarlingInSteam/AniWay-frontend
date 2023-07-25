@@ -115,7 +115,7 @@ fun ProfileSettingsButtons(navController: NavController) {
                     value = nickName,
                     onValueChange = { newText -> nickName = newText },
                     maxLines = 1,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp))
                 )
             }
         }
@@ -226,7 +226,7 @@ fun DropdownTextField(items: List<String>) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp))
+                .clip(RoundedCornerShape(8.dp))
                 .clickable { expanded = true }
                 .background(md_theme_dark_surface_container_higher),
             contentAlignment = Alignment.CenterStart
