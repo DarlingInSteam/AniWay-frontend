@@ -53,6 +53,7 @@ import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.cards.AchievementCard
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
+import com.shadow_shift_studio.aniway.screens.secondary_screens.Notification
 import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.Settings
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
@@ -88,6 +89,9 @@ fun ProfileScreen() {
             }
             composable("settings") {
                 Settings(navController)
+            }
+            composable("notify") {
+                Notification(navController)
             }
             }
         }
@@ -317,7 +321,7 @@ fun Wallpaper(navController: NavController) {
                 .padding(bottom = 14.dp, end = 4.dp),
         ) {
             IconButton(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("notify") },
                 modifier = Modifier
                     .height(32.dp)
                     .width(32.dp)
