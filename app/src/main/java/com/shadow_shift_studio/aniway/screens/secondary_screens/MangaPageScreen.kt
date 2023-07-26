@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.screens.secondary_screens
 
+import CommentCard
 import android.content.res.Resources.Theme
 import android.widget.ListView
 import androidx.compose.animation.AnimatedVisibility
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
@@ -60,6 +62,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -67,9 +70,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -78,20 +84,26 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import coil.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.chip.ChipGroup
 import com.shadow_shift_studio.aniway.AddBookmarkButtonText
 import com.shadow_shift_studio.aniway.ChaptersButtonText
 import com.shadow_shift_studio.aniway.GenresButtonText
+import com.shadow_shift_studio.aniway.LastCommentButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
@@ -110,69 +122,83 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun MangaPage( navController: NavController) {
-    val scrollState = rememberScrollState()
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-    ) {
+    /*NavHost(navController = navController as NavHostController, startDestination = "main") {
+        composable("main") {*/
+            val scrollState = rememberScrollState()
+            var description =
+                "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
 
-        Box(modifier = Modifier
-            .fillMaxWidth()) {
-
-            Row(modifier = Modifier) {
-                GradientImage(
-                    startColor = Color.Transparent,
-                    endColor = md_theme_dark_background
-                )}
-            Row(){
-                TopMangaBar(navController = navController)
-            }
-            Spacer(
+            Column(
                 modifier = Modifier
-                    .height(100.dp)
-            )
-            Row(
-                modifier = Modifier
-                    .padding(top = 120.dp)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
             ) {
-                MangaInfo()
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+
+                    Row(modifier = Modifier) {
+                        GradientImage(
+                            startColor = Color.Transparent,
+                            endColor = md_theme_dark_background
+                        )
+                    }
+                    Row() {
+                        TopMangaBar(navController = navController)
+                    }
+                    Spacer(
+                        modifier = Modifier
+                            .height(100.dp)
+                    )
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 120.dp)
+                    ) {
+                        MangaInfo()
+                    }
+                }
+                Spacer(
+                    modifier = Modifier.height(11.dp)
+                )
+
+                MangaActionsButtons(navController = navController)
+
+                Spacer(
+                    modifier = Modifier.height(11.dp)
+                )
+
+                Genres(
+                    listOf(
+                        "Мистика",
+                        "Приключения",
+                        "Фэнтези",
+                        "В цвете",
+                        "Демоны",
+                        "Зверолюди",
+                        "Кто",
+                        "Прочитал",
+                        "Тот",
+                        "Лапочка"
+                    )
+                )
+                Spacer(modifier = Modifier.height(11.dp))
+
+                ExpandableText(text = description)
+                //Description()
+
+                Spacer(modifier = Modifier.height(11.dp))
+
+                SimilarWorks(navController)
+
+                Spacer(modifier = Modifier.height(11.dp))
+
+                Comments(navController = navController)
             }
         }
-            Spacer(
-                modifier = Modifier.height(11.dp)
-            )
-
-            MangaActionsButtons(navController = navController)
-
-            Spacer(
-                modifier = Modifier.height(11.dp)
-            )
-
-            Genres(
-                listOf(
-                    "Мистика",
-                    "Приключения",
-                    "Фэнтези",
-                    "В цвете",
-                    "Демоны",
-                    "Зверолюди",
-                    "Кто",
-                    "Прочитал",
-                    "Тот",
-                    "Лапочка"
-                )
-            )
-            Spacer(modifier = Modifier.height(11.dp))
-
-            Description()
-
-            Spacer(modifier = Modifier.height(11.dp))
-
-            SimilarWorks(navController)
-
-        }
-}
+/*    }
+}*/
 
 @Composable
 fun GradientImage(startColor: Color, endColor: Color) {
@@ -279,7 +305,6 @@ fun MangaInfo()
     var views = "1.5M"
     var likes = "21K"
     var bookMarks = "12K"
-    var rating = "4,9"
 Column() {
     Row(
         modifier = Modifier
@@ -556,6 +581,80 @@ fun ChipVerticalGrid(
 }
 
 @Composable
+fun ExpandableText(
+    text: String,
+    modifier: Modifier = Modifier,
+    minimizedMaxLines: Int = 5,
+) {
+    var cutText by remember(text) { mutableStateOf<String?>(null) }
+    var expanded by remember { mutableStateOf(false) }
+    val textLayoutResultState = remember { mutableStateOf<TextLayoutResult?>(null) }
+    val seeMoreSizeState = remember { mutableStateOf<IntSize?>(null) }
+    val seeMoreOffsetState = remember { mutableStateOf<Offset?>(null) }
+
+    val textLayoutResult = textLayoutResultState.value
+    val seeMoreSize = seeMoreSizeState.value
+    val seeMoreOffset = seeMoreOffsetState.value
+
+    LaunchedEffect(text, expanded, textLayoutResult, seeMoreSize) {
+        val lastLineIndex = minimizedMaxLines - 1
+        if (!expanded && textLayoutResult != null && seeMoreSize != null
+            && lastLineIndex + 1 == textLayoutResult.lineCount
+            && textLayoutResult.isLineEllipsized(lastLineIndex)
+        ) {
+            var lastCharIndex = textLayoutResult.getLineEnd(lastLineIndex, visibleEnd = true) + 1
+            var charRect: Rect
+            do {
+                lastCharIndex -= 1
+                charRect = textLayoutResult.getCursorRect(lastCharIndex)
+            } while (
+                charRect.left > textLayoutResult.size.width - seeMoreSize.width
+            )
+            seeMoreOffsetState.value = Offset(charRect.left, charRect.bottom - seeMoreSize.height)
+            cutText = text.substring(startIndex = 0, endIndex = lastCharIndex)
+        }
+    }
+
+    Box(modifier = Modifier
+        .padding(start = 23.dp, end = 23.dp)
+        .fillMaxWidth()) {
+        Text(
+            text = cutText ?: text,
+            maxLines = if (expanded) Int.MAX_VALUE else minimizedMaxLines,
+            overflow = TextOverflow.Ellipsis,
+            //textAlign = TextAlign.Justify,
+            onTextLayout = { textLayoutResultState.value = it },
+            color = Color.White,
+            fontSize = 16.sp
+        )
+        if (!expanded) {
+            val density = LocalDensity.current
+            Text(
+                "... Раскрыть",
+                onTextLayout = { seeMoreSizeState.value = it.size },
+                modifier = Modifier
+                    .then(
+                        if (seeMoreOffset != null)
+                            Modifier.offset(
+                                x = with(density) { seeMoreOffset.x.toDp() },
+                                y = with(density) { seeMoreOffset.y.toDp() },
+                            )
+                        else
+                            Modifier
+                    )
+                    .clickable {
+                        expanded = true
+                        cutText = null
+                    }
+                    .alpha(if (seeMoreOffset != null) 1f else 0f),
+                color = md_theme_dark_onSurface,
+                fontSize = 16.sp
+            )
+        }
+    }
+}
+
+@Composable
 fun Description() {
     var description =
         "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
@@ -593,7 +692,7 @@ fun SimilarWorks(navController: NavController)
                 text = SimilarWorksText,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Left,
-                color = Color.White
+                color = md_theme_light_surfaceVariant
             )
         }
 
@@ -609,6 +708,60 @@ fun SimilarWorks(navController: NavController)
             }
         }
 }
+
+@Composable
+fun Comments(navController: NavController) {
+    Column() {
+        Row() {
+            Button(
+                onClick = { },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 23.dp, end = 23.dp),
+                colors = ButtonColors(
+                    md_theme_dark_bottom_sheet_bottoms,
+                    Color.White,
+                    Color.White,
+                    Color.White
+                )
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = LastCommentButtonText,
+                        fontSize = 16.sp,
+                        color = md_theme_light_surfaceVariant
+                    )
+                    Icon(Icons.Default.ArrowRight, contentDescription = "")
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(11.dp))
+
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .height(450.dp),
+            content = {
+                items(count = 25) { index ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
+                            .fillMaxWidth()
+                    ) {
+                        CommentCard()
+                    }
+                }
+            }
+        )
+    }
+}
+
 
 
 
