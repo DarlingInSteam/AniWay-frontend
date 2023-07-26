@@ -4,7 +4,12 @@ import CommentCard
 import android.content.res.Resources.Theme
 import android.widget.ListView
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -97,6 +102,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.material.chip.ChipGroup
@@ -122,8 +128,9 @@ import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun MangaPage( navController: NavController) {
-    /*NavHost(navController = navController as NavHostController, startDestination = "main") {
-        composable("main") {*/
+    val navControllerMangaPage = rememberNavController()
+    NavHost(navController = navControllerMangaPage, startDestination = "main") {
+        composable("main") {
             val scrollState = rememberScrollState()
             var description =
                 "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
@@ -186,7 +193,6 @@ fun MangaPage( navController: NavController) {
                 Spacer(modifier = Modifier.height(11.dp))
 
                 ExpandableText(text = description)
-                //Description()
 
                 Spacer(modifier = Modifier.height(11.dp))
 
@@ -194,11 +200,14 @@ fun MangaPage( navController: NavController) {
 
                 Spacer(modifier = Modifier.height(11.dp))
 
-                Comments(navController = navController)
+                Comments(navController = navControllerMangaPage)
             }
         }
-/*    }
-}*/
+        composable("commentsScreen") {
+            AddComment(navControllerMangaPage)
+        }
+    }
+}
 
 @Composable
 fun GradientImage(startColor: Color, endColor: Color) {
@@ -506,8 +515,11 @@ fun Genres(genresList: List<String>) {
         }
         AnimatedVisibility(
             visible = isGenreExpanded.value,
-            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
-            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            enter = expandVertically(spring(
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntSize.VisibilityThreshold
+            )),
+            exit = shrinkVertically(),
             content = {
                 ChipVerticalGrid(
                     spacing = 7.dp,
@@ -595,6 +607,9 @@ fun ExpandableText(
     val textLayoutResult = textLayoutResultState.value
     val seeMoreSize = seeMoreSizeState.value
     val seeMoreOffset = seeMoreOffsetState.value
+    var textAlignJustify by remember{ mutableStateOf(TextAlign.Justify)}
+    var textAlignLeft by remember{ mutableStateOf(TextAlign.Left)}
+
 
     LaunchedEffect(text, expanded, textLayoutResult, seeMoreSize) {
         val lastLineIndex = minimizedMaxLines - 1
@@ -622,7 +637,7 @@ fun ExpandableText(
             text = cutText ?: text,
             maxLines = if (expanded) Int.MAX_VALUE else minimizedMaxLines,
             overflow = TextOverflow.Ellipsis,
-            //textAlign = TextAlign.Justify,
+            textAlign = if (expanded) textAlignJustify else textAlignLeft,
             onTextLayout = { textLayoutResultState.value = it },
             color = Color.White,
             fontSize = 16.sp
@@ -651,29 +666,6 @@ fun ExpandableText(
                 fontSize = 16.sp
             )
         }
-    }
-}
-
-@Composable
-fun Description() {
-    var description =
-        "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Text(
-            modifier = Modifier
-                .padding(start = 23.dp, end = 23.dp)
-                .fillMaxWidth(),
-            textAlign = TextAlign.Justify,
-            maxLines = 5,
-            overflow = TextOverflow.Ellipsis,
-            text = description,
-            color = Color.White,
-            fontSize = 16.sp
-        )
     }
 }
 
@@ -714,7 +706,7 @@ fun Comments(navController: NavController) {
     Column() {
         Row() {
             Button(
-                onClick = { },
+                onClick = {navController.navigate("commentsScreen")},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp),
@@ -761,6 +753,7 @@ fun Comments(navController: NavController) {
         )
     }
 }
+
 
 
 

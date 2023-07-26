@@ -2,8 +2,13 @@ package com.shadow_shift_studio.aniway.screens
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -54,6 +59,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -429,8 +435,11 @@ fun ButtonsGenres() {
         }
         AnimatedVisibility(
             visible = isGenresExpanded.value,
-            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
-            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            enter = expandVertically(spring(
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntSize.VisibilityThreshold
+            )),
+            exit = shrinkVertically(),
             content = {
                 Column(
                     modifier = Modifier
@@ -616,8 +625,13 @@ fun ButtonsType() {
         }
         AnimatedVisibility(
             visible = isTypeExpanded.value,
-            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
-            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            enter = expandVertically(
+                spring(
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntSize.VisibilityThreshold
+            )
+            ),
+            exit = shrinkVertically(),
             content = {
                 Column(
                     modifier = Modifier
@@ -683,8 +697,11 @@ fun ButtonsCategory() {
         }
         AnimatedVisibility(
             visible = isCategoryExpanded.value,
-            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
-            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            enter = expandVertically(spring(
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntSize.VisibilityThreshold
+            )),
+            exit = shrinkVertically(),
             content = {
                 Column(
                     modifier = Modifier
@@ -750,8 +767,11 @@ fun ButtonsTitleStatus() {
         }
         AnimatedVisibility(
             visible = isTitleStatusExpanded.value,
-            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
-            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            enter = expandVertically(spring(
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntSize.VisibilityThreshold
+            )),
+            exit = shrinkVertically(),
             content = {
                 Column(
                     modifier = Modifier
@@ -827,8 +847,11 @@ fun ButtonsAge() {
         }
         AnimatedVisibility(
             visible = isAgeExpanded.value,
-            enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
-            exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+            enter = expandVertically(spring(
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntSize.VisibilityThreshold
+            )),
+            exit = shrinkVertically(),
             content = {
                 Column(
                     modifier = Modifier

@@ -21,14 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.shadow_shift_studio.aniway.screens.Comments
 
-@Preview
 @Composable
-fun AddComment() {
+fun AddComment(navController: NavController) {
     var comment by remember { mutableStateOf("Оставьте комментарий") }
     Column() {
-        Row()
+        Row(modifier = Modifier.height(300.dp))
         {
             Comments()
         }
