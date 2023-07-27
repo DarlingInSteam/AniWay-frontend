@@ -200,7 +200,7 @@ fun MangaPage( navController: NavController) {
 
                 Spacer(modifier = Modifier.height(11.dp))
 
-                Comments(navController = navControllerMangaPage)
+                CommentsMangaPage(navController = navControllerMangaPage)
             }
         }
         composable("commentsScreen") {
@@ -702,7 +702,7 @@ fun SimilarWorks(navController: NavController)
 }
 
 @Composable
-fun Comments(navController: NavController) {
+fun CommentsMangaPage(navController: NavController) {
     Column() {
         Row() {
             Button(
@@ -739,7 +739,7 @@ fun Comments(navController: NavController) {
                 .fillMaxSize()
                 .height(450.dp),
             content = {
-                items(count = 25) { index ->
+                items(count = 3) { index ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier

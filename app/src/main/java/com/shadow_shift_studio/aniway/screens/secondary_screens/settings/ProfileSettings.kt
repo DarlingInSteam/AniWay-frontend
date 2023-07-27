@@ -254,7 +254,8 @@ fun DropdownTextField(items: List<String>) {
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .padding(start = 23.dp, end = 23.dp)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(md_theme_dark_surface_container_higher),
         ) {
             items.forEach { item ->
                 TextButton(
@@ -264,7 +265,14 @@ fun DropdownTextField(items: List<String>) {
                     },
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
+                    colors = ButtonColors(
+                        md_theme_dark_surface_container_higher,
+                        md_theme_dark_onSurfaceVariant,
+                        Color.White,
+                        Color.White
+                    )
+
                 ) {
                     Text(text = item)
                 }
