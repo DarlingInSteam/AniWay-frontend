@@ -1,5 +1,11 @@
 package com.shadow_shift_studio.aniway.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +18,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.*
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
@@ -19,6 +28,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -43,6 +54,10 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 @Composable
 fun TopsScreen(){
     val navControllerTop = rememberNavController()
+    val scrollState = rememberLazyListState()
+    var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var tabBarVisible by remember { mutableStateOf(true) }
 
     Column(
         modifier = Modifier
@@ -58,9 +73,32 @@ fun TopsScreen(){
                         modifier = Modifier
                             .fillMaxSize()
                     ) {
-                        TabScreen()
+                        LaunchedEffect(scrollState.firstVisibleItemIndex) {
+                            currentFirstVisibleItemIndex = scrollState.firstVisibleItemIndex
+
+                            if (currentFirstVisibleItemIndex > prevFirstVisibleItemIndex) {
+                                tabBarVisible = false
+                            } else if (currentFirstVisibleItemIndex < prevFirstVisibleItemIndex) {
+                                tabBarVisible = true
+                            }
+                            prevFirstVisibleItemIndex = currentFirstVisibleItemIndex
+                        }
+
+                        AnimatedVisibility(
+                            visible = tabBarVisible,
+                            enter = expandVertically(
+                                spring(
+                                    stiffness = Spring.StiffnessLow,
+                                    visibilityThreshold = IntSize.VisibilityThreshold
+                                )
+                            ),
+                            exit = shrinkVertically(),
+                        ) {
+                            TabScreen()
+                        }
+
                         TopCheckBox()
-                        TopCards(navControllerTop)
+                        TopCards(navControllerTop, scrollState)
                     }
                 }
 
@@ -73,9 +111,10 @@ fun TopsScreen(){
 }
 
 @Composable
-fun TopCards(navController: NavController) {
+fun TopCards(navController: NavController, scrollState: LazyListState) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
+        state = scrollState,
         content = {
             items(count = 25) { index ->
                 Row(verticalAlignment = Alignment.CenterVertically,

@@ -11,6 +11,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -25,7 +26,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -43,10 +46,12 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MediumTopAppBar
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -71,13 +76,20 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_backgr
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
+import me.onebone.toolbar.CollapsingToolbarScaffold
+import me.onebone.toolbar.ScrollStrategy
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun CatalogScreen() {
     var sortingBottomSheetVisible by remember { mutableStateOf(false) }
     var filterBottomSheetVisible by remember { mutableStateOf(false) }
     val navController = rememberNavController()
+    val scrollState = rememberLazyGridState()
+    var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var searchBarVisible by remember { mutableStateOf(true) }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -85,14 +97,42 @@ fun CatalogScreen() {
         NavHost(navController = navController, startDestination = "main") {
             composable("main") {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    SearchBar()
+
+                    LaunchedEffect(scrollState.firstVisibleItemIndex) {
+                        currentFirstVisibleItemIndex = scrollState.firstVisibleItemIndex
+
+                        if (currentFirstVisibleItemIndex > prevFirstVisibleItemIndex) {
+                            searchBarVisible = false
+                        } else if (currentFirstVisibleItemIndex < prevFirstVisibleItemIndex) {
+                            searchBarVisible = true
+                        }
+
+                        prevFirstVisibleItemIndex = currentFirstVisibleItemIndex
+                    }
+
+                    AnimatedVisibility(
+                        visible = searchBarVisible,
+                        enter = expandVertically(
+                            spring(
+                                stiffness = Spring.StiffnessLow,
+                                visibilityThreshold = IntSize.VisibilityThreshold
+                            )
+                        ),
+                        exit = shrinkVertically(),
+                    ) {
+                        SearchBar()
+                    }
+
                     Spacer(modifier = Modifier.height(0.dp))
+
                     CatalogButtons(
                         changeButtonSheetSortVisible = { sortingBottomSheetVisible = true },
                         changeButtonSheetFilterVisible = { filterBottomSheetVisible = true }
                     )
+
                     Spacer(modifier = Modifier.height(10.dp))
-                    CardsList(navController = navController)
+
+                    CardsList(navController = navController, scrollState)
                 }
             }
             composable("fullScreen") {
@@ -224,13 +264,14 @@ fun SearchBar() {
 }
 
 @Composable
-fun CardsList(navController: NavController) {
+fun CardsList(navController: NavController, scrollState: LazyGridState) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         LazyVerticalGrid(
             GridCells.FixedSize(108.dp),
+            state = scrollState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 23.dp, end = 23.dp),

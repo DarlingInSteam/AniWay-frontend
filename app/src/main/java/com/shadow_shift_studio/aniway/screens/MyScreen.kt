@@ -1,6 +1,12 @@
 package com.shadow_shift_studio.aniway.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,7 +18,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -23,12 +31,14 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -43,6 +53,10 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 fun MyScreen(){
     var selectedTabTitle by remember { mutableStateOf("") }
     val navController = rememberNavController()
+    val scrollState = rememberLazyGridState()
+    var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var mySearchBarVisible by remember { mutableStateOf(true) }
 
     Column(modifier = Modifier
         .fillMaxSize()
@@ -50,12 +64,36 @@ fun MyScreen(){
         NavHost(navController = navController, startDestination = "main") {
             composable("main") {
                 Column(Modifier.fillMaxSize()) {
-                    MyScreenSearchBar("Поиск в \"$selectedTabTitle\"")
+                    LaunchedEffect(scrollState.firstVisibleItemIndex) {
+                        currentFirstVisibleItemIndex = scrollState.firstVisibleItemIndex
+
+                        if (currentFirstVisibleItemIndex > prevFirstVisibleItemIndex) {
+                            mySearchBarVisible = false
+                        } else if (currentFirstVisibleItemIndex < prevFirstVisibleItemIndex) {
+                            mySearchBarVisible = true
+                        }
+                        prevFirstVisibleItemIndex = currentFirstVisibleItemIndex
+                    }
+
+                    AnimatedVisibility(
+                        visible = mySearchBarVisible,
+                        enter = expandVertically(
+                            spring(
+                                stiffness = Spring.StiffnessLow,
+                                visibilityThreshold = IntSize.VisibilityThreshold
+                            )
+                        ),
+                        exit = shrinkVertically(),
+                    ) {
+                        MyScreenSearchBar("Поиск в \"$selectedTabTitle\"")
+                    }
+
                     TabMyScreen(onTabSelected = { tabTitle ->
                         selectedTabTitle = tabTitle
                     })
+
                     Spacer(modifier = Modifier.height(12.dp))
-                    MyScreenCards(navController)
+                    MyScreenCards(navController, scrollState)
                 }
             }
             composable("fullScreen") {
@@ -66,13 +104,14 @@ fun MyScreen(){
 }
 
 @Composable
-fun MyScreenCards(navController: NavController) {
+fun MyScreenCards(navController: NavController, scrollState: LazyGridState) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         LazyVerticalGrid(
             GridCells.FixedSize(108.dp),
+            state = scrollState,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(start = 23.dp, end = 23.dp),
