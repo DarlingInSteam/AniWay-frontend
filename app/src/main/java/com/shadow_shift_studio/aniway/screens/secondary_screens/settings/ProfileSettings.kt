@@ -171,7 +171,12 @@ fun ProfileSettingsButtons(navController: NavController) {
 
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Изменить аватар", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(100))
+                    .background(md_theme_dark_secondaryContainer))
+            {
                 Icon(Icons.Default.Edit, "")
             }
         }
@@ -180,7 +185,12 @@ fun ProfileSettingsButtons(navController: NavController) {
 
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
             Text(text = "Изменить фон профиля", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(
+                onClick = { /*TODO*/ },
+                modifier = Modifier
+                    .clip(RoundedCornerShape(100))
+                    .background(md_theme_dark_secondaryContainer))
+            {
                 Icon(Icons.Default.Edit, "")
             }
         }

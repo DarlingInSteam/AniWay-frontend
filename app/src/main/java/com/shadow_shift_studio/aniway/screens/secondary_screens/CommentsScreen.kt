@@ -1,11 +1,13 @@
 package com.shadow_shift_studio.aniway.screens.secondary_screens
 
 import CommentCard
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,15 +16,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -49,10 +55,36 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddComment(navController: NavController) {
-    Column(modifier = Modifier.fillMaxSize(),) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        Icons.Default.ArrowBack, "", modifier = Modifier
+                            .height(28.dp)
+                            .width(28.dp))
+                }
+            }
+        },
+        bottomBar = {
+            CommentTextField()
+        },
+        content = {
+            Column(modifier = Modifier
+                .padding(top = 50.dp, bottom = 100.dp),) {
+                CommentsFullScreen()
+            }
+        }
+    )
+
+   /* Column(modifier = Modifier.fillMaxSize(),) {
+
+        Row(modifier = Modifier.fillMaxWidth()) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     Icons.Default.ArrowBack, "", modifier = Modifier
@@ -60,17 +92,15 @@ fun AddComment(navController: NavController) {
                         .width(28.dp))
             }
         }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
-            CommentsFullScreen()
-        }
-        Spacer(modifier = Modifier.height(11.dp))
-        Row() {
+
+        //CommentsFullScreen()
+
+        BottomAppBar(modifier = Modifier.padding(bottom = 100.dp)) {
+
             CommentTextField()
         }
-    }
+
+    }*/
 }
 
 @Composable
@@ -78,59 +108,59 @@ fun CommentTextField()
 {
     var comment by remember { mutableStateOf("") }
     val maxLength = 350
-    Row() {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 23.dp, end = 23.dp)
-                .clip(RoundedCornerShape(8.dp))
-                .background(md_theme_dark_surface_container_higher),
-            contentAlignment = Alignment.CenterStart
-        ) {
-
-            BasicTextField(
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 23.dp)) {
+        Row(modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically) {
+                TextField(
+                    modifier = Modifier
+                        .height(60.dp)
+                        .weight(1f),
+                    value = comment,
+                    enabled = true,
+                    onValueChange = { if (it.length <= maxLength) comment = it },
+                    textStyle = TextStyle(
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Start
+                    ),
+                )
+            IconButton(onClick = {}) {
+                Icon(
+                    Icons.Default.Send, ""
+                )
+            }
+        }
+        Row() {
+            Text(
+                text = "${comment.length} / $maxLength",
+                textAlign = TextAlign.Start,
+                color = md_theme_light_surfaceVariant,
                 modifier = Modifier
-                    .height(60.dp),
-                value = comment,
-                enabled = true,
-                onValueChange = { if (it.length <= maxLength) comment = it },
-                textStyle = TextStyle(
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Start
-                ),
-            )
-            Icon(
-                Icons.Default.Send, "", modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(end = 10.dp)
-                    .clickable { }
+                    .fillMaxWidth()
             )
         }
-    }
-    Row() {
-        Text(
-            text = "${comment.length} / $maxLength",
-            textAlign = TextAlign.End,
-            color = md_theme_light_surfaceVariant,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = 23.dp)
-        )
     }
 }
 @Composable
 fun CommentsFullScreen()
 {
     LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .height(450.dp),
         content = {
             items(count = 25) { index ->
                 Row(modifier = Modifier
-                        .padding(end = 23.dp, start = 23.dp)
-                        .fillMaxWidth()
+                    .padding(end = 23.dp, start = 23.dp)
+                    .fillMaxWidth()
                 ) {
                     CommentCard()
                 }
+                Spacer(modifier = Modifier.height(11.dp))
             }
         }
     )
