@@ -170,7 +170,7 @@ fun MangaPage( navController: NavController) {
                     modifier = Modifier.height(11.dp)
                 )
 
-                MangaActionsButtons(navController = navController)
+                MangaActionsButtons(navControllerMangaPage)
 
                 Spacer(
                     modifier = Modifier.height(11.dp)
@@ -205,6 +205,10 @@ fun MangaPage( navController: NavController) {
         }
         composable("commentsScreen") {
             AddComment(navControllerMangaPage)
+        }
+        composable("chaptersScreen")
+        {
+            ChaptersScreen(navControllerMangaPage)
         }
     }
 }
@@ -438,7 +442,7 @@ fun MangaActionsButtons(navController: NavController)
         horizontalArrangement = Arrangement.Center
     ) {
         ExtendedFloatingActionButton(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate("chaptersScreen") },
             modifier = Modifier
                 .width(115.dp)
                 .background(Color.Transparent)

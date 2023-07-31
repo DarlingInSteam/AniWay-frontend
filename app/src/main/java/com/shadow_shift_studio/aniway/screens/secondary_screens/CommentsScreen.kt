@@ -81,26 +81,6 @@ fun AddComment(navController: NavController) {
             }
         }
     )
-
-   /* Column(modifier = Modifier.fillMaxSize(),) {
-
-        Row(modifier = Modifier.fillMaxWidth()) {
-            IconButton(onClick = { navController.popBackStack() }) {
-                Icon(
-                    Icons.Default.ArrowBack, "", modifier = Modifier
-                        .height(28.dp)
-                        .width(28.dp))
-            }
-        }
-
-        //CommentsFullScreen()
-
-        BottomAppBar(modifier = Modifier.padding(bottom = 100.dp)) {
-
-            CommentTextField()
-        }
-
-    }*/
 }
 
 @Composable

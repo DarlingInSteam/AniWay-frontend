@@ -16,4 +16,6 @@ val ReadButtonText: String = "Читать"
 val SimilarWorksText: String = "Похожие произведения"
 val GenresButtonText: String = "Жанры"
 val LastCommentButtonText: String = "Последние комментарии"
+val ChapterText: String = "Глава"
+val ChapterSText: String = "Главы"
 
