@@ -210,6 +210,10 @@ fun MangaPage( navController: NavController) {
         {
             ChaptersScreen(navControllerMangaPage)
         }
+        composable("ReadScreen")
+        {
+            ReadScreen(navControllerMangaPage)
+        }
     }
 }
 
@@ -466,7 +470,7 @@ fun MangaActionsButtons(navController: NavController)
         }
         Spacer(modifier = Modifier.width(8.dp))
         ExtendedFloatingActionButton(
-            onClick = { /*TODO*/ },
+            onClick = { navController.navigate("ReadScreen") },
             modifier = Modifier
                 .width(115.dp)
                 .background(Color.Transparent)
