@@ -39,22 +39,27 @@ fun  ChaptersScreen(navController: NavController)
             Text(text = ChapterSText, fontSize = 22.sp)
         }
         Spacer(modifier = Modifier.height(11.dp))
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .height(450.dp),
-            content = {
-                items(count = 25) { index ->
-                    Row(
-                        modifier = Modifier
-                            .padding(end = 23.dp, start = 23.dp)
-                            .fillMaxWidth()
-                    ) {
-                        ChapterCard()
-                    }
-                    Spacer(modifier = Modifier.height(11.dp))
-                }
-            }
-        )
+        Chapters()
     }
+}
+
+@Composable
+fun Chapters()
+{
+    var count: Int = 25
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize(),
+        content = {
+            items(count = count) { index ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    ChapterCard()
+                }
+                Spacer(modifier = Modifier.height(11.dp))
+            }
+        }
+    )
 }

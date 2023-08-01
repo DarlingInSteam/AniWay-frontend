@@ -5,20 +5,31 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.outlined.Download
+import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,9 +46,22 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun ChapterCard() {
-    val isChapterClosed by remember { mutableStateOf(true) }
-    val isChapterLiked by remember { mutableStateOf(false) }
-    val isChapterDownloaded by remember { mutableStateOf(true) }
+    var isChapterClosed by remember { mutableStateOf(true) }
+    var isChapterLiked by remember { mutableStateOf(false) }
+    var isChapterDownloaded by remember { mutableStateOf(false) }
+
+    var likeIconAfter by remember {
+        mutableStateOf(Icons.Default.FavoriteBorder)
+    }
+    var likeIconBefore by remember {
+        mutableStateOf(Icons.Default.Favorite)
+    }
+    var downloadIconAfter by remember {
+        mutableStateOf(Icons.Outlined.Download)
+    }
+    var downloadIconBefore by remember {
+        mutableStateOf(Icons.Default.Download)
+    }
 
     var volumeNumber: Int = 1
     var chapterNumber: Int = 1
@@ -75,33 +99,48 @@ fun ChapterCard() {
                         color = Color.White
                     )
                     Icon(
-                        Icons.Default.Lock, "",
-                        modifier = Modifier
-                            .alpha(if (isChapterClosed) 1f else 0f)
+                    Icons.Outlined.Lock, "",
+                    modifier = Modifier
+                        .alpha(if (isChapterClosed) 1f else 0f)
                     )
                 }
             }
             Column(){
-                Row(){
+                Row() {
                     Text(
                         text = date.toString(),
                         fontSize = 17.sp,
                         color = md_theme_dark_onSurfaceVariant
                     )
-                    Icon(
-                        Icons.Default.Favorite, "", tint = if(isChapterLiked) md_theme_dark_primary else Color.White
-                    )
+                    IconButton(
+                        onClick = {
+                            isChapterLiked = !isChapterLiked
+                        },
+                        modifier = Modifier.height(25.dp)
+                    ) {
+                        Icon(
+                            if(isChapterLiked) likeIconBefore else likeIconAfter,
+                            "",
+                            tint = md_theme_dark_primary
+                        )
+                    }
+
                     Text(
                         text = likesCount.toString(),
                         fontSize = 17.sp,
                         color = md_theme_dark_primary
                     )
-                    Icon(
-                        Icons.Default.Download, ""
-                    )
+                    IconButton(
+                        onClick = {/*TODO*/},
+                        modifier = Modifier.height(25.dp)
+                    ) {
+                        Icon(
+                            if (isChapterDownloaded) downloadIconBefore else downloadIconAfter, ""
+                        )
+                    }
+                }
                 }
             }
 
         }
     }
-}
