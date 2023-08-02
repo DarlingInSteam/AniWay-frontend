@@ -18,4 +18,8 @@ val GenresButtonText: String = "Жанры"
 val LastCommentButtonText: String = "Последние комментарии"
 val ChapterText: String = "Глава"
 val ChapterSText: String = "Главы"
+val EnterLoginHint: String = "Логин"
+val EnterPasswordHint: String = "Пароль"
+val LoginButtonText: String = "Войти"
+val ForgotPasswordText: String = "Забыли пароль?"
 

@@ -31,36 +31,55 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ReadScreen(navController: NavController)
-{
+fun ReadScreen(navController: NavController) {
     val navControllerReadPage = rememberNavController()
 
     val images: Array<String> = arrayOf(
-        "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",
-        "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",
-        "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",
-        )
-
-
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            TopBar(navController)
-        },
-        bottomBar = {
-            BottomBar(images)
-        },
-        content =
-        {
-            ImageList(images)
-        }
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/a703990a-e6ec-4c33-8c66-1ac75e36bf45.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/dd080cde-e046-4603-9a21-7b374617cc12.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/777725b7-ddd7-4108-935d-fcef2447851e.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/d036cb42-ec33-416f-bf54-666265945e71.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/907ec384-919f-4407-bd57-8899ec619a64.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/4e0e46b8-3c46-4d4a-bc85-ab8efd695e8c.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/a0c55523-1697-4379-a56c-e777e00c47ed.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/cc2357e3-6272-4366-9428-88b07b10d9d8.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/2489a269-365a-4c34-ac17-c1ea83b5b3f3.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/f45d8b8f-5bc6-4f0f-b7db-6645fd72f7a8.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/e2edbbd3-e1ee-4858-9df7-f20676179410.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/37b00da4-65ca-4453-bbfc-ee47dec39a25.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/96e53cfd-6f49-4c9c-ab9e-a3d1e5621a32.jpg",
+        "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/993d93ca-01f9-47a3-a055-1909df56c5e7.jpg",
     )
+
+    NavHost(navController = navControllerReadPage, startDestination = "main") {
+        composable("main") {
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                topBar = {
+                    TopBar(navController)
+                },
+                bottomBar = {
+                    BottomBar(images)
+                },
+                content =
+                {
+                    ImageList(images)
+                }
+            )
+        }
+        composable("chaptersScreen")
+        {
+            ChaptersScreen(navControllerReadPage)
+        }
+    }
 }
 
 @Composable
@@ -87,7 +106,7 @@ fun TopBar(navController: NavController)
             fontSize = 22.sp,
 
         )
-        IconButton(onClick = {/*TODO*/}) {
+        IconButton(onClick = {navController.navigate("chaptersScreen")}) {
             Icon(
                 Icons.Default.Menu, "", modifier = Modifier
                     .height(28.dp)
