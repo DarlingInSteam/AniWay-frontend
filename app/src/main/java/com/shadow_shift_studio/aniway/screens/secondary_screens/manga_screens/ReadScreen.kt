@@ -1,7 +1,13 @@
 package com.shadow_shift_studio.aniway.screens.secondary_screens.manga_screens
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +31,10 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -35,6 +45,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.shadow_shift_studio.aniway.screens.FilterButtonSheet
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 
@@ -42,6 +53,7 @@ import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 @Composable
 fun ReadScreen(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     val navControllerReadPage = rememberNavController()
+    var readBarsVisible by remember { mutableStateOf(true) }
     val images: Array<String> = arrayOf(
         "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/a703990a-e6ec-4c33-8c66-1ac75e36bf45.jpg",
         "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/dd080cde-e046-4603-9a21-7b374617cc12.jpg",
@@ -64,14 +76,28 @@ fun ReadScreen(navController: NavController, viewModelBottom: BottomNavBarViewMo
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    TopBar(navController, viewModelBottom)
+                    AnimatedVisibility(
+                        visible = readBarsVisible,
+                        enter = slideInVertically(initialOffsetY = { height -> -height }, animationSpec = tween()),
+                        exit = slideOutVertically(targetOffsetY = { height -> -height }, animationSpec = tween()),
+                        content = {
+                            TopBar(navController, viewModelBottom)
+                        }
+                    )
                 },
                 bottomBar = {
-                    BottomBar(images)
+                    AnimatedVisibility(
+                        visible = readBarsVisible,
+                        enter = slideInVertically(initialOffsetY = { height -> height }, animationSpec = tween()),
+                        exit = slideOutVertically(targetOffsetY = { height -> height }, animationSpec = tween()),
+                        content = {
+                            BottomBar(images)
+                        }
+                    )
                 },
                 content =
                 {
-                    ImageList(images)
+                    ImageList(images, {readBarsVisible = !readBarsVisible})
                 }
             )
         }
@@ -121,7 +147,8 @@ fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
 }
 
 @Composable
-fun ImageList(imagesResource: Array<String>) {
+fun ImageList(imagesResource: Array<String>, onChangeVisible: () -> Unit ) {
+    val interactionSource = remember { MutableInteractionSource() }
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,7 +157,12 @@ fun ImageList(imagesResource: Array<String>) {
     {
         for (i in imagesResource) {
             AsyncImage(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null,
+                    ) { onChangeVisible() },
                 contentScale = ContentScale.FillWidth,
                 model = i,
                 contentDescription = "",

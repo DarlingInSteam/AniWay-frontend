@@ -82,7 +82,7 @@ fun ChapterCard() {
             Column {
                 Row {
                     Text(
-                        text = volumeNumber.toString(),
+                        text = volumeNumber.toString() + " ",
                         fontSize = 22.sp,
                         color = md_theme_dark_onSurfaceVariant
                     )

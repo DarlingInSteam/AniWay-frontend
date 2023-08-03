@@ -54,7 +54,7 @@ fun Chapters() {
                 ) {
                     ChapterCard()
                 }
-                Spacer(modifier = Modifier.height(11.dp))
+                Spacer(modifier = Modifier.height(25.dp))
             }
         }
     )

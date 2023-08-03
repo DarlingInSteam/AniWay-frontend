@@ -16,6 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -24,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.bottomnav.Constants
+import com.shadow_shift_studio.aniway.screens.Authorization
 import com.shadow_shift_studio.aniway.screens.CatalogScreen
 import com.shadow_shift_studio.aniway.screens.MyScreen
 import com.shadow_shift_studio.aniway.screens.ProfileScreen
@@ -40,23 +44,27 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val viewModelBottom: BottomNavBarViewModel by lazy { BottomNavBarViewModel() }
-
+            var isAuthorization by remember { mutableStateOf(false)}
             AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
                 Surface {
-                    Scaffold(
-                        bottomBar = {
-                            if (viewModelBottom.getFirstVisibleItemIndex())
-                                BottomNavigationBar(navController = navController)
-                        },
-                        content = { padding ->
-                            NavHostContainer(
-                                navController = navController,
-                                padding = padding,
-                                viewModelBottom
-                            )
-                        }
-                    )
+                    if(isAuthorization) {
+                        Scaffold(
+                            bottomBar = {
+                                if (viewModelBottom.getFirstVisibleItemIndex())
+                                    BottomNavigationBar(navController = navController)
+                            },
+                            content = { padding ->
+                                NavHostContainer(
+                                    navController = navController,
+                                    padding = padding,
+                                    viewModelBottom
+                                )
+                            }
+                        )
+                    }
+                    else
+                        Authorization(navController, {isAuthorization = true})
                 }
             }
         }
