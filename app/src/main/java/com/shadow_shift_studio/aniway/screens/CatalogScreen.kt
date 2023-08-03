@@ -47,10 +47,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -294,40 +296,14 @@ fun CardsList(navController: NavController, scrollState: LazyGridState) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SortingBottomSheet(onClose: () -> Unit) {
-    val scaffoldState = rememberBottomSheetScaffoldState()
-    val touchSlop = with(LocalDensity.current) { 8.dp.toPx() }
-    val offsetY = remember { mutableStateOf(0f) }
-
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        modifier = Modifier.fillMaxWidth(),
-        sheetPeekHeight = 400.dp,
-        sheetContainerColor = md_theme_dark_bottom_sheet_background,
-        sheetContentColor = md_theme_light_surfaceVariant,
-        sheetContent = {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
-                    .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            val delta = offsetY.value + dragAmount.y
-                            offsetY.value = delta
-                            if (change != null && dragAmount.y.dp > 50.dp) {
-                                if (delta > touchSlop) {
-                                    onClose()
-                                } else {
-                                    offsetY.value = 0f
-                                }
-                            }
-                        }
-                    },
-                contentAlignment = Alignment.TopStart
-            ) {
-                ButtonsForSorting(onClose = { onClose() })
-            }
-        }
-    ) {}
+    val scaffoldState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        onDismissRequest = { onClose() },
+        sheetState = scaffoldState,
+        modifier = Modifier.height(400.dp)
+    ) {
+        ButtonsForSorting(onClose = { onClose() })
+    }
 }
 
 @Composable
@@ -400,43 +376,14 @@ fun ButtonsForSorting(onClose: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun FilterButtonSheet(onClose: () -> Unit) {
-    val scaffoldState = rememberBottomSheetScaffoldState()
-    val touchSlop = with(LocalDensity.current) { 8.dp.toPx() }
-    val offsetY = remember { mutableStateOf(0f) }
-
-    BottomSheetScaffold(
-        scaffoldState = scaffoldState,
-        modifier = Modifier.fillMaxWidth(),
-        sheetPeekHeight = 400.dp,
-        sheetContainerColor = md_theme_dark_bottom_sheet_background,
-        sheetContentColor = md_theme_light_surfaceVariant,
-        sheetContent = {
-            Column(
-                Modifier
-                    .fillMaxSize()
-                    .height(400.dp)
-                    .pointerInput(Unit) {
-                        detectDragGestures { change, dragAmount ->
-                            val delta = offsetY.value + dragAmount.y
-                            offsetY.value = delta
-                            if (change != null && dragAmount.y.dp > 50.dp) {
-                                if (delta > touchSlop) {
-                                    onClose()
-                                    offsetY.value = 0f
-                                }
-                            }
-                        }
-                    },
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                ) {
-                    FilterButtons()
-                }
-            }
-        }
-    ) {}
+    val scaffoldState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        onDismissRequest = { onClose() },
+        sheetState = scaffoldState,
+        modifier = Modifier.height(400.dp),
+    ) {
+        FilterButtons()
+    }
 }
 
 @Composable
