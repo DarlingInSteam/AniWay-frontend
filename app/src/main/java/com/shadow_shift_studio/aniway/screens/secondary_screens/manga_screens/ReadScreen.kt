@@ -83,17 +83,19 @@ fun ReadScreen(navController: NavController, viewModelBottom: BottomNavBarViewMo
 }
 
 @Composable
-fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
-{
+fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     var volumeNumber: Int = 1
     var chapterNumber: Int = 77
     var dash: String = "-"
     var volumeChapterText: String = "$volumeNumber$dash$chapterNumber"
 
-    Row(modifier = Modifier.fillMaxWidth()
-        .background(md_theme_dark_background),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(md_theme_dark_background),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         IconButton(onClick = {
             navController.popBackStack()
         }) {
@@ -107,8 +109,8 @@ fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
             text = volumeChapterText,
             fontSize = 22.sp,
 
-        )
-        IconButton(onClick = {navController.navigate("chaptersScreen")}) {
+            )
+        IconButton(onClick = { navController.navigate("chaptersScreen") }) {
             Icon(
                 Icons.Default.Menu, "", modifier = Modifier
                     .height(28.dp)
@@ -119,13 +121,14 @@ fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
 }
 
 @Composable
-fun ImageList(imagesResource: Array<String>)
-{
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .verticalScroll(rememberScrollState()))
+fun ImageList(imagesResource: Array<String>) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    )
     {
-        for(i in imagesResource) {
+        for (i in imagesResource) {
             AsyncImage(
                 modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth,
@@ -137,19 +140,21 @@ fun ImageList(imagesResource: Array<String>)
 }
 
 @Composable
-fun BottomBar(imagesResource: Array<String>)
-{
+fun BottomBar(imagesResource: Array<String>) {
     var likeCount: Int = 22
-    var imageIndex : Int = 1
+    var imageIndex: Int = 1
     var imageCount: Int = imagesResource.size
     var slash: String = "/"
-    var indexCountText: String  = "$imageIndex$slash$imageCount"
-    Row(modifier = Modifier.fillMaxWidth()
-        .background(md_theme_dark_background)
-        .padding(start = 23.dp, end = 23.dp),
+    var indexCountText: String = "$imageIndex$slash$imageCount"
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(md_theme_dark_background)
+            .padding(start = 23.dp, end = 23.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween) {
-        Column(){
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column {
             Row()
             {
                 Icon(
@@ -167,7 +172,7 @@ fun BottomBar(imagesResource: Array<String>)
                 )
             }
         }
-        Column() {
+        Column {
             Row()
             {
                 IconButton(onClick = { /*TODO*/ })

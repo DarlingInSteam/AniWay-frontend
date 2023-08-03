@@ -23,9 +23,8 @@ import com.shadow_shift_studio.aniway.ChapterSText
 import com.shadow_shift_studio.aniway.cards.ChapterCard
 
 @Composable
-fun  ChaptersScreen(navController: NavController)
-{
-    Column() {
+fun ChaptersScreen(navController: NavController) {
+    Column {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
@@ -42,8 +41,7 @@ fun  ChaptersScreen(navController: NavController)
 }
 
 @Composable
-fun Chapters()
-{
+fun Chapters() {
     var count: Int = 25
     LazyColumn(
         modifier = Modifier

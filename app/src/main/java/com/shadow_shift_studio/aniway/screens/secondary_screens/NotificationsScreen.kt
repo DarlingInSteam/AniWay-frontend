@@ -68,7 +68,8 @@ fun NotifyTop(navController: NavController) {
             Icon(
                 Icons.Default.ArrowBack, "", modifier = Modifier
                     .height(28.dp)
-                    .width(28.dp))
+                    .width(28.dp)
+            )
         }
         Text(text = "Уведомления", fontSize = 18.sp)
     }
@@ -76,12 +77,13 @@ fun NotifyTop(navController: NavController) {
 
 @Composable
 fun NotifyList(navController: NavController) {
-    LazyColumn() {
+    LazyColumn {
         items(25) { index ->
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 15.dp)) {
+                    .padding(bottom = 15.dp)
+            ) {
                 NotificationCard(navController)
             }
         }

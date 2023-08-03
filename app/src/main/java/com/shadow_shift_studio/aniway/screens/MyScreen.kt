@@ -50,15 +50,20 @@ import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.MyViewModel
 
 @Composable
-fun MyScreen(viewModel: MyViewModel, scrollState: LazyGridState, viewModelBottom: BottomNavBarViewModel){
+fun MyScreen(
+    viewModel: MyViewModel,
+    scrollState: LazyGridState,
+    viewModelBottom: BottomNavBarViewModel
+) {
     var selectedTabTitle by remember { mutableStateOf("") }
     val navController = rememberNavController()
     var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var mySearchBarVisible by remember { mutableStateOf(true) }
 
-    Column(modifier = Modifier
-        .fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         NavHost(navController = navController, startDestination = "main") {
             composable("main") {
@@ -140,9 +145,10 @@ fun MyScreenSearchBar(selectedTabTitle: String) {
     val horizontalPadding = animateDpAsState(if (expanded) 0.dp else 23.dp).value
     val verticalPadding = animateDpAsState(if (expanded) 0.dp else 11.dp).value
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = horizontalPadding, vertical = verticalPadding)
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = horizontalPadding, vertical = verticalPadding)
     ) {
         androidx.compose.material3.SearchBar(
             modifier = Modifier.fillMaxWidth(),

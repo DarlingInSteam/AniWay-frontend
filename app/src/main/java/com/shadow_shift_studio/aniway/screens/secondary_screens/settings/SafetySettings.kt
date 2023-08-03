@@ -12,9 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.LockReset
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -28,7 +27,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun SafetySettings(navController: NavController) {
@@ -52,15 +50,21 @@ fun SafetySettingsButtons(navController: NavController) {
             Icon(
                 Icons.Default.ArrowBack, "", modifier = Modifier
                     .height(28.dp)
-                    .width(28.dp))
+                    .width(28.dp)
+            )
         }
         Text(text = "Настройки безопасности", fontSize = 18.sp)
     }
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(start = 23.dp, end = 23.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 23.dp, end = 23.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Изменить пароль", modifier = Modifier)
             IconButton(onClick = { /*TODO*/ }) {
                 Icon(Icons.Default.LockReset, "")
@@ -71,17 +75,21 @@ fun SafetySettingsButtons(navController: NavController) {
 
         Column(modifier = Modifier.fillMaxWidth()) {
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                 Text(text = "Привязанные аккаунты", fontSize = 18.sp)
             }
 
             Row(modifier = Modifier.fillMaxWidth()) {
-                Divider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
+                HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
             }
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = "Вконтаке", modifier = Modifier)
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(Icons.Default.Add, "")
@@ -90,7 +98,11 @@ fun SafetySettingsButtons(navController: NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = "Google", modifier = Modifier)
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(Icons.Default.Add, "")
@@ -99,7 +111,11 @@ fun SafetySettingsButtons(navController: NavController) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Text(text = "Yandex", modifier = Modifier)
                 IconButton(onClick = { /*TODO*/ }) {
                     Icon(Icons.Default.Add, "")

@@ -91,7 +91,7 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 
 @Composable
-fun MangaPage( navController: NavController, viewModelBottom: BottomNavBarViewModel) {
+fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     val navControllerMangaPage = rememberNavController()
     NavHost(navController = navControllerMangaPage, startDestination = "main") {
         composable("main") {
@@ -118,7 +118,7 @@ fun MangaPage( navController: NavController, viewModelBottom: BottomNavBarViewMo
                             endColor = md_theme_dark_background
                         )
                     }
-                    Row() {
+                    Row {
                         TopMangaBar(navController = navController, viewModelBottom)
                     }
                     Spacer(
@@ -226,8 +226,7 @@ fun GradientImage(startColor: Color, endColor: Color) {
 
 
 @Composable
-fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
-{
+fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -251,10 +250,12 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
             containerColor = Color.White,
             contentColor = md_theme_dark_background
         ) {
-            Icon(Icons.Default.ArrowBack, "" ,
+            Icon(
+                Icons.Default.ArrowBack, "",
                 modifier = Modifier
                     .width(20.dp)
-                    .height(20.dp))
+                    .height(20.dp)
+            )
         }
         ExtendedFloatingActionButton(
             onClick = { /*TODO*/ },
@@ -282,8 +283,7 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
 }
 
 @Composable
-fun MangaInfo()
-{
+fun MangaInfo() {
     var titleName = "Токийские мстители"
     var titleType = "Манга"
     var year = "2018"
@@ -291,124 +291,123 @@ fun MangaInfo()
     var views = "1.5M"
     var likes = "21K"
     var bookMarks = "12K"
-Column() {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        AsyncImage(
-            model = "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",
-            contentDescription = "",
+    Column {
+        Row(
             modifier = Modifier
-                .clip(
-                    RoundedCornerShape(
-                        topStart = 25.dp,
-                        topEnd = 25.dp,
-                        bottomStart = 25.dp,
-                        bottomEnd = 25.dp
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            AsyncImage(
+                model = "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",
+                contentDescription = "",
+                modifier = Modifier
+                    .clip(
+                        RoundedCornerShape(
+                            topStart = 25.dp,
+                            topEnd = 25.dp,
+                            bottomStart = 25.dp,
+                            bottomEnd = 25.dp
+                        )
                     )
+                    .height(202.dp)
+                    .width(132.dp)
+            )
+        }
+        Row(
+            modifier = Modifier
+                .width(450.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = titleName,
+                color = Color.White,
+                fontSize = 20.sp,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .height(6.dp)
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = year + " | ",
+                color = md_theme_dark_onSurfaceVariant,
+                fontSize = 14.sp
+            )
+            Text(
+                text = titleType + " | ",
+                color = md_theme_dark_onSurfaceVariant,
+                fontSize = 14.sp
+            )
+            Text(
+                text = status,
+                color = md_theme_dark_onSurfaceVariant,
+                fontSize = 14.sp
+            )
+        }
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.Bookmark,
+                    contentDescription = "Eye",
+                    tint = md_theme_dark_onSurfaceVariant,
+                    modifier = Modifier
+                        .width(18.dp)
+                        .height(18.dp)
                 )
-                .height(202.dp)
-                .width(132.dp)
-        )
-    }
-    Row(
-        modifier = Modifier
-            .width(450.dp),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = titleName,
-            color = Color.White,
-            fontSize = 20.sp,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1
-        )
-    }
-    Spacer(
-        modifier = Modifier
-            .height(6.dp)
-    )
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text = year + " | ",
-            color = md_theme_dark_onSurfaceVariant,
-            fontSize = 14.sp
-        )
-        Text(
-            text = titleType + " | ",
-            color = md_theme_dark_onSurfaceVariant,
-            fontSize = 14.sp
-        )
-        Text(
-            text = status,
-            color = md_theme_dark_onSurfaceVariant,
-            fontSize = 14.sp
-        )
-    }
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.Bookmark,
-                contentDescription = "Eye",
-                tint = md_theme_dark_onSurfaceVariant,
-                modifier = Modifier
-                    .width(18.dp)
-                    .height(18.dp)
-            )
-            Spacer(modifier = Modifier.width(3.dp))
-            Text(
-                text = bookMarks,
-                color = md_theme_dark_onSurfaceVariant,
-                fontSize = 12.sp
-            )
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.RemoveRedEye,
-                contentDescription = "Eye",
-                tint = md_theme_dark_onSurfaceVariant,
-                modifier = Modifier
-                    .width(18.dp)
-                    .height(18.dp)
-            )
-            Spacer(modifier = Modifier.width(3.dp))
-            Text(
-                text = views,
-                color = md_theme_dark_onSurfaceVariant,
-                fontSize = 12.sp
-            )
-        }
-        Spacer(modifier = Modifier.width(7.dp))
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Icon(
-                Icons.Default.Favorite,
-                contentDescription = "Eye",
-                tint = md_theme_dark_onSurfaceVariant,
-                modifier = Modifier
-                    .width(18.dp)
-                    .height(18.dp)
-            )
-            Spacer(modifier = Modifier.width(3.dp))
-            Text(
-                text = likes,
-                color = md_theme_dark_onSurfaceVariant,
-                fontSize = 12.sp
-            )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                    text = bookMarks,
+                    color = md_theme_dark_onSurfaceVariant,
+                    fontSize = 12.sp
+                )
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.RemoveRedEye,
+                    contentDescription = "Eye",
+                    tint = md_theme_dark_onSurfaceVariant,
+                    modifier = Modifier
+                        .width(18.dp)
+                        .height(18.dp)
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                    text = views,
+                    color = md_theme_dark_onSurfaceVariant,
+                    fontSize = 12.sp
+                )
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.Favorite,
+                    contentDescription = "Eye",
+                    tint = md_theme_dark_onSurfaceVariant,
+                    modifier = Modifier
+                        .width(18.dp)
+                        .height(18.dp)
+                )
+                Spacer(modifier = Modifier.width(3.dp))
+                Text(
+                    text = likes,
+                    color = md_theme_dark_onSurfaceVariant,
+                    fontSize = 12.sp
+                )
+            }
         }
     }
-}
 }
 
 @Composable
-fun MangaActionsButtons(navController: NavController)
-{
+fun MangaActionsButtons(navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
@@ -424,10 +423,12 @@ fun MangaActionsButtons(navController: NavController)
             containerColor = md_theme_dark_primary,
             contentColor = md_theme_dark_onPrimary
         ) {
-            Icon(Icons.Default.Menu, "",
+            Icon(
+                Icons.Default.Menu, "",
                 modifier = Modifier
                     .width(20.dp)
-                    .height(20.dp))
+                    .height(20.dp)
+            )
             Spacer(
                 modifier = Modifier
                     .width(8.dp)
@@ -448,10 +449,12 @@ fun MangaActionsButtons(navController: NavController)
             containerColor = md_theme_dark_secondaryContainer,
             contentColor = md_theme_dark_onSecondaryContainer
         ) {
-            Icon(Icons.Default.AutoStories, "",
+            Icon(
+                Icons.Default.AutoStories, "",
                 modifier = Modifier
                     .width(20.dp)
-                    .height(20.dp))
+                    .height(20.dp)
+            )
             Spacer(
                 modifier = Modifier
                     .width(8.dp)
@@ -471,16 +474,27 @@ fun Genres(genresList: List<String>) {
     var expended by remember { mutableStateOf(false) }
     val isGenreExpanded = remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 23.dp, end = 23.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 23.dp, end = 23.dp)
+    ) {
         Button(
             onClick = { isGenreExpanded.value = !isGenreExpanded.value },
             modifier = Modifier
                 .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, Color.White, Color.White, Color.White)
+            colors = ButtonColors(
+                md_theme_dark_bottom_sheet_bottoms,
+                Color.White,
+                Color.White,
+                Color.White
+            )
         ) {
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
                     text = GenresButtonText,
                     fontSize = 16.sp,
@@ -492,10 +506,12 @@ fun Genres(genresList: List<String>) {
         }
         AnimatedVisibility(
             visible = isGenreExpanded.value,
-            enter = expandVertically(spring(
-                stiffness = Spring.StiffnessLow,
-                visibilityThreshold = IntSize.VisibilityThreshold
-            )),
+            enter = expandVertically(
+                spring(
+                    stiffness = Spring.StiffnessLow,
+                    visibilityThreshold = IntSize.VisibilityThreshold
+                )
+            ),
             exit = shrinkVertically(),
             content = {
                 ChipVerticalGrid(
@@ -548,7 +564,8 @@ fun ChipVerticalGrid(
                 currentRow += 1
                 onRowChange(currentRow) // Вызываем функцию высшего порядка для передачи текущего значения currentRow
 
-                currentOrigin = currentOrigin.copy(x = 0, y = currentOrigin.y + placeable.height + spacingValue)
+                currentOrigin =
+                    currentOrigin.copy(x = 0, y = currentOrigin.y + placeable.height + spacingValue)
             }
 
             placeable to currentOrigin.also {
@@ -584,8 +601,8 @@ fun ExpandableText(
     val textLayoutResult = textLayoutResultState.value
     val seeMoreSize = seeMoreSizeState.value
     val seeMoreOffset = seeMoreOffsetState.value
-    var textAlignJustify by remember{ mutableStateOf(TextAlign.Justify)}
-    var textAlignLeft by remember{ mutableStateOf(TextAlign.Left)}
+    var textAlignJustify by remember { mutableStateOf(TextAlign.Justify) }
+    var textAlignLeft by remember { mutableStateOf(TextAlign.Left) }
 
 
     LaunchedEffect(text, expanded, textLayoutResult, seeMoreSize) {
@@ -607,9 +624,11 @@ fun ExpandableText(
         }
     }
 
-    Box(modifier = Modifier
-        .padding(start = 23.dp, end = 23.dp)
-        .fillMaxWidth()) {
+    Box(
+        modifier = Modifier
+            .padding(start = 23.dp, end = 23.dp)
+            .fillMaxWidth()
+    ) {
         Text(
             text = cutText ?: text,
             maxLines = if (expanded) Int.MAX_VALUE else minimizedMaxLines,
@@ -647,9 +666,8 @@ fun ExpandableText(
 }
 
 @Composable
-fun SimilarWorks(navController: NavController)
-{
-    Column() {
+fun SimilarWorks(navController: NavController) {
+    Column {
         Row(
             modifier = Modifier
                 .padding(vertical = 10.dp)
@@ -671,19 +689,19 @@ fun SimilarWorks(navController: NavController)
                 .padding(start = 23.dp, end = 23.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-                MangaPreviewCard(navController)
-                MangaPreviewCard(navController)
-                MangaPreviewCard(navController)
-            }
+            MangaPreviewCard(navController)
+            MangaPreviewCard(navController)
+            MangaPreviewCard(navController)
         }
+    }
 }
 
 @Composable
 fun CommentsMangaPage(navController: NavController) {
-    Column() {
-        Row() {
+    Column {
+        Row {
             Button(
-                onClick = {navController.navigate("commentsScreen")},
+                onClick = { navController.navigate("commentsScreen") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp),

@@ -29,11 +29,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.EnterLoginHint
 import com.shadow_shift_studio.aniway.EnterPasswordHint
@@ -41,14 +38,15 @@ import com.shadow_shift_studio.aniway.ForgotPasswordText
 import com.shadow_shift_studio.aniway.LoginButtonText
 
 @Composable
-fun Authorization(navController: NavController)
-{
+fun Authorization(navController: NavController) {
     val navControllerAu = rememberNavController()
-    var login by remember { mutableStateOf("")}
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(start = 23.dp, end = 23.dp),
-        verticalArrangement = Arrangement.Center)
+    var login by remember { mutableStateOf("") }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 23.dp, end = 23.dp),
+        verticalArrangement = Arrangement.Center
+    )
     {
         TextField(
             value = login,
@@ -58,7 +56,7 @@ fun Authorization(navController: NavController)
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp)),
             placeholder = { Text(EnterLoginHint) },
-            label = {Text(EnterLoginHint)}
+            label = { Text(EnterLoginHint) }
         )
         Spacer(modifier = Modifier.height(20.dp))
 
@@ -73,18 +71,17 @@ fun Authorization(navController: NavController)
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            onClick = {/*TODO*/},
-            content = {Text( text = LoginButtonText)}
+            onClick = {/*TODO*/ },
+            content = { Text(text = LoginButtonText) }
         )
     }
 }
 
 
 @Composable
-fun PasswordTextField()
-{
-    var password by rememberSaveable { mutableStateOf("")}
-    var passwordVisability by remember { mutableStateOf(false)}
+fun PasswordTextField() {
+    var password by rememberSaveable { mutableStateOf("") }
+    var passwordVisability by remember { mutableStateOf(false) }
 
     TextField(
         value = password,
@@ -94,14 +91,17 @@ fun PasswordTextField()
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp)),
         placeholder = { Text(EnterPasswordHint) },
-        label = {Text(EnterPasswordHint)},
+        label = { Text(EnterPasswordHint) },
         trailingIcon = {
             IconButton(onClick = { passwordVisability = !passwordVisability }) {
-                Icon(if(passwordVisability) Icons.Default.Visibility else Icons.Default.VisibilityOff, "")
+                Icon(
+                    if (passwordVisability) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                    ""
+                )
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        visualTransformation = if(passwordVisability) VisualTransformation.None
+        visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation()
     )
 }

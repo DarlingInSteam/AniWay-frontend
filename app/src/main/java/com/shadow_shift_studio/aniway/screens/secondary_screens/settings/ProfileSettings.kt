@@ -14,20 +14,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text2.input.TextFieldCharSequence
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,21 +42,10 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.PopupProperties
 import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onBackground
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSecondary
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_primary
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_primaryContainer
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_secondary
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_secondaryContainer
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_higher
 
 @Composable
@@ -87,13 +72,16 @@ fun ProfileSettingsButtons(navController: NavController) {
             Icon(
                 Icons.Default.ArrowBack, "", modifier = Modifier
                     .height(28.dp)
-                    .width(28.dp))
+                    .width(28.dp)
+            )
         }
         Text(text = "Настройки профиля", fontSize = 18.sp, color = md_theme_dark_onSurfaceVariant)
     }
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(start = 23.dp, end = 23.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 23.dp, end = 23.dp)
+    ) {
 
         Column(
             modifier = Modifier
@@ -116,7 +104,9 @@ fun ProfileSettingsButtons(navController: NavController) {
                     value = nickName,
                     onValueChange = { newText -> nickName = newText },
                     maxLines = 1,
-                    modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(8.dp))
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
                 )
             }
         }
@@ -140,7 +130,14 @@ fun ProfileSettingsButtons(navController: NavController) {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.Start
             ) {
-                DropdownTextField(listOf("Читатель F ранга", "Читатель D ранга", "Читатель C ранга", "Читатель A ранга"))
+                DropdownTextField(
+                    listOf(
+                        "Читатель F ранга",
+                        "Читатель D ранга",
+                        "Читатель C ранга",
+                        "Читатель A ранга"
+                    )
+                )
             }
         }
 
@@ -169,13 +166,22 @@ fun ProfileSettingsButtons(navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Изменить аватар", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Изменить аватар",
+                modifier = Modifier,
+                color = md_theme_dark_onSurfaceVariant
+            )
             IconButton(
                 onClick = { /*TODO*/ },
                 modifier = Modifier
                     .clip(RoundedCornerShape(100))
-                    .background(md_theme_dark_secondaryContainer))
+                    .background(md_theme_dark_secondaryContainer)
+            )
             {
                 Icon(Icons.Default.Edit, "")
             }
@@ -183,13 +189,22 @@ fun ProfileSettingsButtons(navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Изменить фон профиля", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Изменить фон профиля",
+                modifier = Modifier,
+                color = md_theme_dark_onSurfaceVariant
+            )
             IconButton(
                 onClick = { /*TODO*/ },
                 modifier = Modifier
                     .clip(RoundedCornerShape(100))
-                    .background(md_theme_dark_secondaryContainer))
+                    .background(md_theme_dark_secondaryContainer)
+            )
             {
                 Icon(Icons.Default.Edit, "")
             }
@@ -197,23 +212,39 @@ fun ProfileSettingsButtons(navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Скрыть яой", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
-            Switch(checked = yaoi, onCheckedChange = {yaoi = !yaoi})
+            Switch(checked = yaoi, onCheckedChange = { yaoi = !yaoi })
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(text = "Скрыть хентай", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
-            Switch(checked = hentai, onCheckedChange = {hentai = !hentai})
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "Скрыть хентай",
+                modifier = Modifier,
+                color = md_theme_dark_onSurfaceVariant
+            )
+            Switch(checked = hentai, onCheckedChange = { hentai = !hentai })
         }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Скрыть йури", modifier = Modifier, color = md_theme_dark_onSurfaceVariant)
-            Switch(checked = yuri, onCheckedChange = {yuri = !yuri})
+            Switch(checked = yuri, onCheckedChange = { yuri = !yuri })
         }
     }
 }
@@ -249,16 +280,26 @@ fun DropdownTextField(items: List<String>) {
                 value = TextFieldValue(selectedItem ?: ""),
                 enabled = false,
                 onValueChange = { /* Disable editing */ },
-                textStyle = TextStyle(color = md_theme_dark_onSurfaceVariant, fontSize = 16.sp, textAlign = TextAlign.Start),
+                textStyle = TextStyle(
+                    color = md_theme_dark_onSurfaceVariant,
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Start
+                ),
             )
-            Icon( if (expanded) iconBefore else iconAfter,  "",modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 10.dp))
-            Divider(thickness = 1.dp, modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomEnd), color = md_theme_dark_onSurfaceVariant)
+            Icon(
+                if (expanded) iconBefore else iconAfter, "", modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 10.dp)
+            )
+            HorizontalDivider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomEnd),
+                thickness = 1.dp,
+                color = md_theme_dark_onSurfaceVariant
+            )
         }
-        
+
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },

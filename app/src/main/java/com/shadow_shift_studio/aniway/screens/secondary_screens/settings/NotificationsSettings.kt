@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
@@ -51,58 +51,80 @@ fun NotifySettingsButtons(navController: NavController) {
             Icon(
                 Icons.Default.ArrowBack, "", modifier = Modifier
                     .height(28.dp)
-                    .width(28.dp))
+                    .width(28.dp)
+            )
         }
         Text(text = "Настройки уведомлений", fontSize = 18.sp)
     }
-    
+
     Spacer(modifier = Modifier.height(15.dp))
-    
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(start = 23.dp, end = 23.dp)
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 23.dp, end = 23.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center){
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Text(text = "Уведомления из закладок", fontSize = 18.sp)
         }
 
         Row(modifier = Modifier.fillMaxWidth()) {
-            Divider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
+            HorizontalDivider(modifier = Modifier.fillMaxWidth(), thickness = 2.dp)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Читаю", modifier = Modifier)
-            Switch(checked = reading, onCheckedChange = {reading = !reading})
+            Switch(checked = reading, onCheckedChange = { reading = !reading })
         }
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "В планах", modifier = Modifier)
-            Switch(checked = planed, onCheckedChange = {planed = !planed})
+            Switch(checked = planed, onCheckedChange = { planed = !planed })
         }
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Любимое", modifier = Modifier)
-            Switch(checked = like, onCheckedChange = {like = !like})
+            Switch(checked = like, onCheckedChange = { like = !like })
         }
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Прочитано", modifier = Modifier)
-            Switch(checked = cRead, onCheckedChange = {cRead = !cRead})
+            Switch(checked = cRead, onCheckedChange = { cRead = !cRead })
         }
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Брошено", modifier = Modifier)
-            Switch(checked = trash, onCheckedChange = {trash = !trash})
+            Switch(checked = trash, onCheckedChange = { trash = !trash })
         }
     }
 }

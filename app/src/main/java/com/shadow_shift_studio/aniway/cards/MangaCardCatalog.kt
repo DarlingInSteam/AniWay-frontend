@@ -44,9 +44,16 @@ fun MangaPreviewCard(navController: NavController) {
             .widthIn(108.dp, 108.dp)
             .height(220.dp)
             .clickable { navController.navigate("fullScreen") },
-        colors = CardColors(md_theme_dark_background, md_theme_dark_background, md_theme_dark_background, md_theme_dark_background)
+        colors = CardColors(
+            md_theme_dark_background,
+            md_theme_dark_background,
+            md_theme_dark_background,
+            md_theme_dark_background
+        )
     ) {
-        Column(modifier = Modifier.fillMaxWidth().width(108.dp)) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .width(108.dp)) {
             Box(
                 modifier = Modifier
                     .widthIn(108.dp, 108.dp)

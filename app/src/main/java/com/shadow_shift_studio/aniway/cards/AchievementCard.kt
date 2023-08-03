@@ -2,7 +2,6 @@ package com.shadow_shift_studio.aniway.cards
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -44,8 +43,15 @@ fun AchievementCard() {
             md_theme_dark_background
         )
     ) {
-        Row(modifier = Modifier.fillMaxWidth().background(md_theme_dark_outlineVariant)) {
-            Column(modifier = Modifier.fillMaxHeight().padding(start = 12.dp), verticalArrangement = Arrangement.Center) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .background(md_theme_dark_outlineVariant)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(start = 12.dp),
+                verticalArrangement = Arrangement.Center
+            ) {
                 ImageAchievement()
             }
             Spacer(modifier = Modifier.width(12.dp))
@@ -76,7 +82,7 @@ fun AchievementCard() {
 
 @Composable
 fun ImageAchievement() {
-    Column() {
+    Column {
         androidx.compose.foundation.Image(
             painter = painterResource(R.drawable.ava),
             contentDescription = "avatar",

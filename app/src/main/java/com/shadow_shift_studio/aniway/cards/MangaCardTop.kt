@@ -39,7 +39,8 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_tertiaryContainer
 fun MangaCardTop(navController: NavController) {
     val titleName = "Реинкарнация короля демонов, убивающего богов"
     val titleType = "Манхва"
-    val description = "Предоставьте управление своим подчиненным и живите жизнью мечты! С такими амбициями Джоруссия - демон низкого ранга, стал мастером подземелья. Однако, поскольку место, где было построено подземелье, является особым местом, называемым Землей Хаоса, талантливый демон приходит работать секретаршей, а темный бог приходит в гости. Кроме того, несколько авантюрист... "
+    val description =
+        "Предоставьте управление своим подчиненным и живите жизнью мечты! С такими амбициями Джоруссия - демон низкого ранга, стал мастером подземелья. Однако, поскольку место, где было построено подземелье, является особым местом, называемым Землей Хаоса, талантливый демон приходит работать секретаршей, а темный бог приходит в гости. Кроме того, несколько авантюрист... "
     val chapters = "60 Глав"
     val views = "1.5M"
     val likes = "21K"
@@ -48,10 +49,15 @@ fun MangaCardTop(navController: NavController) {
     Card(
         modifier = Modifier
             .height(160.dp)
-            .clickable {navController.navigate("fullScreen") },
-        colors = CardColors(md_theme_dark_background, md_theme_dark_background, md_theme_dark_background, md_theme_dark_background)
+            .clickable { navController.navigate("fullScreen") },
+        colors = CardColors(
+            md_theme_dark_background,
+            md_theme_dark_background,
+            md_theme_dark_background,
+            md_theme_dark_background
+        )
     ) {
-        Row(modifier = Modifier.fillMaxWidth()){
+        Row(modifier = Modifier.fillMaxWidth()) {
             Image(rating)
             Spacer(modifier = Modifier.width(8.dp))
             Column(modifier = Modifier.fillMaxSize()) {
@@ -64,7 +70,10 @@ fun MangaCardTop(navController: NavController) {
                         maxLines = 2
                     )
                 }
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Text(
                         text = titleType,
                         color = md_theme_dark_onSurfaceVariant,
@@ -139,7 +148,8 @@ fun Image(rating: String) {
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .clip(RoundedCornerShape(bottomEnd = 10.dp))
-                .background(md_theme_dark_background)) {
+                .background(md_theme_dark_background)
+        ) {
             Row {
                 Text(
                     text = rating,

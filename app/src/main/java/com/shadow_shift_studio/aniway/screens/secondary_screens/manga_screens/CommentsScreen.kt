@@ -47,7 +47,8 @@ fun AddComment(navController: NavController) {
                     Icon(
                         Icons.Default.ArrowBack, "", modifier = Modifier
                             .height(28.dp)
-                            .width(28.dp))
+                            .width(28.dp)
+                    )
                 }
             }
         },
@@ -55,8 +56,10 @@ fun AddComment(navController: NavController) {
             CommentTextField()
         },
         content = {
-            Column(modifier = Modifier
-                .padding(top = 50.dp, bottom = 100.dp),) {
+            Column(
+                modifier = Modifier
+                    .padding(top = 50.dp, bottom = 100.dp),
+            ) {
                 CommentsFullScreen()
             }
         }
@@ -64,37 +67,39 @@ fun AddComment(navController: NavController) {
 }
 
 @Composable
-fun CommentTextField()
-{
+fun CommentTextField() {
     var comment by remember { mutableStateOf("") }
     val maxLength = 350
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 23.dp)) {
-        Row(modifier = Modifier.fillMaxWidth(),
+            .padding(start = 23.dp)
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically) {
-                TextField(
-                    modifier = Modifier
-                        .height(60.dp)
-                        .weight(1f),
-                    value = comment,
-                    enabled = true,
-                    onValueChange = { if (it.length <= maxLength) comment = it },
-                    textStyle = TextStyle(
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Start
-                    ),
-                )
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextField(
+                modifier = Modifier
+                    .height(60.dp)
+                    .weight(1f),
+                value = comment,
+                enabled = true,
+                onValueChange = { if (it.length <= maxLength) comment = it },
+                textStyle = TextStyle(
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Start
+                ),
+            )
             IconButton(onClick = {}) {
                 Icon(
                     Icons.Default.Send, ""
                 )
             }
         }
-        Row() {
+        Row {
             Text(
                 text = "${comment.length} / $maxLength",
                 textAlign = TextAlign.Start,
@@ -105,18 +110,19 @@ fun CommentTextField()
         }
     }
 }
+
 @Composable
-fun CommentsFullScreen()
-{
+fun CommentsFullScreen() {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .height(450.dp),
         content = {
             items(count = 25) { index ->
-                Row(modifier = Modifier
-                    .padding(end = 23.dp, start = 23.dp)
-                    .fillMaxWidth()
+                Row(
+                    modifier = Modifier
+                        .padding(end = 23.dp, start = 23.dp)
+                        .fillMaxWidth()
                 ) {
                     CommentCard()
                 }

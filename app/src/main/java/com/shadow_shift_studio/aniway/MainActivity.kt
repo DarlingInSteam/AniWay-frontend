@@ -16,9 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -53,7 +50,11 @@ class MainActivity : ComponentActivity() {
                                 BottomNavigationBar(navController = navController)
                         },
                         content = { padding ->
-                            NavHostContainer(navController = navController, padding = padding, viewModelBottom)
+                            NavHostContainer(
+                                navController = navController,
+                                padding = padding,
+                                viewModelBottom
+                            )
                         }
                     )
                 }
@@ -136,23 +137,23 @@ fun BottomNavigationBar(navController: NavHostController) {
 
         Constants.BottomNavItems.forEach { navItem ->
 
-                NavigationBarItem(
-                    selected = currentRoute == navItem.route,
+            NavigationBarItem(
+                selected = currentRoute == navItem.route,
 
-                    onClick = {
-                        navController.navigate(navItem.route)
-                    },
+                onClick = {
+                    navController.navigate(navItem.route)
+                },
 
-                    icon = {
-                        Icon(imageVector = navItem.icon, contentDescription = navItem.title)
-                    },
+                icon = {
+                    Icon(imageVector = navItem.icon, contentDescription = navItem.title)
+                },
 
-                    label = {
-                        Text(text = navItem.title)
-                    },
+                label = {
+                    Text(text = navItem.title)
+                },
 
-                    alwaysShowLabel = true
-                )
+                alwaysShowLabel = true
+            )
 
         }
     }

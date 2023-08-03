@@ -52,8 +52,8 @@ import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.cards.AchievementCard
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
-import com.shadow_shift_studio.aniway.screens.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.screens.secondary_screens.Notification
+import com.shadow_shift_studio.aniway.screens.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.Settings
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
@@ -64,8 +64,9 @@ import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
-    Column(modifier = Modifier
-        .fillMaxSize()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
     ) {
         NavHost(navController = navController, startDestination = "main") {
             composable("main") {
@@ -94,9 +95,9 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
             composable("notify") {
                 Notification(navController, viewModelBottom)
             }
-            }
         }
     }
+}
 
 
 @Composable
@@ -112,7 +113,8 @@ fun Comments() {
             .height(450.dp),
         content = {
             items(count = 25) { index ->
-                Row(verticalAlignment = Alignment.CenterVertically,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
                         .fillMaxWidth()
@@ -132,7 +134,8 @@ fun Achievements() {
             .height(450.dp),
         content = {
             items(count = 25) { index ->
-                Row(verticalAlignment = Alignment.CenterVertically,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
                         .fillMaxWidth()
@@ -201,16 +204,13 @@ fun UserTab(navController: NavController) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        if(selectedTabIndex == 0) {
+        if (selectedTabIndex == 0) {
             Favorites(navController)
-        }
-        else if(selectedTabIndex == 1) {
+        } else if (selectedTabIndex == 1) {
             Achievements()
-        }
-        else if(selectedTabIndex == 2) {
+        } else if (selectedTabIndex == 2) {
             Comments()
-        }
-        else if(selectedTabIndex == 3) {
+        } else if (selectedTabIndex == 3) {
             Balance()
         }
     }
@@ -227,31 +227,60 @@ fun InformationAboutUser() {
             .padding(start = 23.dp, end = 23.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Column() {
-            Text(text = "16.7K", color = Color.White, fontSize = fontSizeForNumbers, modifier = Modifier.align(Alignment.CenterHorizontally))
-            Text(text = "Прочитано глав", color = md_theme_dark_onSurfaceVariant, fontSize = fontSizeForText)
+        Column {
+            Text(
+                text = "16.7K",
+                color = Color.White,
+                fontSize = fontSizeForNumbers,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "Прочитано глав",
+                color = md_theme_dark_onSurfaceVariant,
+                fontSize = fontSizeForText
+            )
         }
-        Column() {
-            Text(text = "1.2K", color = Color.White, fontSize = fontSizeForNumbers, modifier = Modifier.align(Alignment.CenterHorizontally))
-            Text(text = "Лайков к главам", color = md_theme_dark_onSurfaceVariant, fontSize = fontSizeForText)
+        Column {
+            Text(
+                text = "1.2K",
+                color = Color.White,
+                fontSize = fontSizeForNumbers,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "Лайков к главам",
+                color = md_theme_dark_onSurfaceVariant,
+                fontSize = fontSizeForText
+            )
         }
-        Column() {
-            Text(text = "31", color = Color.White, fontSize = fontSizeForNumbers, modifier = Modifier.align(Alignment.CenterHorizontally))
-            Text(text = "Комментариев", color = md_theme_dark_onSurfaceVariant, fontSize = fontSizeForText)
+        Column {
+            Text(
+                text = "31",
+                color = Color.White,
+                fontSize = fontSizeForNumbers,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                text = "Комментариев",
+                color = md_theme_dark_onSurfaceVariant,
+                fontSize = fontSizeForText
+            )
         }
     }
 }
 
 @Composable
 fun LvLFragment() {
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(start = 23.dp, end = 23.dp)) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 23.dp, end = 23.dp)
+    ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Text(text = "LVL 0", color = Color.White, fontSize = 10.sp)
             Text(text = "350/500", color = Color.White, fontSize = 10.sp)
         }
-        Row() {
+        Row {
             LinearProgressIndicator(progress = 0.7f, modifier = Modifier.fillMaxWidth())
         }
     }
@@ -283,16 +312,19 @@ fun NickAndBadge() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Wallpaper(navController: NavController) {
-    Box(modifier = Modifier
-        .fillMaxWidth()
-        .height(250.dp)) {
-        Row(modifier = Modifier
+    Box(
+        modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-            .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
-            .background(Color.White)
+            .height(250.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
+                .background(Color.White)
         ) {
-            Box() {
+            Box {
                 Image(
                     painter = painterResource(R.drawable.wallpaper),
                     contentDescription = "avatar",

@@ -49,7 +49,11 @@ import com.shadow_shift_studio.aniway.view_model.TopsViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TopsScreen(viewModel: TopsViewModel, scrollState: LazyListState, viewModelBottom: BottomNavBarViewModel){
+fun TopsScreen(
+    viewModel: TopsViewModel,
+    scrollState: LazyListState,
+    viewModelBottom: BottomNavBarViewModel
+) {
     val navControllerTop = rememberNavController()
     var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
@@ -120,7 +124,8 @@ fun TopCards(navController: NavController, scrollState: LazyListState) {
         state = scrollState,
         content = {
             items(count = 25) { index ->
-                Row(verticalAlignment = Alignment.CenterVertically,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(bottom = 12.dp, end = 23.dp)
                         .fillMaxWidth()
@@ -185,30 +190,31 @@ fun TopCheckBox() {
         modifier = Modifier
             .fillMaxWidth()
             .padding(6.dp),
-        horizontalArrangement = Arrangement.SpaceBetween) {
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
         FilterChip(
-            label = ({ Text(text = "Все подряд")}),
+            label = ({ Text(text = "Все подряд") }),
             selected = selectedAll,
             onClick = { /*TODO*/
                 selectedAll = !selectedAll
             }
         )
         FilterChip(
-            label = ({ Text(text = "Манга")}),
+            label = ({ Text(text = "Манга") }),
             selected = selectedManga,
             onClick = { /*TODO*/
                 selectedManga = !selectedManga
             }
         )
         FilterChip(
-            label = ({ Text(text = "Маньхуа")}),
+            label = ({ Text(text = "Маньхуа") }),
             selected = selectedManihua,
             onClick = { /*TODO*/
                 selectedManihua = !selectedManihua
             }
         )
         FilterChip(
-            label = ({ Text(text = "Манхва")}),
+            label = ({ Text(text = "Манхва") }),
             selected = selectedManhwa,
             onClick = { /*TODO*/
                 selectedManhwa = !selectedManhwa

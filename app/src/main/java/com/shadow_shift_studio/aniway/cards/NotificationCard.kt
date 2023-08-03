@@ -24,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -47,18 +46,25 @@ fun NotificationCard(navController: NavController) {
             md_theme_dark_background
         )
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .background(md_theme_dark_outlineVariant)) {
-            Column(modifier = Modifier
-                .fillMaxHeight()
-                .padding(start = 12.dp, top = 6.dp), verticalArrangement = Arrangement.Center) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(md_theme_dark_outlineVariant)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(start = 12.dp, top = 6.dp), verticalArrangement = Arrangement.Center
+            ) {
                 ImageComment()
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 6.dp, end = 12.dp, bottom = 6.dp), verticalArrangement = Arrangement.Top) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 6.dp, end = 12.dp, bottom = 6.dp),
+                verticalArrangement = Arrangement.Top
+            ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "Подземелье демона",
@@ -95,7 +101,7 @@ fun NotificationCard(navController: NavController) {
 
 @Composable
 fun ImageComment() {
-    Column() {
+    Column {
         androidx.compose.foundation.Image(
             painter = painterResource(R.drawable.ava),
             contentDescription = "avatar",

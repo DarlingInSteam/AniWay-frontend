@@ -28,7 +28,6 @@ import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_outlineVariant
-import org.w3c.dom.Comment
 
 @Composable
 fun CommentCard() {
@@ -43,18 +42,25 @@ fun CommentCard() {
             md_theme_dark_background
         )
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .background(md_theme_dark_outlineVariant)) {
-            Column(modifier = Modifier
-                .fillMaxHeight()
-                .padding(start = 12.dp, top = 6.dp), verticalArrangement = Arrangement.Center) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(md_theme_dark_outlineVariant)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(start = 12.dp, top = 6.dp), verticalArrangement = Arrangement.Center
+            ) {
                 ImageComment()
             }
             Spacer(modifier = Modifier.width(12.dp))
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(top = 6.dp, end = 12.dp, bottom = 6.dp), verticalArrangement = Arrangement.Top) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 6.dp, end = 12.dp, bottom = 6.dp),
+                verticalArrangement = Arrangement.Top
+            ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
                         text = "TheNorth",
@@ -92,7 +98,7 @@ fun CommentCard() {
 
 @Composable
 fun ImageComment() {
-    Column() {
+    Column {
         androidx.compose.foundation.Image(
             painter = painterResource(R.drawable.ava),
             contentDescription = "avatar",

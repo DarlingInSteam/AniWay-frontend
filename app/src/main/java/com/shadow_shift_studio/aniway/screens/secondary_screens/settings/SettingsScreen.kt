@@ -69,9 +69,11 @@ fun Settings(navController: NavController) {
 fun SettingsButtons(navControllerSettings: NavController, navController: NavController) {
     Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = { navController.popBackStack() }) {
-            Icon(Icons.Default.ArrowBack, "", modifier = Modifier
-                .height(28.dp)
-                .width(28.dp))
+            Icon(
+                Icons.Default.ArrowBack, "", modifier = Modifier
+                    .height(28.dp)
+                    .width(28.dp)
+            )
         }
         Text(text = "Настройки", fontSize = 18.sp)
     }

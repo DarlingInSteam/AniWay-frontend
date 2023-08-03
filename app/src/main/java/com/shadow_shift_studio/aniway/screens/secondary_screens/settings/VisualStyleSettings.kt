@@ -48,34 +48,56 @@ fun VisualStyleSettingsButtons(navController: NavController) {
             Icon(
                 Icons.Default.ArrowBack, "", modifier = Modifier
                     .height(28.dp)
-                    .width(28.dp))
+                    .width(28.dp)
+            )
         }
         Text(text = "Настройки внешнего вида", fontSize = 18.sp)
     }
 
     Spacer(modifier = Modifier.height(15.dp))
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(start = 23.dp, end = 23.dp)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(start = 23.dp, end = 23.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Светлая тема", modifier = Modifier)
-            Switch(checked = lightTheme, onCheckedChange = {lightTheme = !lightTheme}, enabled = false)
+            Switch(
+                checked = lightTheme,
+                onCheckedChange = { lightTheme = !lightTheme },
+                enabled = false
+            )
         }
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Темная тема", modifier = Modifier)
-            Switch(checked = darkTheme, onCheckedChange = {darkTheme = !darkTheme})
+            Switch(checked = darkTheme, onCheckedChange = { darkTheme = !darkTheme })
         }
 
         Spacer(modifier = Modifier.height(15.dp))
 
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Text(text = "Системная тема", modifier = Modifier)
-            Switch(checked = systemTheme, onCheckedChange = {systemTheme = !systemTheme}, enabled = false)
+            Switch(
+                checked = systemTheme,
+                onCheckedChange = { systemTheme = !systemTheme },
+                enabled = false
+            )
         }
     }
 }

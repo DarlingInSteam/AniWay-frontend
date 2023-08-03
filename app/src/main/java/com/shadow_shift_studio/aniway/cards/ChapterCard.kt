@@ -8,18 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.outlined.Download
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.rounded.Lock
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
@@ -30,11 +23,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shadow_shift_studio.aniway.ChapterText
@@ -82,12 +73,14 @@ fun ChapterCard() {
             md_theme_dark_background
         )
     ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 23.dp, end = 23.dp),
-            horizontalArrangement = Arrangement.SpaceBetween){
-            Column() {
-                Row() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 23.dp, end = 23.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Column {
+                Row {
                     Text(
                         text = volumeNumber.toString(),
                         fontSize = 22.sp,
@@ -99,14 +92,14 @@ fun ChapterCard() {
                         color = Color.White
                     )
                     Icon(
-                    Icons.Outlined.Lock, "",
-                    modifier = Modifier
-                        .alpha(if (isChapterClosed) 1f else 0f)
+                        Icons.Outlined.Lock, "",
+                        modifier = Modifier
+                            .alpha(if (isChapterClosed) 1f else 0f)
                     )
                 }
             }
-            Column(){
-                Row() {
+            Column {
+                Row {
                     Text(
                         text = date.toString(),
                         fontSize = 17.sp,
@@ -119,7 +112,7 @@ fun ChapterCard() {
                         modifier = Modifier.height(25.dp)
                     ) {
                         Icon(
-                            if(isChapterLiked) likeIconBefore else likeIconAfter,
+                            if (isChapterLiked) likeIconBefore else likeIconAfter,
                             "",
                             tint = md_theme_dark_primary
                         )
@@ -131,7 +124,7 @@ fun ChapterCard() {
                         color = md_theme_dark_primary
                     )
                     IconButton(
-                        onClick = {/*TODO*/},
+                        onClick = {/*TODO*/ },
                         modifier = Modifier.height(25.dp)
                     ) {
                         Icon(
@@ -139,8 +132,8 @@ fun ChapterCard() {
                         )
                     }
                 }
-                }
             }
-
         }
+
     }
+}
