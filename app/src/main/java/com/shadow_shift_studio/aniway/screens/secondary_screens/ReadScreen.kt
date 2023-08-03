@@ -125,6 +125,7 @@ fun ImageList(imagesResource: Array<String>)
     {
         for(i in imagesResource) {
             AsyncImage(
+                modifier = Modifier.fillMaxWidth(),
                 contentScale = ContentScale.FillWidth,
                 model = i,
                 contentDescription = "",

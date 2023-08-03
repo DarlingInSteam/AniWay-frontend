@@ -49,12 +49,12 @@ import com.shadow_shift_studio.aniway.screens.secondary_screens.NotifyList
 import com.shadow_shift_studio.aniway.screens.secondary_screens.NotifyTop
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
+import com.shadow_shift_studio.aniway.view_model.TopsViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TopsScreen(){
+fun TopsScreen(viewModel: TopsViewModel, scrollState: LazyListState){
     val navControllerTop = rememberNavController()
-    val scrollState = rememberLazyListState()
     var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var tabBarVisible by remember { mutableStateOf(true) }
@@ -69,6 +69,11 @@ fun TopsScreen(){
                 startDestination = "main"
             ) {
                 composable("main") {
+                    LaunchedEffect(Unit) {
+                        // Восстанавливаем значение firstVisibleItemIndex из ViewModel после отображения компонента
+                        scrollState.scrollToItem(viewModel.firstVisibleItemIndex.value)
+                    }
+
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -103,6 +108,8 @@ fun TopsScreen(){
                 }
 
                 composable("fullScreen") {
+                    viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
+                    viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
                     MangaPage(navController = navControllerTop)
                 }
             }

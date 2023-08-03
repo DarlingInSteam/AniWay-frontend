@@ -48,12 +48,12 @@ import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
+import com.shadow_shift_studio.aniway.view_model.MyViewModel
 
 @Composable
-fun MyScreen(){
+fun MyScreen(viewModel: MyViewModel, scrollState: LazyGridState){
     var selectedTabTitle by remember { mutableStateOf("") }
     val navController = rememberNavController()
-    val scrollState = rememberLazyGridState()
     var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var mySearchBarVisible by remember { mutableStateOf(true) }
@@ -63,6 +63,11 @@ fun MyScreen(){
     ) {
         NavHost(navController = navController, startDestination = "main") {
             composable("main") {
+                LaunchedEffect(Unit) {
+                    // Восстанавливаем значение firstVisibleItemIndex из ViewModel после отображения компонента
+                    scrollState.scrollToItem(viewModel.firstVisibleItemIndex.value)
+                }
+
                 Column(Modifier.fillMaxSize()) {
                     LaunchedEffect(scrollState.firstVisibleItemIndex) {
                         currentFirstVisibleItemIndex = scrollState.firstVisibleItemIndex
@@ -97,6 +102,8 @@ fun MyScreen(){
                 }
             }
             composable("fullScreen") {
+                viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
+                viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
                 MangaPage(navController)
             }
         }

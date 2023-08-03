@@ -66,6 +66,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -76,17 +77,16 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_backgr
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
+import com.shadow_shift_studio.aniway.view_model.CatalogViewModel
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun CatalogScreen() {
+fun CatalogScreen(viewModel: CatalogViewModel, scrollState: LazyGridState) {
     var sortingBottomSheetVisible by remember { mutableStateOf(false) }
     var filterBottomSheetVisible by remember { mutableStateOf(false) }
     val navController = rememberNavController()
-    val scrollState = rememberLazyGridState()
     var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
     var searchBarVisible by remember { mutableStateOf(true) }
@@ -96,6 +96,11 @@ fun CatalogScreen() {
     ) {
         NavHost(navController = navController, startDestination = "main") {
             composable("main") {
+                LaunchedEffect(Unit) {
+                    // Восстанавливаем значение firstVisibleItemIndex из ViewModel после отображения компонента
+                    scrollState.scrollToItem(viewModel.firstVisibleItemIndex.value)
+                }
+
                 Column(modifier = Modifier.fillMaxSize()) {
 
                     LaunchedEffect(scrollState.firstVisibleItemIndex) {
@@ -123,8 +128,6 @@ fun CatalogScreen() {
                         SearchBar()
                     }
 
-                    Spacer(modifier = Modifier.height(0.dp))
-
                     CatalogButtons(
                         changeButtonSheetSortVisible = { sortingBottomSheetVisible = true },
                         changeButtonSheetFilterVisible = { filterBottomSheetVisible = true }
@@ -136,6 +139,8 @@ fun CatalogScreen() {
                 }
             }
             composable("fullScreen") {
+                viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
+                viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
                 MangaPage(navController = navController)
             }
         }
@@ -163,7 +168,7 @@ fun CatalogButtons(changeButtonSheetSortVisible: () -> Unit, changeButtonSheetFi
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(23.dp, 11.dp),
+            .padding(horizontal = 23.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         ExtendedFloatingActionButton(
