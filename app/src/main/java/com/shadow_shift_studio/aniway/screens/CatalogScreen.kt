@@ -47,6 +47,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MediumTopAppBar
+import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetScaffoldState
@@ -283,7 +284,7 @@ fun CardsList(navController: NavController, scrollState: LazyGridState) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items(count = 25) { index ->
+            items(count = 25, key = null) { index ->
                 MangaPreviewCard(navController)
             }
         }
