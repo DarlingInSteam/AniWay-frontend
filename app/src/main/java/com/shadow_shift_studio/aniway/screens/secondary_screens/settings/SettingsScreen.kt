@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.screens.secondary_screens.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -12,6 +13,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Palette
+import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
@@ -88,16 +94,18 @@ fun SettingsButtons(navControllerSettings: NavController, navController: NavCont
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Button(
-            shape = RoundedCornerShape(7.dp),
-            onClick = {
-                  navControllerSettings.navigate("profileSettings")
-            },
+        Row(
             modifier = Modifier
-                .padding(start = 23.dp, end = 23.dp)
-                .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
+                .fillMaxWidth()
+                .height(50.dp)
+                .clickable {
+                    navControllerSettings.navigate("profileSettings")
+                }
+                .padding(start = 23.dp, end = 23.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(Icons.Outlined.Person, "")
+            Spacer(modifier = Modifier.width(15.dp))
             Text(text = "Настройки профиля")
         }
     }
@@ -106,16 +114,18 @@ fun SettingsButtons(navControllerSettings: NavController, navController: NavCont
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Button(
-            shape = RoundedCornerShape(7.dp),
-            onClick = {
-                navControllerSettings.navigate("safetySettings")
-            },
+        Row(
             modifier = Modifier
-                .padding(start = 23.dp, end = 23.dp)
-                .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
+                .fillMaxWidth()
+                .height(50.dp)
+                .clickable {
+                    navControllerSettings.navigate("safetySettings")
+                }
+                .padding(start = 23.dp, end = 23.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(Icons.Outlined.Lock, "")
+            Spacer(modifier = Modifier.width(15.dp))
             Text(text = "Настройки безопасности")
         }
     }
@@ -124,16 +134,18 @@ fun SettingsButtons(navControllerSettings: NavController, navController: NavCont
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Button(
-            shape = RoundedCornerShape(7.dp),
-            onClick = {
-                navControllerSettings.navigate("notifySettings")
-            },
+        Row(
             modifier = Modifier
-                .padding(start = 23.dp, end = 23.dp)
-                .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
+                .fillMaxWidth()
+                .height(50.dp)
+                .clickable {
+                    navControllerSettings.navigate("notifySettings")
+                }
+                .padding(start = 23.dp, end = 23.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(Icons.Outlined.Notifications, "")
+            Spacer(modifier = Modifier.width(15.dp))
             Text(text = "Настройки уведомлений")
         }
     }
@@ -142,16 +154,18 @@ fun SettingsButtons(navControllerSettings: NavController, navController: NavCont
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Button(
-            shape = RoundedCornerShape(7.dp),
-            onClick = {
-                navControllerSettings.navigate("visualSettings")
-            },
+        Row(
             modifier = Modifier
-                .padding(start = 23.dp, end = 23.dp)
-                .fillMaxWidth(),
-            colors = ButtonColors(md_theme_dark_bottom_sheet_bottoms, md_theme_light_surfaceVariant, Color.White, Color.White)
+                .fillMaxWidth()
+                .height(50.dp)
+                .clickable {
+                    navControllerSettings.navigate("visualSettings")
+                }
+                .padding(start = 23.dp, end = 23.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
+            Icon(Icons.Outlined.Palette, "")
+            Spacer(modifier = Modifier.width(15.dp))
             Text(text = "Настройки внешнего вида")
         }
     }
