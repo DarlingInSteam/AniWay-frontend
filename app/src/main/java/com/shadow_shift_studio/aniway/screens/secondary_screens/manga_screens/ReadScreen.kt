@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.screens.secondary_screens
+package com.shadow_shift_studio.aniway.screens.secondary_screens.manga_screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background

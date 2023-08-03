@@ -52,7 +52,7 @@ import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.cards.AchievementCard
 import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
-import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
+import com.shadow_shift_studio.aniway.screens.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.screens.secondary_screens.Notification
 import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.Settings
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background

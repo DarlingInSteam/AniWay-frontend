@@ -9,38 +9,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shadow_shift_studio.aniway.screens.InformationAboutUser
-import com.shadow_shift_studio.aniway.screens.LvLFragment
-import com.shadow_shift_studio.aniway.screens.NickAndBadge
-import com.shadow_shift_studio.aniway.screens.UserTab
-import com.shadow_shift_studio.aniway.screens.Wallpaper
-import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
 
 @Composable
 fun Settings(navController: NavController) {

@@ -1,7 +1,6 @@
 package com.shadow_shift_studio.aniway.screens.secondary_screens
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,9 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Icon
@@ -28,8 +24,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.cards.NotificationCard
-import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.ProfileSettings
-import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.SettingsButtons
+import com.shadow_shift_studio.aniway.screens.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 
 @Composable

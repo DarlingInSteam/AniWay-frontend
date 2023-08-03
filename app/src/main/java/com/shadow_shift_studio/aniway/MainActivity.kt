@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val viewModelBottom: BottomNavBarViewModel by lazy {BottomNavBarViewModel()}
+            val viewModelBottom: BottomNavBarViewModel by lazy { BottomNavBarViewModel() }
 
             AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
