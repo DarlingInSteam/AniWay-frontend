@@ -48,10 +48,11 @@ import com.shadow_shift_studio.aniway.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.screens.secondary_screens.MangaPage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
+import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.MyViewModel
 
 @Composable
-fun MyScreen(viewModel: MyViewModel, scrollState: LazyGridState){
+fun MyScreen(viewModel: MyViewModel, scrollState: LazyGridState, viewModelBottom: BottomNavBarViewModel){
     var selectedTabTitle by remember { mutableStateOf("") }
     val navController = rememberNavController()
     var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
@@ -104,7 +105,7 @@ fun MyScreen(viewModel: MyViewModel, scrollState: LazyGridState){
             composable("fullScreen") {
                 viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
                 viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
-                MangaPage(navController)
+                MangaPage(navController, viewModelBottom)
             }
         }
     }

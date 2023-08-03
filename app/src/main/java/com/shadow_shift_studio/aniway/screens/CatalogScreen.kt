@@ -80,13 +80,18 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_backgr
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
+import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.CatalogViewModel
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CatalogScreen(viewModel: CatalogViewModel, scrollState: LazyGridState) {
+fun CatalogScreen(
+    viewModel: CatalogViewModel,
+    scrollState: LazyGridState,
+    viewModelBottom: BottomNavBarViewModel
+  ) {
     var sortingBottomSheetVisible by remember { mutableStateOf(false) }
     var filterBottomSheetVisible by remember { mutableStateOf(false) }
     val navController = rememberNavController()
@@ -144,7 +149,7 @@ fun CatalogScreen(viewModel: CatalogViewModel, scrollState: LazyGridState) {
             composable("fullScreen") {
                 viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
                 viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
-                MangaPage(navController = navController)
+                MangaPage(navController = navController, viewModelBottom)
             }
         }
     }

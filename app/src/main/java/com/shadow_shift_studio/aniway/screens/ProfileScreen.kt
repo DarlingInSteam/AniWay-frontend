@@ -58,9 +58,10 @@ import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.Setting
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
     Column(modifier = Modifier
@@ -85,13 +86,13 @@ fun ProfileScreen() {
                 }
             }
             composable("fullScreen") {
-                MangaPage(navController)
+                MangaPage(navController, viewModelBottom)
             }
             composable("settings") {
                 Settings(navController)
             }
             composable("notify") {
-                Notification(navController)
+                Notification(navController, viewModelBottom)
             }
             }
         }

@@ -33,6 +33,7 @@ import com.shadow_shift_studio.aniway.screens.ProfileScreen
 import com.shadow_shift_studio.aniway.screens.TopsScreen
 import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.CatalogViewModel
 import com.shadow_shift_studio.aniway.view_model.MyViewModel
 import com.shadow_shift_studio.aniway.view_model.TopsViewModel
@@ -41,15 +42,18 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val viewModelBottom: BottomNavBarViewModel by lazy {BottomNavBarViewModel()}
+
             AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
                 Surface {
                     Scaffold(
                         bottomBar = {
-                            BottomNavigationBar(navController = navController)
+                            if (viewModelBottom.getFirstVisibleItemIndex())
+                                BottomNavigationBar(navController = navController)
                         },
                         content = { padding ->
-                            NavHostContainer(navController = navController, padding = padding)
+                            NavHostContainer(navController = navController, padding = padding, viewModelBottom)
                         }
                     )
                 }
@@ -63,6 +67,7 @@ class MainActivity : ComponentActivity() {
 fun NavHostContainer(
     navController: NavHostController,
     padding: PaddingValues,
+    viewModelBottom: BottomNavBarViewModel
 ) {
     val viewModelCatalog: CatalogViewModel = viewModel()
     val scrollStateCatalog = rememberLazyGridState()
@@ -88,7 +93,7 @@ fun NavHostContainer(
                 LaunchedEffect(Unit) {
                     scrollStateCatalog.scrollToItem(viewModelCatalog.firstVisibleItemIndex.value)
                 }
-                CatalogScreen(viewModelCatalog, scrollStateCatalog)
+                CatalogScreen(viewModelCatalog, scrollStateCatalog, viewModelBottom)
             }
 
             composable("tops") {
@@ -96,7 +101,7 @@ fun NavHostContainer(
                 viewModelMy.setFirstVisibleItemScrollOffset((scrollStateMy.firstVisibleItemScrollOffset))
                 viewModelCatalog.setFirstVisibleItemIndex(scrollStateCatalog.firstVisibleItemIndex)
                 viewModelCatalog.setFirstVisibleItemScrollOffset((scrollStateCatalog.firstVisibleItemScrollOffset))
-                TopsScreen(viewModelTops, scrollStateTops)
+                TopsScreen(viewModelTops, scrollStateTops, viewModelBottom)
             }
 
             composable("my") {
@@ -104,7 +109,7 @@ fun NavHostContainer(
                 viewModelTops.setFirstVisibleItemScrollOffset((scrollStateTops.firstVisibleItemScrollOffset))
                 viewModelCatalog.setFirstVisibleItemIndex(scrollStateCatalog.firstVisibleItemIndex)
                 viewModelCatalog.setFirstVisibleItemScrollOffset((scrollStateCatalog.firstVisibleItemScrollOffset))
-                MyScreen(viewModelMy, scrollStateMy)
+                MyScreen(viewModelMy, scrollStateMy, viewModelBottom)
             }
 
             composable("profile") {
@@ -114,7 +119,7 @@ fun NavHostContainer(
                 viewModelTops.setFirstVisibleItemScrollOffset((scrollStateTops.firstVisibleItemScrollOffset))
                 viewModelCatalog.setFirstVisibleItemIndex(scrollStateCatalog.firstVisibleItemIndex)
                 viewModelCatalog.setFirstVisibleItemScrollOffset((scrollStateCatalog.firstVisibleItemScrollOffset))
-                ProfileScreen()
+                ProfileScreen(viewModelBottom)
             }
         })
 

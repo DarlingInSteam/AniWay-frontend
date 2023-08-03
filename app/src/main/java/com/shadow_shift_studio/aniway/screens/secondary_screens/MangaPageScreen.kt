@@ -124,13 +124,16 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_secondaryContainer
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surfaceVariant
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
+import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
-fun MangaPage( navController: NavController) {
+fun MangaPage( navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     val navControllerMangaPage = rememberNavController()
     NavHost(navController = navControllerMangaPage, startDestination = "main") {
         composable("main") {
+            viewModelBottom.setFirstVisibleItemIndex(true)
+
             val scrollState = rememberScrollState()
             var description =
                 "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
@@ -153,7 +156,7 @@ fun MangaPage( navController: NavController) {
                         )
                     }
                     Row() {
-                        TopMangaBar(navController = navController)
+                        TopMangaBar(navController = navController, viewModelBottom)
                     }
                     Spacer(
                         modifier = Modifier
@@ -212,7 +215,8 @@ fun MangaPage( navController: NavController) {
         }
         composable("ReadScreen")
         {
-            ReadScreen(navControllerMangaPage)
+            viewModelBottom.setFirstVisibleItemIndex(false)
+            ReadScreen(navControllerMangaPage, viewModelBottom)
         }
     }
 }
@@ -259,7 +263,7 @@ fun GradientImage(startColor: Color, endColor: Color) {
 
 
 @Composable
-fun TopMangaBar(navController: NavController)
+fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
 {
     Row(
         modifier = Modifier
@@ -272,7 +276,9 @@ fun TopMangaBar(navController: NavController)
     ) {
 
         ExtendedFloatingActionButton(
-            onClick = { navController.popBackStack() },
+            onClick = {
+                navController.popBackStack()
+            },
             modifier = Modifier
                 .height(40.dp)
                 .width(60.dp)

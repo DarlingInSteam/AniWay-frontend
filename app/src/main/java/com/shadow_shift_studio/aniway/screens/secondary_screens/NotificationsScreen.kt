@@ -30,9 +30,10 @@ import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.cards.NotificationCard
 import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.ProfileSettings
 import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.SettingsButtons
+import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 
 @Composable
-fun Notification(navController: NavController) {
+fun Notification(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     val navControllerNotify = rememberNavController()
 
     Column(
@@ -59,7 +60,7 @@ fun Notification(navController: NavController) {
             }
 
             composable("fullScreen") {
-                MangaPage(navController = navControllerNotify)
+                MangaPage(navController = navControllerNotify, viewModelBottom)
             }
         }
     }

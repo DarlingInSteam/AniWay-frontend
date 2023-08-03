@@ -36,12 +36,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun ReadScreen(navController: NavController) {
+fun ReadScreen(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     val navControllerReadPage = rememberNavController()
-
     val images: Array<String> = arrayOf(
         "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/a703990a-e6ec-4c33-8c66-1ac75e36bf45.jpg",
         "https://img-cdn.trendymanga.com/b6b0e1c1-7543-4b8b-8ef4-ec39ae9929e8/dd080cde-e046-4603-9a21-7b374617cc12.jpg",
@@ -64,7 +64,7 @@ fun ReadScreen(navController: NavController) {
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 topBar = {
-                    TopBar(navController)
+                    TopBar(navController, viewModelBottom)
                 },
                 bottomBar = {
                     BottomBar(images)
@@ -83,7 +83,7 @@ fun ReadScreen(navController: NavController) {
 }
 
 @Composable
-fun TopBar(navController: NavController)
+fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
 {
     var volumeNumber: Int = 1
     var chapterNumber: Int = 77
@@ -94,7 +94,9 @@ fun TopBar(navController: NavController)
         .background(md_theme_dark_background),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween) {
-        IconButton(onClick = { navController.popBackStack() }) {
+        IconButton(onClick = {
+            navController.popBackStack()
+        }) {
             Icon(
                 Icons.Default.ArrowBack, "", modifier = Modifier
                     .height(28.dp)
