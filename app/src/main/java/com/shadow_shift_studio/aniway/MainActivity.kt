@@ -40,7 +40,7 @@ import com.shadow_shift_studio.aniway.view_model.MyViewModel
 import com.shadow_shift_studio.aniway.view_model.TopsViewModel
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {0
         super.onCreate(savedInstanceState)
         setContent {
             val viewModelBottom: BottomNavBarViewModel by lazy { BottomNavBarViewModel() }
