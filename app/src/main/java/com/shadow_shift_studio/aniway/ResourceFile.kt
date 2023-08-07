@@ -28,6 +28,8 @@ val RegisterButtonText: String = "Зарегистрироваться"
 val ForgotPasswordText: String = "Забыли пароль?"
 val RegistrationText: String = "Ещё нет аккаунта?"
 val InputErrorMessage: String = "Некорректный ввод"
+val PasswordsDontMatch: String = "Пароли не совпадают"
+val FillAllFields: String = "Пожалуйста, заполните все поля"
 
 val loginErrors: Array<String> = arrayOf(
     "Допустимая длина от 3 до 20 символов",

@@ -52,8 +52,10 @@ import com.shadow_shift_studio.aniway.CreateLoginHint
 import com.shadow_shift_studio.aniway.EnterEmailHint
 import com.shadow_shift_studio.aniway.EnterLoginHint
 import com.shadow_shift_studio.aniway.EnterPasswordHint
+import com.shadow_shift_studio.aniway.FillAllFields
 import com.shadow_shift_studio.aniway.InputErrorMessage
 import com.shadow_shift_studio.aniway.LoginButtonText
+import com.shadow_shift_studio.aniway.PasswordsDontMatch
 import com.shadow_shift_studio.aniway.RegisterButtonText
 import com.shadow_shift_studio.aniway.RepeatPasswordHint
 import com.shadow_shift_studio.aniway.loginErrors
@@ -61,6 +63,7 @@ import com.shadow_shift_studio.aniway.passwordRules
 import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.DropdownTextField
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_errorContainer
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onError
+import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_error
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
@@ -72,7 +75,7 @@ import kotlinx.coroutines.launch
 fun Registration(navController: NavController) {
 
     val viewModelRegistration: RegistrationViewModel by lazy { RegistrationViewModel() }
-
+    var isTextVisible by remember { mutableStateOf(false) }
 
     Column {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -100,7 +103,7 @@ fun Registration(navController: NavController) {
 
             DropdownTextField(listOf("Мужской", "Женский"))
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
             EmailTextField(viewModelRegistration)
 
@@ -110,15 +113,24 @@ fun Registration(navController: NavController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            PasswordTextField(RepeatPasswordHint)
+            RepeatPasswordField(RepeatPasswordHint, viewModelRegistration)
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = { },
+                onClick = {if(viewModelRegistration.IsAllDataEntered()) navController.popBackStack() else isTextVisible = true},
                 content = { Text(text = RegisterButtonText, fontSize = 18.sp) }
             )
+
+            if(isTextVisible) {
+                Text(
+                    text = FillAllFields,
+                    color = md_theme_light_error,
+                    modifier = Modifier.fillMaxWidth().padding(start = 23.dp, end = 23.dp),
+                    textAlign = TextAlign.Justify
+                    )
+            }
         }
     }
 }
@@ -126,15 +138,14 @@ fun Registration(navController: NavController) {
 @Composable
 fun LoginTextField(viewModelRegistration: RegistrationViewModel)
 {
-    var login by remember { mutableStateOf("") }
     var isLoginError by remember { mutableStateOf(false) }
     var loginErrorMessage by remember { mutableStateOf("") }
 
     TextField(
-        value = login,
+        value = viewModelRegistration.login.value,
         onValueChange = {
-            login = it
-            var res = viewModelRegistration.IsLoginValid(login)
+            viewModelRegistration.login.value = it
+            var res = viewModelRegistration.IsLoginValid(viewModelRegistration.login.value)
             if (res == LoginStates.VALID)
                 isLoginError = false
             else if (res == LoginStates.INVALID_CHARACTERS) {
@@ -152,7 +163,7 @@ fun LoginTextField(viewModelRegistration: RegistrationViewModel)
         placeholder = { Text(CreateLoginHint) },
         label = { Text(CreateLoginHint) },
         supportingText = {
-            if (isLoginError && !login.isEmpty()) {
+            if (isLoginError && !viewModelRegistration.login.value.isEmpty()) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = loginErrorMessage,
@@ -166,14 +177,14 @@ fun LoginTextField(viewModelRegistration: RegistrationViewModel)
 @Composable
 fun EmailTextField(viewModelRegistration: RegistrationViewModel)
 {
-    var email by remember { mutableStateOf("") }
+
     var isEmailError by remember { mutableStateOf(false) }
 
     TextField(
-        value = email,
+        value = viewModelRegistration.email.value,
         onValueChange = {
-            email = it
-            isEmailError = !viewModelRegistration.IsEmailValid(email)},
+            viewModelRegistration.email.value = it
+            isEmailError = !viewModelRegistration.IsEmailValid(viewModelRegistration.email.value)},
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
@@ -181,7 +192,7 @@ fun EmailTextField(viewModelRegistration: RegistrationViewModel)
         placeholder = { Text(EnterEmailHint) },
         label = { Text(EnterEmailHint) },
         supportingText = {
-            if (isEmailError && email.isNotEmpty()) {
+            if (isEmailError && viewModelRegistration.email.value.isNotEmpty()) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = InputErrorMessage,
@@ -196,14 +207,13 @@ fun EmailTextField(viewModelRegistration: RegistrationViewModel)
 @Composable
 fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
 {
-    var password by rememberSaveable { mutableStateOf("") }
     var passwordVisability by remember { mutableStateOf(false) }
     var isPasswordError by remember { mutableStateOf(false) }
     TextField(
-        value = password,
+        value = viewModelRegistration.password.value,
         onValueChange = {
-            password = it
-            isPasswordError = !viewModelRegistration.IsPasswordValid(password)},
+            viewModelRegistration.password.value = it
+            isPasswordError = !viewModelRegistration.IsPasswordValid(viewModelRegistration.password.value)},
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
@@ -225,6 +235,7 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Info,
+                        tint = if(isPasswordError == true) md_theme_light_error else md_theme_dark_onSurface,
                         contentDescription = ""
                     )
                 }
@@ -234,7 +245,7 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
         visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation(),
         supportingText = {
-            if (isPasswordError && password.isNotEmpty()) {
+            if (isPasswordError && viewModelRegistration.password.value.isNotEmpty()) {
                 Text(
                     modifier = Modifier.fillMaxWidth(),
                     text = InputErrorMessage,
@@ -244,3 +255,43 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
         }
     )
 }
+
+@Composable
+fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
+{
+    var passwordVisability by remember { mutableStateOf(false) }
+    var isPasswordsEqual by remember { mutableStateOf(false) }
+
+    TextField(
+        value = viewModelRegistration.repeatPassword.value,
+        onValueChange = { viewModelRegistration.repeatPassword.value = it
+            isPasswordsEqual =viewModelRegistration.IsPasswordsMatch()},
+        maxLines = 1,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)),
+        placeholder = { Text(Hint) },
+        label = { Text(Hint) },
+        trailingIcon = {
+            IconButton(onClick = { passwordVisability = !passwordVisability }) {
+                Icon(
+                    if (passwordVisability) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                    ""
+                )
+            }
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        supportingText = {
+            if (isPasswordsEqual == false && viewModelRegistration.repeatPassword.value.isNotEmpty()) {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = PasswordsDontMatch,
+                    color = md_theme_light_error
+                )
+            }
+        },
+        visualTransformation = if (passwordVisability) VisualTransformation.None
+        else PasswordVisualTransformation()
+    )
+}
+
