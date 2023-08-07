@@ -1,5 +1,14 @@
 package com.shadow_shift_studio.aniway.data.data_class
 
+enum class Gender {
+    MALE,
+    FEMALE
+}
+
 data class UserInformation(
-    val preview_image_link: String,
+    var password: String,
+    var username: String,
+    var email: String,
+    var gender: Gender,
+    var xp: Int,
 )

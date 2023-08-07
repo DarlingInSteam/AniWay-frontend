@@ -10,11 +10,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -23,8 +21,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.RichTooltipBox
-import androidx.compose.material3.RichTooltipColors
-import androidx.compose.material3.RichTooltipState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberRichTooltipState
@@ -33,16 +29,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,31 +43,25 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.shadow_shift_studio.aniway.CreateLoginHint
 import com.shadow_shift_studio.aniway.EnterEmailHint
-import com.shadow_shift_studio.aniway.EnterLoginHint
 import com.shadow_shift_studio.aniway.EnterPasswordHint
 import com.shadow_shift_studio.aniway.FillAllFields
 import com.shadow_shift_studio.aniway.InputErrorMessage
-import com.shadow_shift_studio.aniway.LoginButtonText
 import com.shadow_shift_studio.aniway.PasswordsDontMatch
 import com.shadow_shift_studio.aniway.RegisterButtonText
 import com.shadow_shift_studio.aniway.RepeatPasswordHint
 import com.shadow_shift_studio.aniway.loginErrors
 import com.shadow_shift_studio.aniway.passwordRules
 import com.shadow_shift_studio.aniway.screens.secondary_screens.settings.DropdownTextField
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_errorContainer
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onError
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_error
-import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.LoginStates
 import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun Registration(navController: NavController) {
-
-    val viewModelRegistration: RegistrationViewModel by lazy { RegistrationViewModel() }
+    val context = LocalContext.current
+    val viewModelRegistration: RegistrationViewModel = RegistrationViewModel(context)
     var isTextVisible by remember { mutableStateOf(false) }
 
     Column {
@@ -119,7 +106,7 @@ fun Registration(navController: NavController) {
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {if(viewModelRegistration.IsAllDataEntered()) navController.popBackStack() else isTextVisible = true},
+                onClick = {if(viewModelRegistration.isAllDataEntered()) navController.popBackStack() else isTextVisible = true},
                 content = { Text(text = RegisterButtonText, fontSize = 18.sp) }
             )
 
@@ -145,7 +132,7 @@ fun LoginTextField(viewModelRegistration: RegistrationViewModel)
         value = viewModelRegistration.login.value,
         onValueChange = {
             viewModelRegistration.login.value = it
-            var res = viewModelRegistration.IsLoginValid(viewModelRegistration.login.value)
+            var res = viewModelRegistration.isLoginValid(viewModelRegistration.login.value)
             if (res == LoginStates.VALID)
                 isLoginError = false
             else if (res == LoginStates.INVALID_CHARACTERS) {
@@ -184,7 +171,7 @@ fun EmailTextField(viewModelRegistration: RegistrationViewModel)
         value = viewModelRegistration.email.value,
         onValueChange = {
             viewModelRegistration.email.value = it
-            isEmailError = !viewModelRegistration.IsEmailValid(viewModelRegistration.email.value)},
+            isEmailError = !viewModelRegistration.isEmailValid(viewModelRegistration.email.value)},
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
@@ -213,7 +200,7 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
         value = viewModelRegistration.password.value,
         onValueChange = {
             viewModelRegistration.password.value = it
-            isPasswordError = !viewModelRegistration.IsPasswordValid(viewModelRegistration.password.value)},
+            isPasswordError = !viewModelRegistration.isPasswordValid(viewModelRegistration.password.value)},
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
@@ -265,7 +252,7 @@ fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewMod
     TextField(
         value = viewModelRegistration.repeatPassword.value,
         onValueChange = { viewModelRegistration.repeatPassword.value = it
-            isPasswordsEqual =viewModelRegistration.IsPasswordsMatch()},
+            isPasswordsEqual =viewModelRegistration.isPasswordsMatch()},
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()

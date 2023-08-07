@@ -32,12 +32,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -50,11 +53,13 @@ import com.shadow_shift_studio.aniway.LoginButtonText
 import com.shadow_shift_studio.aniway.RegistrationText
 import com.shadow_shift_studio.aniway.screens.secondary_screens.manga_screens.AddComment
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surfaceVariant
+import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Authorization(navController: NavController, onAuthorization: () -> Unit) {
     val navControllerAuthorization = rememberNavController()
+
     NavHost(navController = navControllerAuthorization, startDestination = "main") {
         composable("main") {
             Scaffold(
@@ -86,7 +91,8 @@ fun Authorization(navController: NavController, onAuthorization: () -> Unit) {
 
 @Composable
 fun AuthorizationContent(navController: NavController, onAuthorization: () -> Unit) {
-    var login by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val viewModelRegistration: RegistrationViewModel = RegistrationViewModel(context)
 
     Column(
         modifier = Modifier
@@ -96,8 +102,8 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
     )
     {
         TextField(
-            value = login,
-            onValueChange = { newText -> login = newText },
+            value = viewModelRegistration.login.value,
+            onValueChange = { newText -> viewModelRegistration.login.value = newText },
             maxLines = 1,
             modifier = Modifier
                 .fillMaxWidth()
@@ -107,7 +113,7 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
         )
         Spacer(modifier = Modifier.height(20.dp))
 
-        PasswordTextField(EnterPasswordHint)
+        PasswordTextField(EnterPasswordHint, viewModelRegistration)
 
         Spacer(modifier = Modifier.height(11.dp))
 
@@ -119,7 +125,7 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { onAuthorization() },
+            onClick = { viewModelRegistration.loginUser() },
             content = { Text(text = LoginButtonText, fontSize = 18.sp) }
         )
     }
@@ -127,13 +133,12 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
 
 
 @Composable
-fun PasswordTextField(Hint: String) {
-    var password by rememberSaveable { mutableStateOf("") }
+fun PasswordTextField(Hint: String, viewModelRegistration: RegistrationViewModel) {
     var passwordVisability by remember { mutableStateOf(false) }
 
     TextField(
-        value = password,
-        onValueChange = { newText -> password = newText },
+        value = viewModelRegistration.password.value,
+        onValueChange = { newText -> viewModelRegistration.password.value = newText },
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
