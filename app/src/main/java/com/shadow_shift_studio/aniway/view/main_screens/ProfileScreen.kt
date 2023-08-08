@@ -33,23 +33,29 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.R
+import com.shadow_shift_studio.aniway.data.data_class.User
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.Notification
@@ -59,11 +65,36 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.ProfileViewModel
+import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
+    val context = LocalContext.current
+    val viewModelProfile: ProfileViewModel = ProfileViewModel(context)
     val scrollState = rememberScrollState()
     val navController = rememberNavController()
+    val coroutineScope = rememberCoroutineScope()
+
+    val userState = remember { mutableStateOf<User?>(null) }
+
+    val userObserver = Observer<User> { newUser ->
+        userState.value = newUser
+    }
+
+    LaunchedEffect(viewModelProfile) {
+        viewModelProfile.getUserByUsername()
+    }
+
+    DisposableEffect(viewModelProfile) {
+        viewModelProfile.userByUsernameLiveData.observeForever(userObserver)
+
+        onDispose {
+            viewModelProfile.userByUsernameLiveData.removeObserver(userObserver)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,9 +108,11 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
                 ) {
                     Wallpaper(navController)
                     Spacer(modifier = Modifier.height(15.dp))
-                    NickAndBadge()
+
+                    userState.value?.let { it1 -> NickAndBadge(it1) }
+
                     Spacer(modifier = Modifier.height(15.dp))
-                    LvLFragment()
+                    userState.value?.let { it1 -> LvLFragment(it1) }
                     Spacer(modifier = Modifier.height(35.dp))
                     InformationAboutUser()
                     Spacer(modifier = Modifier.height(20.dp))
@@ -270,7 +303,9 @@ fun InformationAboutUser() {
 }
 
 @Composable
-fun LvLFragment() {
+fun LvLFragment(user: User) {
+    val xpProgress = user.xp?.times(0.2)?.toFloat()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -278,22 +313,24 @@ fun LvLFragment() {
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Text(text = "LVL 0", color = Color.White, fontSize = 10.sp)
-            Text(text = "350/500", color = Color.White, fontSize = 10.sp)
+            Text(text = "0/500", color = Color.White, fontSize = 10.sp)
         }
         Row {
-            LinearProgressIndicator(progress = 0.7f, modifier = Modifier.fillMaxWidth())
+            if (xpProgress != null) {
+                LinearProgressIndicator(progress = xpProgress, modifier = Modifier.fillMaxWidth())
+            }
         }
     }
 }
 
 @Composable
-fun NickAndBadge() {
+fun NickAndBadge(user: User) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = "TheNorth", color = Color.White, fontSize = 26.sp)
+        Text(text = user.username.toString(), color = Color.White, fontSize = 26.sp)
     }
     Spacer(modifier = Modifier.height(6.dp))
     Row(

@@ -4,13 +4,14 @@ import com.shadow_shift_studio.aniway.data.enum.Sex
 import java.util.Date
 
 data class User(
-    val id: Long,
-    val username: String,
-    val sex: Sex,
-    val xp: Int,
-    val pass_xp: Int,
-    val balance: Int,
-    val createdAt: Date
+    var id: Long?,
+    var username: String?,
+    var sex: Sex?,
+    var xp: Int?,
+    var pass_xp: Int?,
+    var balance: Int?,
+    var createdAt: Date?
 )
 
-data class Credentials(val username: String, val password: String)
+data class CredentialsForLogin(val username: String, val password: String)
+data class CredentialsForUserByUsername(val username: String)

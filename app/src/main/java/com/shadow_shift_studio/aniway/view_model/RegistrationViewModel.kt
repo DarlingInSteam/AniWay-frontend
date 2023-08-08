@@ -2,24 +2,16 @@ package com.shadow_shift_studio.aniway.view_model
 
 import android.content.Context
 import android.text.TextUtils
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.UserAuthentication
-import com.shadow_shift_studio.aniway.data.service.BackendService
-import com.shadow_shift_studio.aniway.data.data_class.Credentials
-import com.shadow_shift_studio.aniway.data.secure_data.KeyStore
-import com.shadow_shift_studio.aniway.data.data_class.TokenResponse
+import com.shadow_shift_studio.aniway.data.client.UserIsAuth
 import com.shadow_shift_studio.aniway.data.enum.LoginStates
 import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
 import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RegistrationViewModel(private val context: Context) : ViewModel() {
     private val loginUserUseCase: LoginUserUseCase =
@@ -88,6 +80,10 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
         viewModelScope.launch {
             val status = loginUserUseCase.execute(context, login.value, password.value)
             loginStatusLiveData.value = status
+
+            if(status) {
+                UserIsAuth.username = login.value
+            }
         }.join()
     }
 }

@@ -17,7 +17,8 @@ import javax.crypto.spec.IvParameterSpec
  */
 class KeyStore(private val context: Context) {
 
-    private val keyStore: java.security.KeyStore = java.security.KeyStore.getInstance("AndroidKeyStore")
+    private val keyStore: java.security.KeyStore =
+        java.security.KeyStore.getInstance("AndroidKeyStore")
 
     init {
         // Инициализация KeyStore при создании экземпляра класса
@@ -31,7 +32,8 @@ class KeyStore(private val context: Context) {
      */
     fun createSecretKey(keyAlias: String) {
         if (!keyStore.containsAlias(keyAlias)) {
-            val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
+            val keyGenerator =
+                KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
             val keyGenParameterSpec = KeyGenParameterSpec.Builder(
                 keyAlias,
                 KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
@@ -79,7 +81,17 @@ class KeyStore(private val context: Context) {
         val iv = encryptedData.copyOfRange(0, 16) // Получите IV из начала зашифрованных данных
         cipher.init(Cipher.DECRYPT_MODE, secretKey, IvParameterSpec(iv))
 
-        return cipher.doFinal(encryptedData, 16, encryptedData.size - 16) // Проигнорируйте первые 16 байт (IV)
+        return cipher.doFinal(
+            encryptedData,
+            16,
+            encryptedData.size - 16
+        ) // Проигнорируйте первые 16 байт (IV)
+    }
+
+    fun getTokenAsByteArray(tokenAlias: String): ByteArray? {
+        val encryptedToken = keyStore.getKey(tokenAlias, null) as? SecretKey
+        var a = encryptedToken?.encoded
+        return a
     }
 
     /**

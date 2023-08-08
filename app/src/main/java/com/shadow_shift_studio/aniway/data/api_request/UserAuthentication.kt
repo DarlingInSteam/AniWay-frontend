@@ -2,12 +2,12 @@ package com.shadow_shift_studio.aniway.data.api_request
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.mutableStateOf
-import com.shadow_shift_studio.aniway.data.client.HttpClient
-import com.shadow_shift_studio.aniway.data.data_class.Credentials
+import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
+import com.shadow_shift_studio.aniway.data.client.HttpClientNotLogin
+import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
+import com.shadow_shift_studio.aniway.data.data_class.CredentialsForLogin
 import com.shadow_shift_studio.aniway.data.data_class.TokenResponse
-import com.shadow_shift_studio.aniway.data.secure_data.KeyStore
-import com.shadow_shift_studio.aniway.domain.repository.UserRepository
+import com.shadow_shift_studio.aniway.domain.repository.LoginRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Response
@@ -17,9 +17,7 @@ import kotlin.coroutines.resume
  * Класс UserAuthentication предоставляет методы для аутентификации пользователя и обработки полученных токенов.
  * Он позволяет выполнять вход пользователя и зашифровывать полученные токены для безопасного хранения.
  */
-class UserAuthentication : UserRepository {
-    var loginStatus = false
-
+class UserAuthentication : LoginRepository {
     /**
      * Выполняет процесс входа пользователя.
      *
@@ -27,8 +25,8 @@ class UserAuthentication : UserRepository {
      */
 
     override suspend fun loginUser(context: Context, username: String, password: String) : Boolean {
-        val backendService = HttpClient.backendService
-        val credentials = Credentials(username, password)
+        val backendService = HttpClientNotLogin.loginService
+        val credentials = CredentialsForLogin(username, password)
 
         return suspendCancellableCoroutine { continuation ->
             val call = backendService.login(credentials)
@@ -37,11 +35,17 @@ class UserAuthentication : UserRepository {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if (responseBody != null) {
-                            val keyStore = KeyStore(context)
+                            val keyStore = KeyStoreManager.getKeyStore(context)
                             keyStore.createSecretKey("1")
                             keyStore.createSecretKey("2")
                             val encryptedAccessToken = keyStore.encryptData("1", responseBody.accessToken.toByteArray())
                             val encryptedRefreshToken = keyStore.encryptData("2", responseBody.token.toByteArray())
+
+                            KeyStoreManager.accessToken = responseBody.accessToken
+                            KeyStoreManager.token = responseBody.token
+
+                            Log.e("token syka", KeyStoreManager.accessToken)
+
                             continuation.resume(true)
                         } else {
                             continuation.resume(false)
