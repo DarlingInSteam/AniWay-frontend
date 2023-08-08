@@ -6,27 +6,24 @@ import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.google.gson.Gson
-import com.shadow_shift_studio.aniway.data.data_class.BackendService
+import androidx.lifecycle.viewModelScope
+import com.shadow_shift_studio.aniway.data.api_request.UserAuthentication
+import com.shadow_shift_studio.aniway.data.service.BackendService
 import com.shadow_shift_studio.aniway.data.data_class.Credentials
-import com.shadow_shift_studio.aniway.data.data_class.KeyStore
+import com.shadow_shift_studio.aniway.data.secure_data.KeyStore
 import com.shadow_shift_studio.aniway.data.data_class.TokenResponse
-import com.shadow_shift_studio.aniway.data.data_class.User
+import com.shadow_shift_studio.aniway.data.enum.LoginStates
+import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
+import kotlinx.coroutines.launch
 import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
-enum class LoginStates(val value: Int)
-{
-    INVALID_LENGTH(0),
-    INVALID_CHARACTERS(1),
-    VALID(2),
-    EMPTY(3)
-}
 class RegistrationViewModel(private val context: Context) : ViewModel() {
+    private val loginUserUseCase: LoginUserUseCase by lazy {
+        LoginUserUseCase(UserAuthentication())
+    }
 
     var login: MutableState<String> = mutableStateOf("DarlingInSteam")
     var email: MutableState<String> = mutableStateOf("")
@@ -88,55 +85,10 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
         return res
     }
 
-    fun createBackendService(): BackendService {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080") // Замените на URL вашего локального бэкенда
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        return retrofit.create(BackendService::class.java)
-    }
-
     fun loginUser() {
-        val backendService = createBackendService()
-
-        val credentials = Credentials("DarlingInSteam", "artem11112003")
-
-        val call = backendService.login(credentials)
-        call.enqueue(object : retrofit2.Callback<TokenResponse> {
-            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                if (response.isSuccessful) {
-                    val responseBody = response.body()
-                    if (responseBody != null) {
-                        try {
-                            val keyStore = KeyStore(context)
-                            keyStore.createSecretKey("1")
-                            keyStore.createSecretKey("2")
-
-                            val encryptedAccessToken = keyStore.encryptData("1", responseBody.accessToken.toByteArray())
-                            val encryptedRefreshToken = keyStore.encryptData("2", responseBody.token.toByteArray())
-
-                            val decryptedAccessToken = String(keyStore.decryptData("1", encryptedAccessToken))
-                            val decryptedRefreshToken = String(keyStore.decryptData("2", encryptedRefreshToken))
-
-
-                        } catch (e: Exception) {
-                            Log.e("login pars request error", "An error occurred while encrypting tokens: ${e.message}")
-                        }
-
-
-                    }
-                    // Обработайте ответ от бэкенда, например, сохраните его куда-либо
-                } else {
-                    Log.e("Login Error", response.errorBody().toString())
-
-                }
-            }
-
-            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                Log.e("Login Error", t.message ?: "Unknown Error")
-            }
-        })
+        viewModelScope.launch {
+            loginUserUseCase.execute(context, login.value, password.value)
+        }
     }
 }
 
