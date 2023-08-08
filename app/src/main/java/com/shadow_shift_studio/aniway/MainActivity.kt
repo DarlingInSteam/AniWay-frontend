@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val viewModelBottom: BottomNavBarViewModel by lazy { BottomNavBarViewModel() }
             var isAuthorization by remember { mutableStateOf(false)}
+
             AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
                 Surface {
@@ -64,7 +65,7 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                     else
-                        Authorization(navController, {isAuthorization = true})
+                        Authorization(navController) { isAuthorization = true }
                 }
             }
         }

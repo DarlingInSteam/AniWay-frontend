@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.UserAuthentication
@@ -21,16 +22,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RegistrationViewModel(private val context: Context) : ViewModel() {
-    private val loginUserUseCase: LoginUserUseCase by lazy {
+    private val loginUserUseCase: LoginUserUseCase =
         LoginUserUseCase(UserAuthentication())
-    }
 
     var login: MutableState<String> = mutableStateOf("DarlingInSteam")
     var email: MutableState<String> = mutableStateOf("")
     var password: MutableState<String> = mutableStateOf("artem11112003")
     var repeatPassword: MutableState<String> = mutableStateOf("")
-    var a: MutableState<String> = mutableStateOf("")
-    var b: MutableState<String> = mutableStateOf("")
+    val loginStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     fun isLoginValid(login: String): LoginStates {
         val pattern = Regex("^[a-zA-Z0-9!@#\$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]*$")
@@ -85,10 +84,11 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
         return res
     }
 
-    fun loginUser() {
+    suspend fun loginUser() {
         viewModelScope.launch {
-            loginUserUseCase.execute(context, login.value, password.value)
-        }
+            val status = loginUserUseCase.execute(context, login.value, password.value)
+            loginStatusLiveData.value = status
+        }.join()
     }
 }
 

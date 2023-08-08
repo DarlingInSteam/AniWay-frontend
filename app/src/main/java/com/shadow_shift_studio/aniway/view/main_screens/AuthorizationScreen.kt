@@ -25,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,6 +36,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -46,6 +48,8 @@ import com.shadow_shift_studio.aniway.LoginButtonText
 import com.shadow_shift_studio.aniway.RegistrationText
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surfaceVariant
 import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -85,6 +89,7 @@ fun Authorization(navController: NavController, onAuthorization: () -> Unit) {
 fun AuthorizationContent(navController: NavController, onAuthorization: () -> Unit) {
     val context = LocalContext.current
     val viewModelRegistration: RegistrationViewModel = RegistrationViewModel(context)
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -117,7 +122,15 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
 
         Button(
             modifier = Modifier.fillMaxWidth(),
-            onClick = { viewModelRegistration.loginUser() },
+            onClick = {
+                coroutineScope.launch {
+                    viewModelRegistration.loginUser()
+
+                    if(viewModelRegistration.loginStatusLiveData.value == true) {
+                        onAuthorization()
+                    }
+                }
+            },
             content = { Text(text = LoginButtonText, fontSize = 18.sp) }
         )
     }

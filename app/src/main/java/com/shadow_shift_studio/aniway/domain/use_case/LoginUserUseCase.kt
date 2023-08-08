@@ -4,7 +4,7 @@ import android.content.Context
 import com.shadow_shift_studio.aniway.domain.repository.UserRepository
 
 class LoginUserUseCase(private val userRepository: UserRepository) {
-    suspend fun execute(context: Context, username: String, password: String) {
-        userRepository.loginUser(context, username, password)
+    suspend fun execute(context: Context, username: String, password: String) : Boolean {
+        return userRepository.loginUser(context, username, password)
     }
 }
