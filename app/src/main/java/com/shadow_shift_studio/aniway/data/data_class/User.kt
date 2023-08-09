@@ -10,7 +10,10 @@ data class User(
     var xp: Int?,
     var pass_xp: Int?,
     var balance: Int?,
-    var createdAt: Date?
+    var createdAt: Date?,
+    var chapters: Int?,
+    var likes: Int?,
+    var comments: Int?
 )
 
 data class CredentialsForLogin(val username: String, val password: String)

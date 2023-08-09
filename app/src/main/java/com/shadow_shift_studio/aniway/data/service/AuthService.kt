@@ -6,9 +6,18 @@ import retrofit2.Call
 import retrofit2.http.POST
 import retrofit2.http.Body
 
+/**
+ * Интерфейс `LoginService` определяет методы для выполнения HTTP-запросов связанных с аутентификацией.
+ */
 interface LoginService {
-    //Путь к API методу
+
+    /**
+     * Выполняет POST-запрос на эндпоинт `/auth/login` для аутентификации пользователя.
+     *
+     * @param credentials Объект, содержащий учетные данные пользователя.
+     * @return Объект типа `Call<TokenResponse>`, представляющий результат запроса.
+     */
     @POST("/auth/login")
-    //TokenResponse - класс, который соответствует ответу сервера
     fun login(@Body credentials: CredentialsForLogin): Call<TokenResponse>
 }
+

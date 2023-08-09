@@ -1,6 +1,5 @@
 package com.shadow_shift_studio.aniway.data.client
 
-object UserForSearch {
+object AuthorizedUser {
     var username = ""
-    var userid = ""
 }

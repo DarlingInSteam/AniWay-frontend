@@ -14,58 +14,74 @@ import retrofit2.Response
 import kotlin.coroutines.resume
 
 /**
- * Класс UserAuthentication предоставляет методы для аутентификации пользователя и обработки полученных токенов.
- * Он позволяет выполнять вход пользователя и зашифровывать полученные токены для безопасного хранения.
+ * Класс `UserAuthentication` предоставляет метод для аутентификации пользователя с использованием имени
+ * пользователя и пароля. Этот класс реализует интерфейс `LoginRepository`.
+ *
+ * @constructor Создает экземпляр класса `UserAuthentication`.
  */
 class UserAuthentication : LoginRepository {
-    /**
-     * Выполняет процесс входа пользователя.
-     *
-     * @param context Контекст приложения, необходимый для создания Keystore.
-     */
 
-    override suspend fun loginUser(context: Context, username: String, password: String) : Boolean {
+    /**
+     * Аутентифицирует пользователя с использованием имени пользователя и пароля.
+     *
+     * @param context Контекст приложения.
+     * @param username Имя пользователя для входа.
+     * @param password Пароль пользователя для входа.
+     * @return `true`, если аутентификация прошла успешно, иначе `false`.
+     */
+    override suspend fun loginUser(context: Context, username: String, password: String): Boolean {
+        // Создаем объект для вызова удаленного сервиса
         val backendService = HttpClientNotLogin.loginService
+        // Создаем объект с учетными данными пользователя
         val credentials = CredentialsForLogin(username, password)
 
+        // Используем suspendCancellableCoroutine для работы с асинхронным кодом
         return suspendCancellableCoroutine { continuation ->
+            // Создаем вызов к удаленному сервису
             val call = backendService.login(credentials)
+
+            // Обработка успешного ответа от сервера
             call.enqueue(object : retrofit2.Callback<TokenResponse> {
                 override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if (responseBody != null) {
+                            // Создаем объект KeyStoreManager для управления хранилищем ключей
                             val keyStore = KeyStoreManager.getKeyStore(context)
+                            // Создаем и шифруем токены доступа и обновления
                             keyStore.createSecretKey("1")
                             keyStore.createSecretKey("2")
                             val encryptedAccessToken = keyStore.encryptData("1", responseBody.accessToken.toByteArray())
                             val encryptedRefreshToken = keyStore.encryptData("2", responseBody.token.toByteArray())
 
+                            // Сохраняем токены в KeyStoreManager для последующего использования
                             KeyStoreManager.accessToken = responseBody.accessToken
                             KeyStoreManager.token = responseBody.token
 
-                            Log.e("token syka", KeyStoreManager.accessToken)
+                            Log.e("Токен", KeyStoreManager.accessToken)
 
-                            continuation.resume(true)
+                            continuation.resume(true) // Возобновляем выполнение корутины с успешным результатом
                         } else {
-                            continuation.resume(false)
+                            continuation.resume(false) // В случае отсутствия данных в ответе, возвращаем `false`
                         }
                     } else {
-                        Log.e("Login Error", response.errorBody().toString())
-                        continuation.resume(false)
+                        Log.e("Ошибка входа", response.errorBody().toString())
+                        continuation.resume(false) // В случае ошибки в ответе, возвращаем `false`
                     }
                 }
 
+                // Обработка ошибки при выполнении запроса
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                    Log.e("Network client error", t.message ?: "HTTP client failed to connect")
-                    continuation.resume(false)
+                    Log.e("Ошибка сети", t.message ?: "Ошибка подключения HTTP-клиента")
+                    continuation.resume(false) // В случае ошибки, возвращаем `false`
                 }
             })
 
+            // Отменяем вызов при отмене корутины
             continuation.invokeOnCancellation {
                 call.cancel()
             }
         }
     }
-
 }
+

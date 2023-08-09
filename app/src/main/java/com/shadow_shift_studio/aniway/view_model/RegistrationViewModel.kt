@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.UserAuthentication
-import com.shadow_shift_studio.aniway.data.client.UserIsAuth
+import com.shadow_shift_studio.aniway.data.client.AuthorizedUser
 import com.shadow_shift_studio.aniway.data.enum.LoginStates
 import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
 import kotlinx.coroutines.launch
@@ -82,7 +82,7 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
             loginStatusLiveData.value = status
 
             if(status) {
-                UserIsAuth.username = login.value
+                AuthorizedUser.username = login.value
             }
         }.join()
     }

@@ -5,12 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.GetUser
-import com.shadow_shift_studio.aniway.data.api_request.UserAuthentication
-import com.shadow_shift_studio.aniway.data.client.UserIsAuth
+import com.shadow_shift_studio.aniway.data.client.AuthorizedUser
 import com.shadow_shift_studio.aniway.data.data_class.User
 import com.shadow_shift_studio.aniway.domain.use_case.GetUserByUsernameUseCase
-import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
-import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(private val context: Context) : ViewModel() {
@@ -21,7 +18,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
 
     suspend fun getUserByUsername() {
         viewModelScope.launch {
-            val user = getUserByUsernameUseCase.execute(context, UserIsAuth.username)
+            val user = getUserByUsernameUseCase.execute(context, AuthorizedUser.username)
             userByUsernameLiveData.value = user
         }.join()
     }

@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.data.client
 
-object UserIsAuth {
+object OtherUser {
     var username = ""
+    var userid = ""
 }

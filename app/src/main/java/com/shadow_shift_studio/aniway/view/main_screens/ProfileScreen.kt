@@ -114,7 +114,7 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
                     Spacer(modifier = Modifier.height(15.dp))
                     userState.value?.let { it1 -> LvLFragment(it1) }
                     Spacer(modifier = Modifier.height(35.dp))
-                    InformationAboutUser()
+                    userState.value?.let { it1 -> InformationAboutUser(it1) }
                     Spacer(modifier = Modifier.height(20.dp))
                     UserTab(navController)
                 }
@@ -250,7 +250,7 @@ fun UserTab(navController: NavController) {
 }
 
 @Composable
-fun InformationAboutUser() {
+fun InformationAboutUser(user: User) {
     val fontSizeForNumbers by remember { mutableStateOf(18.sp) }
     val fontSizeForText by remember { mutableStateOf(12.sp) }
 
@@ -262,7 +262,7 @@ fun InformationAboutUser() {
     ) {
         Column {
             Text(
-                text = "16.7K",
+                text = user.chapters.toString(),
                 color = Color.White,
                 fontSize = fontSizeForNumbers,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -275,7 +275,7 @@ fun InformationAboutUser() {
         }
         Column {
             Text(
-                text = "1.2K",
+                text = user.likes.toString(),
                 color = Color.White,
                 fontSize = fontSizeForNumbers,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -288,7 +288,7 @@ fun InformationAboutUser() {
         }
         Column {
             Text(
-                text = "31",
+                text = user.comments.toString(),
                 color = Color.White,
                 fontSize = fontSizeForNumbers,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
