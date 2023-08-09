@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object HttpClientIsLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
         //нужно поставить ip своего компа
-        .baseUrl("http://10.0.0.2:8080") // Базовый URL удаленного сервера
+        .baseUrl("http://10.0.2.2:8080") // Базовый URL удаленного сервера
         .addConverterFactory(GsonConverterFactory.create()) // Конвертер для обработки JSON
         .client(OkHttpClient.Builder().addInterceptor { chain ->
             // Добавление авторизационного заголовка Bearer token к запросу

@@ -96,16 +96,8 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
         verticalArrangement = Arrangement.Center
     )
     {
-        TextField(
-            value = viewModelLogin.login.value,
-            onValueChange = { newText -> viewModelLogin.login.value = newText },
-            maxLines = 1,
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp)),
-            placeholder = { Text(EnterLoginHint) },
-            label = { Text(EnterLoginHint) }
-        )
+        LoginTextField(viewModelLogin)
+
         Spacer(modifier = Modifier.height(20.dp))
 
         PasswordTextField(EnterPasswordHint, viewModelLogin)
@@ -134,6 +126,19 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
     }
 }
 
+@Composable
+fun LoginTextField(viewModelLogin: LoginViewModel) {
+    TextField(
+        value = viewModelLogin.login.value,
+        onValueChange = { newText -> viewModelLogin.login.value = newText },
+        maxLines = 1,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(8.dp)),
+        placeholder = { Text(EnterLoginHint) },
+        label = { Text(EnterLoginHint) },
+    )
+}
 
 @Composable
 fun PasswordTextField(Hint: String, viewModelLogin: LoginViewModel) {

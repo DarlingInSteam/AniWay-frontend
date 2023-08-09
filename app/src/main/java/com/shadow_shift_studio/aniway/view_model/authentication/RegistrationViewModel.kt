@@ -20,9 +20,9 @@ import kotlinx.coroutines.launch
 class RegistrationViewModel(private val context: Context) : ViewModel() {
 
 
-    var login: MutableState<String> = mutableStateOf("DarlingInSteam")
+    var login: MutableState<String> = mutableStateOf("")
     var email: MutableState<String> = mutableStateOf("")
-    var password: MutableState<String> = mutableStateOf("artem11112003")
+    var password: MutableState<String> = mutableStateOf("")
     var repeatPassword: MutableState<String> = mutableStateOf("")
     var sex: MutableState<Sex> = mutableStateOf(Sex.MALE)
     val registerStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
