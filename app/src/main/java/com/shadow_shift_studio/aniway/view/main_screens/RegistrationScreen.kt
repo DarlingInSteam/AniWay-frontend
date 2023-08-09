@@ -49,7 +49,7 @@ import com.shadow_shift_studio.aniway.InputErrorMessage
 import com.shadow_shift_studio.aniway.PasswordsDontMatch
 import com.shadow_shift_studio.aniway.RegisterButtonText
 import com.shadow_shift_studio.aniway.RepeatPasswordHint
-import com.shadow_shift_studio.aniway.data.enum.LoginStates
+import com.shadow_shift_studio.aniway.model.enum.LoginStates
 import com.shadow_shift_studio.aniway.loginErrors
 import com.shadow_shift_studio.aniway.passwordRules
 import com.shadow_shift_studio.aniway.view.secondary_screens.settings.DropdownTextField

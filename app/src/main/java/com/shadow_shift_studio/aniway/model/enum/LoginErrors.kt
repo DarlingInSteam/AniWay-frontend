@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.data.enum
+package com.shadow_shift_studio.aniway.model.enum
 
 enum class LoginStates(val value: Int)
 {

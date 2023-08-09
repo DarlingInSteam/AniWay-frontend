@@ -1,6 +1,6 @@
 package com.shadow_shift_studio.aniway.model.entity
 
-import com.shadow_shift_studio.aniway.data.enum.Sex
+import com.shadow_shift_studio.aniway.model.enum.Sex
 import java.util.Date
 
 data class User(
