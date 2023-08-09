@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.view.secondary_screens
+package com.shadow_shift_studio.aniway.view.secondary_screens.notify_screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,7 +25,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.view.cards.NotificationCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
-import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 
 @Composable
 fun Notification(navController: NavController, viewModelBottom: BottomNavBarViewModel) {

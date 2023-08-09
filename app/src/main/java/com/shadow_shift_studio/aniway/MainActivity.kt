@@ -27,17 +27,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.view.bottomnav.Constants
-import com.shadow_shift_studio.aniway.view.main_screens.Authorization
+import com.shadow_shift_studio.aniway.view.authentication_screen.Authorization
 import com.shadow_shift_studio.aniway.view.main_screens.CatalogScreen
 import com.shadow_shift_studio.aniway.view.main_screens.MyScreen
 import com.shadow_shift_studio.aniway.view.main_screens.ProfileScreen
 import com.shadow_shift_studio.aniway.view.main_screens.TopsScreen
 import com.shadow_shift_studio.aniway.view.ui.theme.AniWayTheme
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
-import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
-import com.shadow_shift_studio.aniway.view_model.CatalogViewModel
-import com.shadow_shift_studio.aniway.view_model.MyViewModel
-import com.shadow_shift_studio.aniway.view_model.TopsViewModel
+import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.main_screens.CatalogViewModel
+import com.shadow_shift_studio.aniway.view_model.main_screens.MyViewModel
+import com.shadow_shift_studio.aniway.view_model.main_screens.TopsViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {0

@@ -58,14 +58,14 @@ import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
-import com.shadow_shift_studio.aniway.view.secondary_screens.Notification
+import com.shadow_shift_studio.aniway.view.secondary_screens.notify_screens.Notification
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.view.secondary_screens.settings.Settings
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
-import com.shadow_shift_studio.aniway.view_model.ProfileViewModel
+import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.main_screens.ProfileViewModel
 
 @Composable
 fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {

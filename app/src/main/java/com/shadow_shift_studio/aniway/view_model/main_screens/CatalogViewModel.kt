@@ -1,8 +1,6 @@
-package com.shadow_shift_studio.aniway.view_model
+package com.shadow_shift_studio.aniway.view_model.main_screens
 
-import android.security.KeyChain
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 
 class CatalogViewModel : ViewModel() {

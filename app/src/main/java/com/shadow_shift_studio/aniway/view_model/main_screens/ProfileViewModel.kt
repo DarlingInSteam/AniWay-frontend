@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.view_model
+package com.shadow_shift_studio.aniway.view_model.main_screens
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData

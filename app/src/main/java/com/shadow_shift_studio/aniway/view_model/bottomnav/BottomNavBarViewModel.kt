@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.view_model
+package com.shadow_shift_studio.aniway.view_model.bottomnav
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel

@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.view.main_screens
+package com.shadow_shift_studio.aniway.view.authentication_screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
@@ -36,7 +36,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -47,8 +46,7 @@ import com.shadow_shift_studio.aniway.ForgotPasswordText
 import com.shadow_shift_studio.aniway.LoginButtonText
 import com.shadow_shift_studio.aniway.RegistrationText
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surfaceVariant
-import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
-import kotlinx.coroutines.CoroutineScope
+import com.shadow_shift_studio.aniway.view_model.authentication.RegistrationViewModel
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

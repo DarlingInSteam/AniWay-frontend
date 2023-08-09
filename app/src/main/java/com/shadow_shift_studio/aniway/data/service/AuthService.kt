@@ -1,7 +1,7 @@
 package com.shadow_shift_studio.aniway.data.service
 
 import com.shadow_shift_studio.aniway.data.credentials.CredentialsForLogin
-import com.shadow_shift_studio.aniway.model.response.TokenResponse
+import com.shadow_shift_studio.aniway.model.api_response.TokenResponse
 import retrofit2.Call
 import retrofit2.http.POST
 import retrofit2.http.Body

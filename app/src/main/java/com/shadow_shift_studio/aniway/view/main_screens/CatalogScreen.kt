@@ -67,8 +67,8 @@ import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.Manga
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
-import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
-import com.shadow_shift_studio.aniway.view_model.CatalogViewModel
+import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.main_screens.CatalogViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

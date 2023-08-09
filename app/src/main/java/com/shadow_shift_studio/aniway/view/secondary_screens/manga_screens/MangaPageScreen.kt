@@ -88,7 +88,7 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_secondaryContainer
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
-import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 
 @Composable
 fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel) {

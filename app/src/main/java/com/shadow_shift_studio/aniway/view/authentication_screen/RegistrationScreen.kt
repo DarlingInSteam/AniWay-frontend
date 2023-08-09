@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.view.main_screens
+package com.shadow_shift_studio.aniway.view.authentication_screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -55,7 +55,7 @@ import com.shadow_shift_studio.aniway.passwordRules
 import com.shadow_shift_studio.aniway.view.secondary_screens.settings.DropdownTextField
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_error
-import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
+import com.shadow_shift_studio.aniway.view_model.authentication.RegistrationViewModel
 import kotlinx.coroutines.launch
 
 @Composable

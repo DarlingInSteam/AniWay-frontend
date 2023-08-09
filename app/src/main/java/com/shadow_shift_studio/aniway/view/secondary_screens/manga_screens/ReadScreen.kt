@@ -46,7 +46,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
-import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
