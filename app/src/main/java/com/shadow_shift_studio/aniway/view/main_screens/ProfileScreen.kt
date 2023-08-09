@@ -55,7 +55,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.R
-import com.shadow_shift_studio.aniway.data.data_class.User
+import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.Notification
@@ -66,8 +66,6 @@ import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.ProfileViewModel
-import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {

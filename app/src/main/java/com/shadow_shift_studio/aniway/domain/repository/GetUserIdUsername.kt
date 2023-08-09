@@ -1,7 +1,7 @@
 package com.shadow_shift_studio.aniway.domain.repository
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.data.data_class.User
+import com.shadow_shift_studio.aniway.model.entity.User
 
 /**
  * Интерфейс `UserByUsernameRepository` определяет метод для получения информации о пользователе по его имени пользователя.

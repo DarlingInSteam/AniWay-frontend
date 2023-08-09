@@ -1,7 +1,7 @@
 package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.data.data_class.User
+import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.domain.repository.GetUserIdUsername
 
 /**
@@ -11,7 +11,7 @@ import com.shadow_shift_studio.aniway.domain.repository.GetUserIdUsername
  * @constructor Создает экземпляр класса `GetUserByUsernameUseCase`.
  * @param getUserByUsernameRepository Репозиторий для получения информации о пользователе по имени пользователя.
  */
-class GetUserByUsernameUseCase(private val getUserByUsernameRepository: GetUserIdUsername) {
+class GetUserByIdUsername(private val getUserByUsernameRepository: GetUserIdUsername) {
 
     /**
      * Выполняет запрос на получение информации о пользователе по его имени пользователя.

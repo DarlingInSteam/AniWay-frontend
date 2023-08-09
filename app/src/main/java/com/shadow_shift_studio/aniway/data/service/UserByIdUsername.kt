@@ -1,6 +1,6 @@
 package com.shadow_shift_studio.aniway.data.service
 
-import com.shadow_shift_studio.aniway.data.data_class.User
+import com.shadow_shift_studio.aniway.model.entity.User
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

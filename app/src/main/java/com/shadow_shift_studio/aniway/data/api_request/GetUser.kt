@@ -3,7 +3,7 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
-import com.shadow_shift_studio.aniway.data.data_class.User
+import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.domain.repository.GetUserIdUsername
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
