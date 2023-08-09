@@ -32,8 +32,8 @@ import com.shadow_shift_studio.aniway.view.main_screens.CatalogScreen
 import com.shadow_shift_studio.aniway.view.main_screens.MyScreen
 import com.shadow_shift_studio.aniway.view.main_screens.ProfileScreen
 import com.shadow_shift_studio.aniway.view.main_screens.TopsScreen
-import com.shadow_shift_studio.aniway.ui.theme.AniWayTheme
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view.ui.theme.AniWayTheme
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.CatalogViewModel
 import com.shadow_shift_studio.aniway.view_model.MyViewModel

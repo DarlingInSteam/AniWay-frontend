@@ -31,9 +31,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_tertiaryContainer
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_tertiaryContainer
 
 @Composable
 fun MangaCardTop(navController: NavController) {

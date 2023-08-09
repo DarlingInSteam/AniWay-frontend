@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.ui.theme
+package com.shadow_shift_studio.aniway.view.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

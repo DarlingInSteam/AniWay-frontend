@@ -42,8 +42,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.view.cards.MangaCardTop
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.TopsViewModel
 

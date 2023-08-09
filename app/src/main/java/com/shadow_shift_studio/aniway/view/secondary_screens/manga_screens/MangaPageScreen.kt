@@ -78,16 +78,16 @@ import com.shadow_shift_studio.aniway.LastCommentButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_bottom_sheet_bottoms
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onPrimary
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSecondaryContainer
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurface
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_primary
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_secondaryContainer
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_high
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_light_surfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onPrimary
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSecondaryContainer
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_secondaryContainer
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view_model.BottomNavBarViewModel
 
 @Composable

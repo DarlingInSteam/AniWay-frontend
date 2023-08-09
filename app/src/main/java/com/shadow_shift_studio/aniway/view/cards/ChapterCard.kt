@@ -29,9 +29,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.shadow_shift_studio.aniway.ChapterText
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_primary
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

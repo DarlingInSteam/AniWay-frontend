@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.shadow_shift_studio.aniway.R
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_background
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_outlineVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_outlineVariant
 
 @Composable
 fun NotificationCard(navController: NavController) {

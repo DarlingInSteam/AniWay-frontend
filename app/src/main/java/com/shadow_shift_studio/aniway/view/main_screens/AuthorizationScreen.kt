@@ -46,7 +46,7 @@ import com.shadow_shift_studio.aniway.EnterPasswordHint
 import com.shadow_shift_studio.aniway.ForgotPasswordText
 import com.shadow_shift_studio.aniway.LoginButtonText
 import com.shadow_shift_studio.aniway.RegistrationText
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surfaceVariant
 import com.shadow_shift_studio.aniway.view_model.RegistrationViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch

@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.ui.theme
+package com.shadow_shift_studio.aniway.view.ui.theme
 
 import android.app.Activity
 import android.os.Build

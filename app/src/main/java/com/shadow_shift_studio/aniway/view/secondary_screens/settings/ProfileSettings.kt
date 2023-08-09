@@ -44,9 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_secondaryContainer
-import com.shadow_shift_studio.aniway.ui.theme.md_theme_dark_surface_container_higher
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_secondaryContainer
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 
 @Composable
 fun ProfileSettings(navController: NavController) {
