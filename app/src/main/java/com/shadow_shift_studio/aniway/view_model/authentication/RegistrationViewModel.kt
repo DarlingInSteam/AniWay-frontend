@@ -13,15 +13,14 @@ import com.shadow_shift_studio.aniway.model.enum.LoginStates
 import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
 import kotlinx.coroutines.launch
 
-class RegistrationViewModel(private val context: Context) : ViewModel() {
-    private val loginUserUseCase: LoginUserUseCase =
-        LoginUserUseCase(UserAuthentication())
+class RegistrationViewModel() : ViewModel() {
+
 
     var login: MutableState<String> = mutableStateOf("DarlingInSteam")
     var email: MutableState<String> = mutableStateOf("")
     var password: MutableState<String> = mutableStateOf("artem11112003")
     var repeatPassword: MutableState<String> = mutableStateOf("")
-    val loginStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
+
 
     fun isLoginValid(login: String): LoginStates {
         val pattern = Regex("^[a-zA-Z0-9!@#\$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]*$")
@@ -76,15 +75,6 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
         return res
     }
 
-    suspend fun loginUser() {
-        viewModelScope.launch {
-            val status = loginUserUseCase.execute(context, login.value, password.value)
-            loginStatusLiveData.value = status
 
-            if(status) {
-                AuthorizedUser.username = login.value
-            }
-        }.join()
-    }
 }
 
