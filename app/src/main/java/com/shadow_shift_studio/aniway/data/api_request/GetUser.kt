@@ -90,6 +90,15 @@ class GetUser : GetUserIdUsername {
         return userForErrorResponse // Возвращаем пустого пользователя в случае возникновения ошибки
     }
 
+
+    /**
+     * Получает информацию о пользователе по Id пользователя.
+     *
+     * @param context Контекст приложения.
+     * @param id Id пользователя, для которого необходимо получить информацию.
+     * @return Объект `User`, содержащий информацию о пользователе. В случае ошибки возвращается
+     *         объект `User` с пустыми полями или значениями по умолчанию.
+     */
     override suspend fun getUserById(context: Context, id: String): User {
         // Создаем объект для вызова удаленного сервиса
         val backendService = HttpClientIsLogin.getUserService
