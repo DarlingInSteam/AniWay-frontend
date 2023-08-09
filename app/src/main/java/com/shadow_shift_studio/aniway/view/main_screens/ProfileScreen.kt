@@ -54,6 +54,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.R
 import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
@@ -104,7 +105,7 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
                         .fillMaxSize()
                         .verticalScroll(scrollState)
                 ) {
-                    Wallpaper(navController)
+                    userState.value?.let { it1 -> Wallpaper(navController, it1) }
                     Spacer(modifier = Modifier.height(15.dp))
 
                     userState.value?.let { it1 -> NickAndBadge(it1) }
@@ -346,7 +347,7 @@ fun NickAndBadge(user: User) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Wallpaper(navController: NavController) {
+fun Wallpaper(navController: NavController, user: User) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -360,8 +361,8 @@ fun Wallpaper(navController: NavController) {
                 .background(Color.White)
         ) {
             Box {
-                Image(
-                    painter = painterResource(R.drawable.wallpaper),
+                AsyncImage(
+                    model = user.avatarUrl.toString(),
                     contentDescription = "avatar",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -372,8 +373,8 @@ fun Wallpaper(navController: NavController) {
 
         }
 
-        Image(
-            painter = painterResource(R.drawable.ava),
+        AsyncImage(
+            model = user.backgroundUrl.toString(),
             contentDescription = "avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier
