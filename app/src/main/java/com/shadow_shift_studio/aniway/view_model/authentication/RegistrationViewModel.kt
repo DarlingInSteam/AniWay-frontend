@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.view_model.authentication
 
+
 import android.content.Context
 import android.text.TextUtils
 import androidx.compose.runtime.MutableState
@@ -8,19 +9,26 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.UserAuthentication
+import com.shadow_shift_studio.aniway.data.api_request.UserRegistration
 import com.shadow_shift_studio.aniway.data.client.AuthorizedUser
-import com.shadow_shift_studio.aniway.model.enum.LoginStates
 import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
+import com.shadow_shift_studio.aniway.domain.use_case.RegisterUserUseCase
+import com.shadow_shift_studio.aniway.model.enum.LoginStates
+import com.shadow_shift_studio.aniway.model.enum.Sex
 import kotlinx.coroutines.launch
 
-class RegistrationViewModel() : ViewModel() {
+class RegistrationViewModel(private val context: Context) : ViewModel() {
 
 
     var login: MutableState<String> = mutableStateOf("DarlingInSteam")
     var email: MutableState<String> = mutableStateOf("")
     var password: MutableState<String> = mutableStateOf("artem11112003")
     var repeatPassword: MutableState<String> = mutableStateOf("")
+    var sex: MutableState<Sex> = mutableStateOf(Sex.MALE)
+    val registerStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
+    private val registrationUserUseCase: RegisterUserUseCase =
+        RegisterUserUseCase(UserRegistration())
 
     fun isLoginValid(login: String): LoginStates {
         val pattern = Regex("^[a-zA-Z0-9!@#\$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]*$")
@@ -75,6 +83,12 @@ class RegistrationViewModel() : ViewModel() {
         return res
     }
 
+    suspend fun registerUser() {
+        viewModelScope.launch {
+            val status = registrationUserUseCase.execute(context, login.value, email.value, password.value, sex.value)
+            registerStatusLiveData.value = status
 
+        }.join()
+    }
 }
 

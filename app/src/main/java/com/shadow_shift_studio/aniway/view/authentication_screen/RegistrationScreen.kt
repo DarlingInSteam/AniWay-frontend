@@ -63,6 +63,7 @@ fun Registration(navController: NavController) {
     val context = LocalContext.current
     val viewModelRegistration: RegistrationViewModel = RegistrationViewModel(context)
     var isTextVisible by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     Column {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -106,7 +107,16 @@ fun Registration(navController: NavController) {
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {if(viewModelRegistration.isAllDataEntered()) navController.popBackStack() else isTextVisible = true},
+                onClick = {
+                    if(viewModelRegistration.isAllDataEntered()){
+                        coroutineScope.launch {
+                            viewModelRegistration.registerUser()
+                            if(viewModelRegistration.registerStatusLiveData.value == true) {
+                                navController.popBackStack()
+                            }
+                        }
+                    }
+                    else isTextVisible = true},
                 content = { Text(text = RegisterButtonText, fontSize = 18.sp) }
             )
 
