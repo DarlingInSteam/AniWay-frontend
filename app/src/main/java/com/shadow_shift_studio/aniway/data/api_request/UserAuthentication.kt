@@ -5,7 +5,7 @@ import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
 import com.shadow_shift_studio.aniway.data.client.HttpClientNotLogin
 import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
-import com.shadow_shift_studio.aniway.data.data_class.CredentialsForLogin
+import com.shadow_shift_studio.aniway.data.credentials.CredentialsForLogin
 import com.shadow_shift_studio.aniway.data.data_class.TokenResponse
 import com.shadow_shift_studio.aniway.domain.repository.LoginRepository
 import kotlinx.coroutines.suspendCancellableCoroutine

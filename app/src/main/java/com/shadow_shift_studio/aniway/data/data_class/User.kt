@@ -18,5 +18,3 @@ data class User(
     var backgroundUrl: String?
 )
 
-data class CredentialsForLogin(val username: String, val password: String)
-data class CredentialsForUserByUsername(val username: String)
