@@ -3,10 +3,8 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
-import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
-import com.shadow_shift_studio.aniway.data.data_class.CredentialsForUserByUsername
 import com.shadow_shift_studio.aniway.data.data_class.User
-import com.shadow_shift_studio.aniway.domain.repository.UserByUsernameRepository
+import com.shadow_shift_studio.aniway.domain.repository.GetUserIdUsername
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,7 +18,7 @@ import kotlin.coroutines.resume
  *
  * @constructor Создает экземпляр класса `GetUser`.
  */
-class GetUser : UserByUsernameRepository {
+class GetUser : GetUserIdUsername {
 
     /**
      * Получает информацию о пользователе по его имени пользователя.
@@ -32,9 +30,9 @@ class GetUser : UserByUsernameRepository {
      */
     override suspend fun getUserByUsername(context: Context, username: String): User {
         // Создаем объект для вызова удаленного сервиса
-        val backendService = HttpClientIsLogin.userByUsernameService
+        val backendService = HttpClientIsLogin.getUserService
         // Создаем объект с пустыми полями для использования в случае ошибки
-        val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null)
+        val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null, null, null)
 
         try {
             // Используем suspendCancellableCoroutine для работы с асинхронным кодом
@@ -59,7 +57,71 @@ class GetUser : UserByUsernameRepository {
                                     createdAt = responseBody.createdAt,
                                     chapters = responseBody.chapters,
                                     likes = responseBody.likes,
-                                    comments = responseBody.comments
+                                    comments = responseBody.comments,
+                                    avatarUrl = responseBody.avatarUrl,
+                                    backgroundUrl = responseBody.backgroundUrl
+                                )
+                                continuation.resume(user) // Возобновляем выполнение корутины с полученным пользователем
+                            } else {
+                                continuation.resume(userForErrorResponse) // В случае отсутствия данных в ответе, возвращаем пустого пользователя
+                            }
+                        } else {
+                            Log.e("Login Error", response.errorBody().toString())
+                            continuation.resume(userForErrorResponse) // В случае ошибки в ответе, возвращаем пустого пользователя
+                        }
+                    }
+
+                    // Обработка ошибки при выполнении запроса
+                    override fun onFailure(call: Call<User>, t: Throwable) {
+                        Log.e("Network client error", t.message ?: "HTTP client failed to connect")
+                        continuation.resume(userForErrorResponse) // В случае ошибки, возвращаем пустого пользователя
+                    }
+                })
+
+                // Отменяем вызов при отмене корутины
+                continuation.invokeOnCancellation {
+                    call.cancel()
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("Ошибка", e.toString()) // Обработка общей ошибки и логирование
+        }
+
+        return userForErrorResponse // Возвращаем пустого пользователя в случае возникновения ошибки
+    }
+
+    override suspend fun getUserById(context: Context, id: String): User {
+        // Создаем объект для вызова удаленного сервиса
+        val backendService = HttpClientIsLogin.getUserService
+        // Создаем объект с пустыми полями для использования в случае ошибки
+        val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null, null, null)
+
+        try {
+            // Используем suspendCancellableCoroutine для работы с асинхронным кодом
+            return suspendCancellableCoroutine { continuation ->
+                // Создаем вызов к удаленному сервису
+                val call = backendService.userById(id)
+
+                // Обработка успешного ответа от сервера
+                call.enqueue(object : Callback<User> {
+                    override fun onResponse(call: Call<User>, response: Response<User>) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body()
+                            if (responseBody != null) {
+                                // Создаем объект User на основе полученных данных
+                                val user = User(
+                                    id = responseBody.id,
+                                    username = responseBody.username,
+                                    sex = responseBody.sex,
+                                    xp = responseBody.xp,
+                                    pass_xp = responseBody.pass_xp,
+                                    balance = responseBody.balance,
+                                    createdAt = responseBody.createdAt,
+                                    chapters = responseBody.chapters,
+                                    likes = responseBody.likes,
+                                    comments = responseBody.comments,
+                                    avatarUrl = responseBody.avatarUrl,
+                                    backgroundUrl = responseBody.backgroundUrl
                                 )
                                 continuation.resume(user) // Возобновляем выполнение корутины с полученным пользователем
                             } else {

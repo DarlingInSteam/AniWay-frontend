@@ -18,7 +18,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
 
     suspend fun getUserByUsername() {
         viewModelScope.launch {
-            val user = getUserByUsernameUseCase.execute(context, AuthorizedUser.username)
+            val user = getUserByUsernameUseCase.userByUsername(context, AuthorizedUser.username)
             userByUsernameLiveData.value = user
         }.join()
     }

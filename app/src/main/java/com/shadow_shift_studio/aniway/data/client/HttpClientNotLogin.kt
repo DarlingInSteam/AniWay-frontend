@@ -1,7 +1,6 @@
 package com.shadow_shift_studio.aniway.data.client
 
 import com.shadow_shift_studio.aniway.data.service.LoginService
-import com.shadow_shift_studio.aniway.data.service.UserByUsernameService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

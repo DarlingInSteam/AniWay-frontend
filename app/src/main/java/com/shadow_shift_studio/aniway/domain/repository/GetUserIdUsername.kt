@@ -6,7 +6,7 @@ import com.shadow_shift_studio.aniway.data.data_class.User
 /**
  * Интерфейс `UserByUsernameRepository` определяет метод для получения информации о пользователе по его имени пользователя.
  */
-interface UserByUsernameRepository {
+interface GetUserIdUsername {
 
     /**
      * Получает информацию о пользователе по его имени пользователя.
@@ -16,4 +16,5 @@ interface UserByUsernameRepository {
      * @return Объект типа `User`, содержащий информацию о пользователе.
      */
     suspend fun getUserByUsername(context: Context, username: String): User
+    suspend fun getUserById(context: Context, id: String): User
 }

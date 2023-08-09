@@ -13,7 +13,9 @@ data class User(
     var createdAt: Date?,
     var chapters: Int?,
     var likes: Int?,
-    var comments: Int?
+    var comments: Int?,
+    var avatarUrl: String?,
+    var backgroundUrl: String?
 )
 
 data class CredentialsForLogin(val username: String, val password: String)

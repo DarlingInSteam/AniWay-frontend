@@ -1,6 +1,6 @@
 package com.shadow_shift_studio.aniway.data.client
 
-import com.shadow_shift_studio.aniway.data.service.UserByUsernameService
+import com.shadow_shift_studio.aniway.data.service.UserByIdUsername
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -23,5 +23,5 @@ object HttpClientIsLogin {
         .build()
 
     // Создание сервиса для выполнения запросов
-    val userByUsernameService: UserByUsernameService = retrofit.create(UserByUsernameService::class.java)
+    val getUserService: UserByIdUsername = retrofit.create(UserByIdUsername::class.java)
 }
