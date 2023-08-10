@@ -6,7 +6,7 @@ import com.shadow_shift_studio.aniway.model.entity.User
 /**
  * Интерфейс `UserByUsernameRepository` определяет метод для получения информации о пользователе по его имени пользователя.
  */
-interface GetUserIdUsername {
+interface IGetUserIdUsername {
 
     /**
      * Получает информацию о пользователе по его имени пользователя.

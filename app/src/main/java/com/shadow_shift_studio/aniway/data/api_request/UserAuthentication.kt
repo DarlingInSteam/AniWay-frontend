@@ -6,7 +6,7 @@ import com.shadow_shift_studio.aniway.data.client.HttpClientNotLogin
 import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
 import com.shadow_shift_studio.aniway.data.credentials.CredentialsForLogin
 import com.shadow_shift_studio.aniway.model.api_response.TokenResponse
-import com.shadow_shift_studio.aniway.domain.repository.LoginRepository
+import com.shadow_shift_studio.aniway.domain.repository.ILoginRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Response
@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
  *
  * @constructor Создает экземпляр класса `UserAuthentication`.
  */
-class UserAuthentication : LoginRepository {
+class UserAuthentication : ILoginRepository {
 
     /**
      * Аутентифицирует пользователя с использованием имени пользователя и пароля.

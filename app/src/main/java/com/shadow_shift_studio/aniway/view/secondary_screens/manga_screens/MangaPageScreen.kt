@@ -133,7 +133,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
                         )
                     }
                     Row {
-                        TopMangaBar(navController = navController, viewModelBottom,changeBookmarksSheetVisible = { bookmarksBottomSheetVisible = true })
+                        TopMangaBar(navController = navController, viewModelBottom, changeBookmarksSheetVisible = { bookmarksBottomSheetVisible = true })
                     }
                     Spacer(
                         modifier = Modifier
@@ -201,8 +201,8 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
         enter = slideInVertically(initialOffsetY = { height -> height }, animationSpec = tween()),
         exit = slideOutVertically(targetOffsetY = { height -> height }, animationSpec = tween()),
         content = {BookmarksBottomSheet(onClose = {
-                bookmarksBottomSheetVisible = false
-            })
+            bookmarksBottomSheetVisible = false
+        })
         }
     )
 }
@@ -249,7 +249,7 @@ fun GradientImage(startColor: Color, endColor: Color) {
 
 
 @Composable
-fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel, changeBookmarksSheetVisible: () -> Unit,) {
+fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel, changeBookmarksSheetVisible: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -281,7 +281,7 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
             )
         }
         ExtendedFloatingActionButton(
-            onClick = { changeBookmarksSheetVisible()},
+            onClick = { changeBookmarksSheetVisible() },
             shape = RoundedCornerShape(28.dp),
             modifier = Modifier
                 .height(40.dp),
@@ -764,7 +764,7 @@ fun CommentsMangaPage(navController: NavController) {
                             .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
                             .fillMaxWidth()
                     ) {
-                        CommentCard()
+//                        CommentCard()
                     }
                 }
             }
@@ -876,6 +876,8 @@ fun ButtonsForBookmarks(onClose: () -> Unit) {
         }
     }
 }
+
+
 
 
 

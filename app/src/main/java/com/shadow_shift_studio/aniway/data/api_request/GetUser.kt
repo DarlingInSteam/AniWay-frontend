@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
 import com.shadow_shift_studio.aniway.model.entity.User
-import com.shadow_shift_studio.aniway.domain.repository.GetUserIdUsername
+import com.shadow_shift_studio.aniway.domain.repository.IGetUserIdUsername
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
  *
  * @constructor Создает экземпляр класса `GetUser`.
  */
-class GetUser : GetUserIdUsername {
+class GetUser : IGetUserIdUsername {
 
     /**
      * Получает информацию о пользователе по его имени пользователя.
@@ -32,7 +32,7 @@ class GetUser : GetUserIdUsername {
         // Создаем объект для вызова удаленного сервиса
         val backendService = HttpClientIsLogin.getUserService
         // Создаем объект с пустыми полями для использования в случае ошибки
-        val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null, null, null)
+        val userForErrorResponse = User(null, null, null,  null, null, null, null, null, null, null, null, null)
 
         try {
             // Используем suspendCancellableCoroutine для работы с асинхронным кодом
@@ -57,9 +57,9 @@ class GetUser : GetUserIdUsername {
                                     createdAt = responseBody.createdAt,
                                     chapters = responseBody.chapters,
                                     likes = responseBody.likes,
-                                    comments = responseBody.comments,
+                                    commentsCount = responseBody.commentsCount,
                                     avatarUrl = responseBody.avatarUrl,
-                                    backgroundUrl = responseBody.backgroundUrl
+                                    backgroundUrl = responseBody.backgroundUrl,
                                 )
                                 continuation.resume(user) // Возобновляем выполнение корутины с полученным пользователем
                             } else {
@@ -103,7 +103,7 @@ class GetUser : GetUserIdUsername {
         // Создаем объект для вызова удаленного сервиса
         val backendService = HttpClientIsLogin.getUserService
         // Создаем объект с пустыми полями для использования в случае ошибки
-        val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null, null, null)
+        val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null,  null, null)
 
         try {
             // Используем suspendCancellableCoroutine для работы с асинхронным кодом
@@ -128,9 +128,9 @@ class GetUser : GetUserIdUsername {
                                     createdAt = responseBody.createdAt,
                                     chapters = responseBody.chapters,
                                     likes = responseBody.likes,
-                                    comments = responseBody.comments,
+                                    commentsCount = responseBody.commentsCount,
                                     avatarUrl = responseBody.avatarUrl,
-                                    backgroundUrl = responseBody.backgroundUrl
+                                    backgroundUrl = responseBody.backgroundUrl,
                                 )
                                 continuation.resume(user) // Возобновляем выполнение корутины с полученным пользователем
                             } else {

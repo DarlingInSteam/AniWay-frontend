@@ -3,10 +3,8 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientNotLogin
-import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
-import com.shadow_shift_studio.aniway.data.credentials.CredentialsForLogin
 import com.shadow_shift_studio.aniway.data.credentials.CredentialsForRegistration
-import com.shadow_shift_studio.aniway.domain.repository.RegistrationRepository
+import com.shadow_shift_studio.aniway.domain.repository.IRegistrationRepository
 import com.shadow_shift_studio.aniway.model.api_response.TokenResponse
 import com.shadow_shift_studio.aniway.model.enum.Sex
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -18,7 +16,7 @@ import kotlin.coroutines.resume
 //задание
 //сделать регистрацию с обращением к серверу и получением двух токенов
 //запомнить два токена для дальнейшего использования в запросах
-class UserRegistration: RegistrationRepository {
+class UserRegistration: IRegistrationRepository {
     override suspend fun registerUser(context: Context, username: String, email: String, password: String, sex: Sex): Boolean {
 
         val backendService = HttpClientNotLogin.registrationService

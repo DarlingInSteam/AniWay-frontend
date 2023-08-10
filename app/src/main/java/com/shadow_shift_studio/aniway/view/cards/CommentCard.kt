@@ -24,13 +24,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.R
+import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_outlineVariant
 
 @Composable
-fun CommentCard() {
+fun CommentCard(comment: Comment) {
 
     androidx.compose.material3.Card(
         modifier = Modifier
@@ -52,7 +54,7 @@ fun CommentCard() {
                     .fillMaxHeight()
                     .padding(start = 12.dp, top = 6.dp), verticalArrangement = Arrangement.Center
             ) {
-                ImageComment()
+                ImageComment(comment)
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(
@@ -63,7 +65,7 @@ fun CommentCard() {
             ) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "TheNorth",
+                        text = comment.username.toString(),
                         color = Color.White,
                         fontSize = 15.sp,
                     )
@@ -72,7 +74,7 @@ fun CommentCard() {
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
-                        text = "Подземелье демона",
+                        text = comment.titleName.toString(),
                         color = md_theme_dark_onSurfaceVariant,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
@@ -84,8 +86,7 @@ fun CommentCard() {
                     modifier = Modifier.fillMaxSize()
                 ) {
                     Text(
-                        text = "Обалденная манхва!! Одна из самых любимых! Здесь почти в каждой главе можно посмеяться. А в некоторых главах можно захлебнуться со смеху!\n" +
-                                "В общем, манхва однозначно стоит вашего внимания и прочтения))",
+                        text = comment.text.toString(),
                         color = Color.White,
                         fontSize = 15.sp,
                     )
@@ -97,10 +98,10 @@ fun CommentCard() {
 }
 
 @Composable
-fun ImageComment() {
+fun ImageComment(comment: Comment) {
     Column {
-        androidx.compose.foundation.Image(
-            painter = painterResource(R.drawable.ava),
+        AsyncImage(
+            model = comment.avatarUrl.toString(),
             contentDescription = "avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier

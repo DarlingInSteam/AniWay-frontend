@@ -1,7 +1,6 @@
 package com.shadow_shift_studio.aniway.view.main_screens
 
 import CommentCard
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -46,7 +45,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
@@ -55,7 +53,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.shadow_shift_studio.aniway.R
+import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
@@ -115,7 +113,7 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
                     Spacer(modifier = Modifier.height(35.dp))
                     userState.value?.let { it1 -> InformationAboutUser(it1) }
                     Spacer(modifier = Modifier.height(20.dp))
-                    UserTab(navController)
+                    UserTab(navController, viewModelProfile)
                 }
             }
             composable("fullScreen") {
@@ -138,20 +136,20 @@ fun Balance() {
 }
 
 @Composable
-fun Comments() {
+fun Comments(comments: List<Comment>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .height(450.dp),
         content = {
-            items(count = 25) { index ->
+            items(count = comments.size) { index ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
                         .fillMaxWidth()
                 ) {
-                    CommentCard()
+                    CommentCard(comments[index])
                 }
             }
         }
@@ -202,7 +200,7 @@ fun Favorites(navController: NavController) {
 }
 
 @Composable
-fun UserTab(navController: NavController) {
+fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
     val tabTitles = listOf("Любимое", "Ачивки", "Комментарии", "Баланс")
     var selectedTabIndex by remember { mutableStateOf(0) }
 
@@ -241,7 +239,25 @@ fun UserTab(navController: NavController) {
         } else if (selectedTabIndex == 1) {
             Achievements()
         } else if (selectedTabIndex == 2) {
-            Comments()
+            val commentState = remember { mutableStateOf<List<Comment>?>(null) }
+
+            val commentsObserver = Observer<List<Comment>> { newComments ->
+                commentState.value = newComments
+            }
+
+            LaunchedEffect(viewModel) {
+                viewModel.getUserComments()
+            }
+
+            DisposableEffect(viewModel) {
+                viewModel.userCommentsLiveData.observeForever(commentsObserver)
+
+                onDispose {
+                    viewModel.userCommentsLiveData.removeObserver(commentsObserver)
+                }
+            }
+
+            commentState.value?.let { Comments(it) }
         } else if (selectedTabIndex == 3) {
             Balance()
         }
@@ -287,7 +303,7 @@ fun InformationAboutUser(user: User) {
         }
         Column {
             Text(
-                text = user.comments.toString(),
+                text = user.commentsCount.toString(),
                 color = Color.White,
                 fontSize = fontSizeForNumbers,
                 modifier = Modifier.align(Alignment.CenterHorizontally)

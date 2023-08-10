@@ -13,8 +13,8 @@ data class User(
     var createdAt: Date?,
     var chapters: Int?,
     var likes: Int?,
-    var comments: Int?,
+    var commentsCount: Int?,
     var avatarUrl: String?,
-    var backgroundUrl: String?
+    var backgroundUrl: String?,
 )
 

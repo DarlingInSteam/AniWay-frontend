@@ -1,9 +1,11 @@
 package com.shadow_shift_studio.aniway.data.client
 
 import com.shadow_shift_studio.aniway.data.service.UserByIdUsername
+import com.shadow_shift_studio.aniway.data.service.UserComments
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.create
 
 /**
  * Объект `HttpClientIsLogin` предоставляет экземпляр `Retrofit`, настроенный для выполнения HTTP-запросов
@@ -12,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object HttpClientIsLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
         //нужно поставить ip своего компа
-        .baseUrl("http://10.0.2.2:8080") // Базовый URL удаленного сервера
+        .baseUrl("http://192.168.0.7:8080") // Базовый URL удаленного сервера
         .addConverterFactory(GsonConverterFactory.create()) // Конвертер для обработки JSON
         .client(OkHttpClient.Builder().addInterceptor { chain ->
             // Добавление авторизационного заголовка Bearer token к запросу
@@ -25,4 +27,5 @@ object HttpClientIsLogin {
 
     // Создание сервиса для выполнения запросов
     val getUserService: UserByIdUsername = retrofit.create(UserByIdUsername::class.java)
+    val getUserCommentsService: UserComments = retrofit.create(UserComments::class.java)
 }

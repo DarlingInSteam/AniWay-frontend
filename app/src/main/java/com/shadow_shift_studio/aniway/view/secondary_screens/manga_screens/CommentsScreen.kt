@@ -124,7 +124,7 @@ fun CommentsFullScreen() {
                         .padding(end = 23.dp, start = 23.dp)
                         .fillMaxWidth()
                 ) {
-                    CommentCard()
+//                    CommentCard()
                 }
                 Spacer(modifier = Modifier.height(11.dp))
             }

@@ -5,7 +5,7 @@ import android.content.Context
 /**
  * Интерфейс `LoginRepository` определяет метод для аутентификации пользователя.
  */
-interface LoginRepository {
+interface ILoginRepository {
 
     /**
      * Аутентифицирует пользователя с использованием имени пользователя и пароля.

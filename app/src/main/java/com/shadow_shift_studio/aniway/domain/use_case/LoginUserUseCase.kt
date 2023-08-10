@@ -1,7 +1,7 @@
 package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.domain.repository.LoginRepository
+import com.shadow_shift_studio.aniway.domain.repository.ILoginRepository
 
 /**
  * Класс `LoginUserUseCase` представляет собой use case (слой бизнес-логики),
@@ -10,7 +10,7 @@ import com.shadow_shift_studio.aniway.domain.repository.LoginRepository
  * @constructor Создает экземпляр класса `LoginUserUseCase`.
  * @param userRepository Репозиторий для аутентификации пользователя.
  */
-class LoginUserUseCase(private val userRepository: LoginRepository) {
+class LoginUserUseCase(private val userRepository: ILoginRepository) {
 
     /**
      * Выполняет аутентификацию пользователя с использованием имени и пароля.
