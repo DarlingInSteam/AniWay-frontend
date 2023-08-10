@@ -30,6 +30,11 @@ val RegistrationText: String = "Ещё нет аккаунта?"
 val InputErrorMessage: String = "Некорректный ввод"
 val PasswordsDontMatch: String = "Пароли не совпадают"
 val FillAllFields: String = "Пожалуйста, заполните все поля"
+val BookmarksReading: String = "Читаю"
+val BookmarksWillRead: String = "Буду читать"
+val BookmarksAlreadyRead: String = "Прочитано"
+val BookmarksAbandoned: String = "Брошено"
+val BookmarksFavorite: String = "Любимое"
 
 val loginErrors: Array<String> = arrayOf(
     "Допустимая длина от 3 до 20 символов",

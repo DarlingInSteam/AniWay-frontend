@@ -5,8 +5,11 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
 import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -37,9 +40,12 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RemoveRedEye
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -72,6 +78,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.AddBookmarkButtonText
+import com.shadow_shift_studio.aniway.BookmarksAbandoned
+import com.shadow_shift_studio.aniway.BookmarksAlreadyRead
+import com.shadow_shift_studio.aniway.BookmarksFavorite
+import com.shadow_shift_studio.aniway.BookmarksReading
+import com.shadow_shift_studio.aniway.BookmarksWillRead
 import com.shadow_shift_studio.aniway.ChaptersButtonText
 import com.shadow_shift_studio.aniway.GenresButtonText
 import com.shadow_shift_studio.aniway.LastCommentButtonText
@@ -88,11 +99,14 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_secondaryContainer
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 
 @Composable
 fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
     val navControllerMangaPage = rememberNavController()
+    var bookmarksBottomSheetVisible by remember { mutableStateOf(false) }
+
     NavHost(navController = navControllerMangaPage, startDestination = "main") {
         composable("main") {
             viewModelBottom.setFirstVisibleItemIndex(true)
@@ -119,7 +133,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
                         )
                     }
                     Row {
-                        TopMangaBar(navController = navController, viewModelBottom)
+                        TopMangaBar(navController = navController, viewModelBottom,changeBookmarksSheetVisible = { bookmarksBottomSheetVisible = true })
                     }
                     Spacer(
                         modifier = Modifier
@@ -182,6 +196,15 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
             ReadScreen(navControllerMangaPage, viewModelBottom)
         }
     }
+    AnimatedVisibility(
+        visible = bookmarksBottomSheetVisible,
+        enter = slideInVertically(initialOffsetY = { height -> height }, animationSpec = tween()),
+        exit = slideOutVertically(targetOffsetY = { height -> height }, animationSpec = tween()),
+        content = {BookmarksBottomSheet(onClose = {
+                bookmarksBottomSheetVisible = false
+            })
+        }
+    )
 }
 
 @Composable
@@ -226,7 +249,7 @@ fun GradientImage(startColor: Color, endColor: Color) {
 
 
 @Composable
-fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
+fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel, changeBookmarksSheetVisible: () -> Unit,) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -258,7 +281,7 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
             )
         }
         ExtendedFloatingActionButton(
-            onClick = { /*TODO*/ },
+            onClick = { changeBookmarksSheetVisible()},
             shape = RoundedCornerShape(28.dp),
             modifier = Modifier
                 .height(40.dp),
@@ -749,6 +772,110 @@ fun CommentsMangaPage(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BookmarksBottomSheet(onClose: () -> Unit) {
+    val scaffoldState = rememberModalBottomSheetState()
+    ModalBottomSheet(
+        onDismissRequest = { onClose() },
+        sheetState = scaffoldState,
+        modifier = Modifier.height(400.dp),
+        containerColor = surface_container_low
+    ) {
+        ButtonsForBookmarks(onClose = { onClose() })
+    }
+}
+
+@Composable
+fun ButtonsForBookmarks(onClose: () -> Unit) {
+    Column {
+        Button(
+            shape = RoundedCornerShape(7.dp),
+            onClick = {/*TODO*/
+                onClose()
+            },
+            modifier = Modifier
+                .padding(start = 23.dp, end = 23.dp)
+                .fillMaxWidth(),
+            colors = ButtonColors(
+                md_theme_dark_bottom_sheet_bottoms,
+                md_theme_light_surfaceVariant,
+                Color.White,
+                Color.White
+            )
+        ) {
+            Text(text = BookmarksReading)
+        }
+        Button(
+            shape = RoundedCornerShape(7.dp),
+            onClick = {/*TODO*/
+                onClose()
+            },
+            modifier = Modifier
+                .padding(start = 23.dp, end = 23.dp)
+                .fillMaxWidth(),
+            colors = ButtonColors(
+                md_theme_dark_bottom_sheet_bottoms,
+                md_theme_light_surfaceVariant,
+                Color.White,
+                Color.White
+            )
+        ) {
+            Text(text = BookmarksWillRead)
+        }
+        Button(
+            shape = RoundedCornerShape(7.dp),
+            onClick = {/*TODO*/
+                onClose()
+            },
+            modifier = Modifier
+                .padding(start = 23.dp, end = 23.dp)
+                .fillMaxWidth(),
+            colors = ButtonColors(
+                md_theme_dark_bottom_sheet_bottoms,
+                md_theme_light_surfaceVariant,
+                Color.White,
+                Color.White
+            )
+        ) {
+            Text(text = BookmarksAlreadyRead)
+        }
+        Button(
+            shape = RoundedCornerShape(7.dp),
+            onClick = {/*TODO*/
+                onClose()
+            },
+            modifier = Modifier
+                .padding(start = 23.dp, end = 23.dp)
+                .fillMaxWidth(),
+            colors = ButtonColors(
+                md_theme_dark_bottom_sheet_bottoms,
+                md_theme_light_surfaceVariant,
+                Color.White,
+                Color.White
+            )
+        ) {
+            Text(text = BookmarksAbandoned)
+        }
+        Button(
+            shape = RoundedCornerShape(7.dp),
+            onClick = {/*TODO*/
+                onClose()
+            },
+            modifier = Modifier
+                .padding(start = 23.dp, end = 23.dp)
+                .fillMaxWidth(),
+            colors = ButtonColors(
+                md_theme_dark_bottom_sheet_bottoms,
+                md_theme_light_surfaceVariant,
+                Color.White,
+                Color.White
+            )
+        ) {
+            Text(text = BookmarksFavorite)
+        }
+    }
+}
 
 
 
