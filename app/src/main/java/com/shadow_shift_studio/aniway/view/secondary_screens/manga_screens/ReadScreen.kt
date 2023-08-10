@@ -17,8 +17,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIos
@@ -146,25 +146,21 @@ fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
 }
 
 @Composable
-fun ImageList(imagesResource: Array<String>, onChangeVisible: () -> Unit ) {
+fun ImageList(imagesResource: Array<String>, onChangeVisible: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-    )
-    {
-        for (i in imagesResource) {
+
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        items(imagesResource) { i ->
             AsyncImage(
+                model = i,
+                contentDescription = "",
+                contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable(
                         interactionSource = interactionSource,
                         indication = null,
                     ) { onChangeVisible() },
-                contentScale = ContentScale.FillWidth,
-                model = i,
-                contentDescription = "",
             )
         }
     }
