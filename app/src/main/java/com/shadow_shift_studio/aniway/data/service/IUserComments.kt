@@ -6,6 +6,6 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface IUserComments {
-    @GET("todo")
+    @GET("/comment/get_comments/{username}")
     fun commentsByUsername(@Path("username") username: String): Call<List<Comment>>
 }

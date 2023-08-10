@@ -47,6 +47,7 @@ class UserAuthenticationRequest : ILoginRepository {
                         if (responseBody != null) {
                             // Создаем объект KeyStoreManager для управления хранилищем ключей
                             val keyStore = KeyStoreManager.getKeyStore(context)
+                            Log.e("123456", responseBody.accessToken)
                             // Создаем и шифруем токены доступа и обновления
                             keyStore.createSecretKey("1")
                             keyStore.createSecretKey("2")

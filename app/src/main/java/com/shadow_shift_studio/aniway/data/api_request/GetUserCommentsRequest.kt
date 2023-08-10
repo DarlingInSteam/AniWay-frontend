@@ -35,7 +35,7 @@ class GetUserCommentsRequest : IGetUserComments {
                                 continuation.resume(userForErrorResponse) // В случае отсутствия данных в ответе, возвращаем пустого пользователя
                             }
                         } else {
-                            Log.e("Login Error", response.errorBody().toString())
+                            Log.e("Comments error", response.errorBody().toString())
                             continuation.resume(userForErrorResponse) // В случае ошибки в ответе, возвращаем пустого пользователя
                         }
                     }
