@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
  *
  * @constructor Создает экземпляр класса `UserAuthentication`.
  */
-class UserAuthentication : ILoginRepository {
+class UserAuthenticationRequest : ILoginRepository {
 
     /**
      * Аутентифицирует пользователя с использованием имени пользователя и пароля.

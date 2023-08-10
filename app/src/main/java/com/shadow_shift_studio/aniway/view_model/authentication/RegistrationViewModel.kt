@@ -8,10 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shadow_shift_studio.aniway.data.api_request.UserAuthentication
-import com.shadow_shift_studio.aniway.data.api_request.UserRegistration
-import com.shadow_shift_studio.aniway.data.client.AuthorizedUser
-import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
+import com.shadow_shift_studio.aniway.data.api_request.UserRegistrationRequest
 import com.shadow_shift_studio.aniway.domain.use_case.RegisterUserUseCase
 import com.shadow_shift_studio.aniway.model.enum.LoginStates
 import com.shadow_shift_studio.aniway.model.enum.Sex
@@ -28,7 +25,7 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
     val registerStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val registrationUserUseCase: RegisterUserUseCase =
-        RegisterUserUseCase(UserRegistration())
+        RegisterUserUseCase(UserRegistrationRequest())
 
     fun isLoginValid(login: String): LoginStates {
         val pattern = Regex("^[a-zA-Z0-9!@#\$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]*$")

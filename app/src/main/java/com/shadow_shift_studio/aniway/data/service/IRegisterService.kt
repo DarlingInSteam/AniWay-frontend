@@ -6,7 +6,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface RegisterService {
+interface IRegisterService {
     @POST("/auth/register")
     fun register(@Body credentials: CredentialsForRegistration): Call<TokenResponse>
 }

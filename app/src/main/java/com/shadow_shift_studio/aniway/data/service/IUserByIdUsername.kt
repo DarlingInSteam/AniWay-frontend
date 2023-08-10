@@ -9,7 +9,7 @@ import retrofit2.http.Path
  * Интерфейс `UserByUsernameService` определяет метод для выполнения HTTP-запроса к получению информации о пользователе
  * по его имени пользователя.
  */
-interface UserByIdUsername {
+interface IUserByIdUsername {
 
     /**
      * Выполняет GET-запрос на эндпоинт `/user/username/{username}` для получения информации о пользователе

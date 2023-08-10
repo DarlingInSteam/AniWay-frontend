@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
  *
  * @constructor Создает экземпляр класса `GetUser`.
  */
-class GetUser : IGetUserIdUsername {
+class GetUserRequest : IGetUserIdUsername {
 
     /**
      * Получает информацию о пользователе по его имени пользователя.

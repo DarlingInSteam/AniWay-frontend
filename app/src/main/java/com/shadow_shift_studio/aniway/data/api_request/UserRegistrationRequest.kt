@@ -16,7 +16,7 @@ import kotlin.coroutines.resume
 //задание
 //сделать регистрацию с обращением к серверу и получением двух токенов
 //запомнить два токена для дальнейшего использования в запросах
-class UserRegistration: IRegistrationRepository {
+class UserRegistrationRequest: IRegistrationRepository {
     override suspend fun registerUser(context: Context, username: String, email: String, password: String, sex: Sex): Boolean {
 
         val backendService = HttpClientNotLogin.registrationService

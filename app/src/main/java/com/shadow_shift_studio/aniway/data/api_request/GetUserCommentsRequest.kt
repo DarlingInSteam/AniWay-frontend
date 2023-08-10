@@ -5,14 +5,13 @@ import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
 import com.shadow_shift_studio.aniway.domain.repository.IGetUserComments
 import com.shadow_shift_studio.aniway.model.entity.Comment
-import com.shadow_shift_studio.aniway.model.entity.User
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
-class GetUserComments : IGetUserComments {
+class GetUserCommentsRequest : IGetUserComments {
     override suspend fun getUserCommentsByUsername(context: Context, username: String): List<Comment> {
         // Создаем объект для вызова удаленного сервиса
         val backendService = HttpClientIsLogin.getUserCommentsService
