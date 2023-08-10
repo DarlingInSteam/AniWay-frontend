@@ -1,11 +1,11 @@
 package com.shadow_shift_studio.aniway.model.api_response
 
 /**
- * Класс `TokenResponse` представляет ответ от сервера с токенами доступа и обновления.
+ * The `TokenResponse` class represents the response from the server with access and update tokens.
  *
- * @property accessToken Токен доступа.
- * @property token Токен обновления.
- * @constructor Создает экземпляр класса `TokenResponse`.
+ * @property accessToken The access token.
+ * @property token Update token.
+ * @constructor Creates an instance of the `TokenResponse` class.
  */
 data class TokenResponse(val accessToken: String, val token: String)
 

@@ -137,7 +137,7 @@ class GetUserRequest : IGetUser {
                                 continuation.resume(userForErrorResponse) // Return an empty user object in case of missing data in the response
                             }
                         } else {
-                            Log.e("Login Error", response.errorBody().toString())
+                            Log.e("User get error", response.errorBody().toString())
                             continuation.resume(userForErrorResponse) // Return an empty user object in case of an error response
                         }
                     }
@@ -155,7 +155,7 @@ class GetUserRequest : IGetUser {
                 }
             }
         } catch (e: Exception) {
-            Log.e("Error", e.toString()) // Handle a general error and log it
+            Log.e("Unknown Error", e.toString()) // Handle a general error and log it
         }
 
         return userForErrorResponse // Return an empty user object in case of an error

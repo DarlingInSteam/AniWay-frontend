@@ -3,14 +3,14 @@ package com.shadow_shift_studio.aniway.model.entity
 import java.util.Date
 
 /**
- * Класс `Comment` представляет комментарий пользователя.
+ * The `Comment` class represents the user's comment.
  *
- * @property text Текст комментария.
- * @property username Имя пользователя, оставившего комментарий.
- * @property titleName Название заголовка, к которому оставлен комментарий.
- * @property avatarUrl URL аватара пользователя.
- * @property date Дата и время оставления комментария.
- * @constructor Создает экземпляр класса `Comment`.
+ * @property text The text of the comment.
+ * @property username The name of the user who left the comment.
+ * @property titleName The name of the title to which the comment was left.
+ * @property avatarUrl The URL of the user's avatar.
+ * @property date The date and time the comment was left.
+ * @constructor Creates an instance of the `Comment` class.
  */
 data class Comment(
     var text: String?,

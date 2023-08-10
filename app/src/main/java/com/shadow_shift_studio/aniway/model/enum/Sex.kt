@@ -1,16 +1,16 @@
 package com.shadow_shift_studio.aniway.model.enum
 
 /**
- * Перечисление `Sex` представляет возможные половые идентификаторы.
+ * The `Sex` enumeration represents possible gender identifiers.
  */
 enum class Sex {
     /**
-     * Мужской пол.
+     * Male sex.
      */
     MALE,
 
     /**
-     * Женский пол.
+     * Female gender.
      */
     FEMALE
 }

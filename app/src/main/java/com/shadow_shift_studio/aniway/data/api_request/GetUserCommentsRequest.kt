@@ -47,7 +47,7 @@ class GetUserCommentsRequest : IGetUserComments {
                             }
                         } else {
                             // Handling error response from the server.
-                            Log.e("Comments error", response.errorBody().toString())
+                            Log.e("Comments get error", response.errorBody().toString())
                             continuation.resume(userForErrorResponse)
                         }
                     }
@@ -66,7 +66,7 @@ class GetUserCommentsRequest : IGetUserComments {
             }
         } catch (e: Exception) {
             // Handling potential exceptions.
-            Log.e("Error", e.toString())
+            Log.e("Unknown Error", e.toString())
         }
 
         // Returning an empty list of comments in case of an error.

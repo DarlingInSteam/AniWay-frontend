@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shadow_shift_studio.aniway.data.api_request.UserAuthenticationRequest
+import com.shadow_shift_studio.aniway.data.api_request.UserAuthorizationRequest
 import com.shadow_shift_studio.aniway.data.search_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ class LoginViewModel(private val context: Context): ViewModel() {
     val loginStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val loginUserUseCase: LoginUserUseCase =
-        LoginUserUseCase(UserAuthenticationRequest())
+        LoginUserUseCase(UserAuthorizationRequest())
 
     suspend fun loginUser() {
         viewModelScope.launch {

@@ -4,21 +4,21 @@ import com.shadow_shift_studio.aniway.model.enum.Sex
 import java.util.Date
 
 /**
- * Класс `User` представляет информацию о пользователе.
+ * The `User` class represents information about the user.
  *
- * @property id Уникальный идентификатор пользователя.
- * @property username Имя пользователя.
- * @property sex Пол пользователя.
- * @property xp Опыт пользователя.
- * @property pass_xp Опыт для следующего уровня.
- * @property balance Баланс пользователя.
- * @property createdAt Дата и время создания аккаунта пользователя.
- * @property chapters Количество глав пользователя.
- * @property likes Количество лайков пользователя.
- * @property commentsCount Количество комментариев пользователя.
- * @property avatarUrl URL аватара пользователя.
- * @property backgroundUrl URL фона пользователя.
- * @constructor Создает экземпляр класса `User`.
+ * @property id The unique identifier of the user.
+ * @property username Username of the user.
+ * @property sex The user's gender.
+ * @property xp User experience.
+ * @property pass_xp Experience for the next level.
+ * @property balance User balance.
+ * @property createdAt The date and time the user's account was created.
+ * @property chapters Number of chapters of the user.
+ * @property likes Number of likes of the user.
+ * @property commentsCount The number of comments the user has.
+ * @property avatarUrl The URL of the user's avatar.
+ * @property backgroundUrl URL of the user's background.
+ * @constructor Creates an instance of the `User` class.
  */
 data class User(
     var id: Long?,

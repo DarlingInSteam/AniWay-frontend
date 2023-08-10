@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
  *
  * @constructor Creates an instance of the `UserAuthentication` class.
  */
-class UserAuthenticationRequest : ILoginRepository {
+class UserAuthorizationRequest : ILoginRepository {
 
     /**
      * Authenticates a user using their username and password.
@@ -63,14 +63,14 @@ class UserAuthenticationRequest : ILoginRepository {
                             continuation.resume(false) // Return `false` in case of missing data in the response
                         }
                     } else {
-                        Log.e("Auth error", response.errorBody().toString())
+                        Log.e("Authorization error", response.errorBody().toString())
                         continuation.resume(false) // Return `false` in case of an error response
                     }
                 }
 
                 // Handling an error while making the request
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                    Log.e("Client error", t.message ?: "HTTP client failed to connect")
+                    Log.e("Network client error", t.message ?: "HTTP client failed to connect")
                     continuation.resume(false) // Return `false` in case of an error
                 }
             })

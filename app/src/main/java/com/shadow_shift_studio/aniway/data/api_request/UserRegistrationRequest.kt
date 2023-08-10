@@ -54,14 +54,14 @@ class UserRegistrationRequest : IRegistrationRepository {
                             continuation.resume(false) // Error in the server response.
                         }
                     } else {
-                        Log.e("Reg error", response.errorBody().toString())
+                        Log.e("Registration error", response.errorBody().toString())
                         continuation.resume(false) // Server response error.
                     }
                 }
 
                 // Handling an error while making the request.
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                    Log.e("Client error", t.message ?: "HTTP client failed to connect")
+                    Log.e("Network client error", t.message ?: "HTTP client failed to connect")
                     continuation.resume(false) // Connection error.
                 }
             })
