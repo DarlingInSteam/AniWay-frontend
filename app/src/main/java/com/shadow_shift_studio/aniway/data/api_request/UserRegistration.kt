@@ -32,17 +32,6 @@ class UserRegistration: RegistrationRepository {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if (responseBody != null) {
-                            val keyStore = KeyStoreManager.getKeyStore(context)
-                            keyStore.createSecretKey("1")
-                            keyStore.createSecretKey("2")
-                            val encryptedAccessToken = keyStore.encryptData("1", responseBody.accessToken.toByteArray())
-                            val encryptedRefreshToken = keyStore.encryptData("2", responseBody.token.toByteArray())
-
-                            KeyStoreManager.accessToken = responseBody.accessToken
-                            KeyStoreManager.token = responseBody.token
-
-                            Log.e("Токен", KeyStoreManager.accessToken)
-
                             continuation.resume(true)
                         } else {
                             continuation.resume(false)

@@ -54,10 +54,8 @@ class UserAuthentication : LoginRepository {
                             val encryptedRefreshToken = keyStore.encryptData("2", responseBody.token.toByteArray())
 
                             // Сохраняем токены в KeyStoreManager для последующего использования
-                            KeyStoreManager.accessToken = responseBody.accessToken
-                            KeyStoreManager.token = responseBody.token
-
-                            Log.e("Токен", KeyStoreManager.accessToken)
+                            KeyStoreManager.accessToken = encryptedAccessToken
+                            KeyStoreManager.token = encryptedRefreshToken
 
                             continuation.resume(true) // Возобновляем выполнение корутины с успешным результатом
                         } else {

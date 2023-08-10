@@ -8,8 +8,8 @@ import com.shadow_shift_studio.aniway.data.secure_data.KeyStore
  */
 object KeyStoreManager {
     var keyStore: KeyStore? = null // Экземпляр хранилища ключей
-    var accessToken = "" // Токен доступа
-    var token = "" // Токен обновления
+    var accessToken : ByteArray = ByteArray(16)  // Токен доступа
+    var token : ByteArray = ByteArray(16)   // Токен обновления
 
     /**
      * Возвращает экземпляр хранилища ключей (KeyStore).
@@ -22,6 +22,14 @@ object KeyStoreManager {
             keyStore = KeyStore(context) // Создаем хранилище ключей, если оно еще не было создано
         }
         return keyStore!! // Возвращаем существующее хранилище ключей
+    }
+
+    fun getDecryptAccessKey(keyAlies: String) : String {
+        return keyStore?.decryptData(keyAlies, accessToken) ?: ""
+    }
+
+    fun getDecryptKey(keyAlies: String) : String {
+        return keyStore?.decryptData(keyAlies, token) ?: ""
     }
 }
 

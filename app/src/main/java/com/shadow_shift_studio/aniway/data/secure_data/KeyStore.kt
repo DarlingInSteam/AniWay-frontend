@@ -74,18 +74,18 @@ class KeyStore(private val context: Context) {
      * @param encryptedData Зашифрованные данные.
      * @return Расшифрованные данные.
      */
-    fun decryptData(keyAlias: String, encryptedData: ByteArray): ByteArray {
+    fun decryptData(keyAlias: String, encryptedData: ByteArray): String {
         val secretKey = keyStore.getKey(keyAlias, null) as SecretKey
         val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
 
         val iv = encryptedData.copyOfRange(0, 16) // Получите IV из начала зашифрованных данных
         cipher.init(Cipher.DECRYPT_MODE, secretKey, IvParameterSpec(iv))
 
-        return cipher.doFinal(
+        return String(cipher.doFinal(
             encryptedData,
             16,
             encryptedData.size - 16
-        ) // Проигнорируйте первые 16 байт (IV)
+        ) )// Проигнорируйте первые 16 байт (IV)
     }
 
     fun getTokenAsByteArray(tokenAlias: String): ByteArray? {

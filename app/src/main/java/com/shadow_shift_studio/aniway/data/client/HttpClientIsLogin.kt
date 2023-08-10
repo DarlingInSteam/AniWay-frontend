@@ -17,7 +17,7 @@ object HttpClientIsLogin {
         .client(OkHttpClient.Builder().addInterceptor { chain ->
             // Добавление авторизационного заголовка Bearer token к запросу
             val request = chain.request().newBuilder()
-                .addHeader("Authorization", "Bearer ${KeyStoreManager.accessToken}")
+                .addHeader("Authorization", "Bearer ${KeyStoreManager.getDecryptAccessKey("1")}")
                 .build()
             chain.proceed(request) // Продолжение выполнения запроса с добавленным заголовком
         }.build())
