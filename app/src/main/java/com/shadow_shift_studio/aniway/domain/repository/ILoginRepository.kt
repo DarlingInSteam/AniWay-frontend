@@ -3,17 +3,17 @@ package com.shadow_shift_studio.aniway.domain.repository
 import android.content.Context
 
 /**
- * Интерфейс `LoginRepository` определяет метод для аутентификации пользователя.
+ * The `ILoginRepository` interface defines a method for user authentication.
  */
 interface ILoginRepository {
-
     /**
-     * Аутентифицирует пользователя с использованием имени пользователя и пароля.
+     * Authenticates a user using the provided username and password.
      *
-     * @param context Контекст приложения.
-     * @param username Имя пользователя для входа.
-     * @param password Пароль пользователя для входа.
-     * @return `true`, если аутентификация прошла успешно, иначе `false`.
+     * @param context The application context.
+     * @param username The username for login.
+     * @param password The user's password for login.
+     * @return `true` if authentication is successful, otherwise `false`.
      */
     suspend fun loginUser(context: Context, username: String, password: String): Boolean
 }
+

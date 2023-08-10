@@ -82,7 +82,7 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
 
     suspend fun registerUser() {
         viewModelScope.launch {
-            val status = registrationUserUseCase.execute(context, login.value, email.value, password.value, sex.value)
+            val status = registrationUserUseCase.userRegister(context, login.value, email.value, password.value, sex.value)
             registerStatusLiveData.value = status
 
         }.join()

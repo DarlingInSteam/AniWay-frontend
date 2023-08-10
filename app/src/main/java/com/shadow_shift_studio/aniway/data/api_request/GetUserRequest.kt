@@ -3,8 +3,8 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
+import com.shadow_shift_studio.aniway.domain.repository.IGetUser
 import com.shadow_shift_studio.aniway.model.entity.User
-import com.shadow_shift_studio.aniway.domain.repository.IGetUserIdUsername
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
@@ -13,40 +13,40 @@ import kotlin.coroutines.resume
 
 
 /**
- * Класс `GetUser` предоставляет метод для получения информации о пользователе по его имени пользователя.
- * Этот класс реализует интерфейс `UserByUsernameRepository`.
+ * The `GetUserRequest` class provides methods for retrieving user information
+ * by their username or ID. This class implements the `IGetUserIdUsername` and `IGetUserById` interfaces.
  *
- * @constructor Создает экземпляр класса `GetUser`.
+ * @constructor Creates an instance of the `GetUserRequest` class.
  */
-class GetUserRequest : IGetUserIdUsername {
+class GetUserRequest : IGetUser {
 
     /**
-     * Получает информацию о пользователе по его имени пользователя.
+     * Retrieves user information by their username.
      *
-     * @param context Контекст приложения.
-     * @param username Имя пользователя, для которого необходимо получить информацию.
-     * @return Объект `User`, содержащий информацию о пользователе. В случае ошибки возвращается
-     *         объект `User` с пустыми полями или значениями по умолчанию.
+     * @param context The application context.
+     * @param username The username for which to retrieve information.
+     * @return A `User` object containing user information. In case of an error, a
+     *         `User` object with empty fields or default values is returned.
      */
     override suspend fun getUserByUsername(context: Context, username: String): User {
-        // Создаем объект для вызова удаленного сервиса
+        // Create an instance of the remote service caller
         val backendService = HttpClientIsLogin.getUserService
-        // Создаем объект с пустыми полями для использования в случае ошибки
+        // Create an instance with empty fields to use in case of an error
         val userForErrorResponse = User(null, null, null,  null, null, null, null, null, null, null, null, null)
 
         try {
-            // Используем suspendCancellableCoroutine для работы с асинхронным кодом
+            // Use suspendCancellableCoroutine for handling asynchronous code
             return suspendCancellableCoroutine { continuation ->
-                // Создаем вызов к удаленному сервису
+                // Create a call to the remote service
                 val call = backendService.userByUsername(username)
 
-                // Обработка успешного ответа от сервера
+                // Handling a successful response from the server
                 call.enqueue(object : Callback<User> {
                     override fun onResponse(call: Call<User>, response: Response<User>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if (responseBody != null) {
-                                // Создаем объект User на основе полученных данных
+                                // Create a User object based on the received data
                                 val user = User(
                                     id = responseBody.id,
                                     username = responseBody.username,
@@ -61,63 +61,63 @@ class GetUserRequest : IGetUserIdUsername {
                                     avatarUrl = responseBody.avatarUrl,
                                     backgroundUrl = responseBody.backgroundUrl,
                                 )
-                                continuation.resume(user) // Возобновляем выполнение корутины с полученным пользователем
+                                continuation.resume(user) // Resume the coroutine with the received user
                             } else {
-                                continuation.resume(userForErrorResponse) // В случае отсутствия данных в ответе, возвращаем пустого пользователя
+                                continuation.resume(userForErrorResponse) // Return an empty user object in case of missing data in the response
                             }
                         } else {
-                            Log.e("Login Error", response.errorBody().toString())
-                            continuation.resume(userForErrorResponse) // В случае ошибки в ответе, возвращаем пустого пользователя
+                            Log.e("Get User error", response.errorBody().toString())
+                            continuation.resume(userForErrorResponse) // Return an empty user object in case of an error response
                         }
                     }
 
-                    // Обработка ошибки при выполнении запроса
+                    // Handling an error while making the request
                     override fun onFailure(call: Call<User>, t: Throwable) {
                         Log.e("Network client error", t.message ?: "HTTP client failed to connect")
-                        continuation.resume(userForErrorResponse) // В случае ошибки, возвращаем пустого пользователя
+                        continuation.resume(userForErrorResponse) // Return an empty user object in case of an error
                     }
                 })
 
-                // Отменяем вызов при отмене корутины
+                // Cancel the call when the coroutine is canceled
                 continuation.invokeOnCancellation {
                     call.cancel()
                 }
             }
         } catch (e: Exception) {
-            Log.e("Ошибка", e.toString()) // Обработка общей ошибки и логирование
+            Log.e("Error", e.toString()) // Handle a general error and log it
         }
 
-        return userForErrorResponse // Возвращаем пустого пользователя в случае возникновения ошибки
+        return userForErrorResponse // Return an empty user object in case of an error
     }
 
 
     /**
-     * Получает информацию о пользователе по Id пользователя.
+     * Retrieves user information by their ID.
      *
-     * @param context Контекст приложения.
-     * @param id Id пользователя, для которого необходимо получить информацию.
-     * @return Объект `User`, содержащий информацию о пользователе. В случае ошибки возвращается
-     *         объект `User` с пустыми полями или значениями по умолчанию.
+     * @param context The application context.
+     * @param id The ID of the user for which to retrieve information.
+     * @return A `User` object containing user information. In case of an error, a
+     *         `User` object with empty fields or default values is returned.
      */
     override suspend fun getUserById(context: Context, id: String): User {
-        // Создаем объект для вызова удаленного сервиса
+        // Create an instance of the remote service caller
         val backendService = HttpClientIsLogin.getUserService
-        // Создаем объект с пустыми полями для использования в случае ошибки
+        // Create an instance with empty fields to use in case of an error
         val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null,  null, null)
 
         try {
-            // Используем suspendCancellableCoroutine для работы с асинхронным кодом
+            // Use suspendCancellableCoroutine for handling asynchronous code
             return suspendCancellableCoroutine { continuation ->
-                // Создаем вызов к удаленному сервису
+                // Create a call to the remote service
                 val call = backendService.userById(id)
 
-                // Обработка успешного ответа от сервера
+                // Handling a successful response from the server
                 call.enqueue(object : Callback<User> {
                     override fun onResponse(call: Call<User>, response: Response<User>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if (responseBody != null) {
-                                // Создаем объект User на основе полученных данных
+                                // Create a User object based on the received data
                                 val user = User(
                                     id = responseBody.id,
                                     username = responseBody.username,
@@ -132,32 +132,33 @@ class GetUserRequest : IGetUserIdUsername {
                                     avatarUrl = responseBody.avatarUrl,
                                     backgroundUrl = responseBody.backgroundUrl,
                                 )
-                                continuation.resume(user) // Возобновляем выполнение корутины с полученным пользователем
+                                continuation.resume(user) // Resume the coroutine with the received user
                             } else {
-                                continuation.resume(userForErrorResponse) // В случае отсутствия данных в ответе, возвращаем пустого пользователя
+                                continuation.resume(userForErrorResponse) // Return an empty user object in case of missing data in the response
                             }
                         } else {
                             Log.e("Login Error", response.errorBody().toString())
-                            continuation.resume(userForErrorResponse) // В случае ошибки в ответе, возвращаем пустого пользователя
+                            continuation.resume(userForErrorResponse) // Return an empty user object in case of an error response
                         }
                     }
 
-                    // Обработка ошибки при выполнении запроса
+                    // Handling an error while making the request
                     override fun onFailure(call: Call<User>, t: Throwable) {
                         Log.e("Network client error", t.message ?: "HTTP client failed to connect")
-                        continuation.resume(userForErrorResponse) // В случае ошибки, возвращаем пустого пользователя
+                        continuation.resume(userForErrorResponse) // Return an empty user object in case of an error
                     }
                 })
 
-                // Отменяем вызов при отмене корутины
+                // Cancel the call when the coroutine is canceled
                 continuation.invokeOnCancellation {
                     call.cancel()
                 }
             }
         } catch (e: Exception) {
-            Log.e("Ошибка", e.toString()) // Обработка общей ошибки и логирование
+            Log.e("Error", e.toString()) // Handle a general error and log it
         }
 
-        return userForErrorResponse // Возвращаем пустого пользователя в случае возникновения ошибки
+        return userForErrorResponse // Return an empty user object in case of an error
     }
 }
+

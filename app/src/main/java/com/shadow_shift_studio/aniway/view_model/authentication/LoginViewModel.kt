@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.UserAuthenticationRequest
-import com.shadow_shift_studio.aniway.data.client.AuthorizedUser
+import com.shadow_shift_studio.aniway.data.search_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
 import kotlinx.coroutines.launch
 

@@ -1,30 +1,29 @@
 package com.shadow_shift_studio.aniway.data.client
 
-import com.shadow_shift_studio.aniway.data.service.IUserByIdUsername
-import com.shadow_shift_studio.aniway.data.service.IUserComments
+import com.shadow_shift_studio.aniway.data.service.IGetUserService
+import com.shadow_shift_studio.aniway.data.service.IGetUserCommentsService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Объект `HttpClientIsLogin` предоставляет экземпляр `Retrofit`, настроенный для выполнения HTTP-запросов
- * к удаленному серверу с авторизационным заголовком Bearer token.
+ * The `HttpClientIsLogin` object provides an instance of `Retrofit` configured for making HTTP requests
+ * to a remote server with a Bearer token authorization header.
  */
 object HttpClientIsLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
-        //нужно поставить ip своего компа
-        .baseUrl("http://192.168.0.7:8080") // Базовый URL удаленного сервера
-        .addConverterFactory(GsonConverterFactory.create()) // Конвертер для обработки JSON
+        .baseUrl("http://192.168.0.7:8080") // Base URL of the remote server (replace with the actual URL)
+        .addConverterFactory(GsonConverterFactory.create()) // Converter for JSON processing
         .client(OkHttpClient.Builder().addInterceptor { chain ->
-            // Добавление авторизационного заголовка Bearer token к запросу
+            // Adding the Bearer token authorization header to the request
             val request = chain.request().newBuilder()
                 .addHeader("Authorization", "Bearer ${KeyStoreManager.getDecryptAccessKey("1")}")
                 .build()
-            chain.proceed(request) // Продолжение выполнения запроса с добавленным заголовком
+            chain.proceed(request) // Continue executing the request with the added header
         }.build())
         .build()
 
-    // Создание сервиса для выполнения запросов
-    val getUserService: IUserByIdUsername = retrofit.create(IUserByIdUsername::class.java)
-    val getUserCommentsService: IUserComments = retrofit.create(IUserComments::class.java)
+    // Creating a service for making requests to the remote server
+    val getUserService: IGetUserService = retrofit.create(IGetUserService::class.java)
+    val getUserCommentsService: IGetUserCommentsService = retrofit.create(IGetUserCommentsService::class.java)
 }

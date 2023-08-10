@@ -1,22 +1,23 @@
 package com.shadow_shift_studio.aniway.data.client
 
-import com.shadow_shift_studio.aniway.data.service.LoginService
-import com.shadow_shift_studio.aniway.data.service.IRegisterService
+import com.shadow_shift_studio.aniway.data.service.ILoginService
+import com.shadow_shift_studio.aniway.data.service.IRegistrationService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Объект `HttpClientNotLogin` предоставляет экземпляр `Retrofit`, настроенный для выполнения HTTP-запросов
- * к удаленному серверу без авторизации.
+ * The `HttpClientNotLogin` object provides an instance of `Retrofit` configured for making HTTP requests
+ * to a remote server without authentication.
  */
 object HttpClientNotLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
-        //нужно поставить ip своего компа
-        .baseUrl("http://192.168.0.7:8080") // Базовый URL удаленного сервера
-        .addConverterFactory(GsonConverterFactory.create()) // Конвертер для обработки JSON
+        // Replace with your computer's IP address
+        .baseUrl("http://192.168.0.7:8080") // Base URL of the remote server
+        .addConverterFactory(GsonConverterFactory.create()) // Converter for JSON processing
         .build()
 
-    // Создание сервиса для выполнения запросов
-    val loginService: LoginService = retrofit.create(LoginService::class.java)
-    val registrationService: IRegisterService = retrofit.create(IRegisterService::class.java)
+    // Creating services for making requests
+    val loginService: ILoginService = retrofit.create(ILoginService::class.java)
+    val registrationService: IRegistrationService = retrofit.create(IRegistrationService::class.java)
 }
+

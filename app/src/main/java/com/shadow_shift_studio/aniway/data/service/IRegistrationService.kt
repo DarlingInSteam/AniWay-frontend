@@ -6,7 +6,17 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 
-interface IRegisterService {
+/**
+ * The `IRegisterService` interface defines methods for registering a user.
+ */
+interface IRegistrationService {
+    /**
+     * Registers a user using the provided credentials.
+     *
+     * @param credentials User credentials for registration.
+     * @return A `Call` with an expected response of type `TokenResponse`.
+     */
     @POST("/auth/register")
     fun register(@Body credentials: CredentialsForRegistration): Call<TokenResponse>
 }
+

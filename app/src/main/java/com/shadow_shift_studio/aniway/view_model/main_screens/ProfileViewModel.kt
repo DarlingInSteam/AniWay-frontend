@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.GetUserRequest
 import com.shadow_shift_studio.aniway.data.api_request.GetUserCommentsRequest
-import com.shadow_shift_studio.aniway.data.client.AuthorizedUser
+import com.shadow_shift_studio.aniway.data.search_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.model.entity.User
-import com.shadow_shift_studio.aniway.domain.use_case.GetUserByIdUsernameUseCase
+import com.shadow_shift_studio.aniway.domain.use_case.GetUserUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.GetUserCommentsUseCase
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import kotlinx.coroutines.launch
@@ -18,8 +18,8 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
     val userCommentsLiveData: MutableLiveData<List<Comment>> = MutableLiveData()
 
 
-    private val getUserByUsernameUseCase: GetUserByIdUsernameUseCase =
-        GetUserByIdUsernameUseCase(GetUserRequest())
+    private val getUserByUsernameUseCase: GetUserUseCase =
+        GetUserUseCase(GetUserRequest())
 
     private val getUserCommentsUseCase: GetUserCommentsUseCase =
         GetUserCommentsUseCase(GetUserCommentsRequest())

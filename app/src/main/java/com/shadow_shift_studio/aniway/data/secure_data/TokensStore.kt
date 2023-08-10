@@ -10,25 +10,25 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
 /**
- * Класс KeyStore предоставляет методы для работы с Android Keystore.
- * Он позволяет создавать и управлять ключами для шифрования и дешифрования данных.
+ * The `KeyStore` class provides methods for working with Android Keystore.
+ * It allows you to create and manage keys for encrypting and decrypting data.
  *
- * @property context Контекст приложения, необходимый для инициализации Keystore.
+ * @property context The application context required for Keystore initialization.
  */
-class KeyStore(private val context: Context) {
+class TokensStore(private val context: Context) {
 
     private val keyStore: java.security.KeyStore =
         java.security.KeyStore.getInstance("AndroidKeyStore")
 
     init {
-        // Инициализация KeyStore при создании экземпляра класса
+        // Initialize KeyStore when an instance of the class is created
         keyStore.load(null)
     }
 
     /**
-     * Создает секретный ключ с заданным псевдонимом (алиасом), если его еще нет.
+     * Creates a secret key with the given alias if it does not exist.
      *
-     * @param keyAlias Псевдоним ключа.
+     * @param keyAlias The key alias.
      */
     fun createSecretKey(keyAlias: String) {
         if (!keyStore.containsAlias(keyAlias)) {
@@ -48,56 +48,57 @@ class KeyStore(private val context: Context) {
     }
 
     /**
-     * Шифрует данные с использованием заданного ключа.
+     * Encrypts data using the specified key.
      *
-     * @param keyAlias Псевдоним ключа.
-     * @param dataToEncrypt Данные для шифрования.
-     * @return Зашифрованные данные.
+     * @param keyAlias The key alias.
+     * @param dataToEncrypt Data to be encrypted.
+     * @return Encrypted data.
      */
     fun encryptData(keyAlias: String, dataToEncrypt: ByteArray): ByteArray {
         val secretKey = keyStore.getKey(keyAlias, null) as SecretKey
         val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
 
-        val iv = generateRandomIv() // Генерация случайного IV
+        val iv = generateRandomIv() // Generate a random IV
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, IvParameterSpec(iv))
 
         val encryptedData = cipher.doFinal(dataToEncrypt)
 
-        // Конкатенируйте IV и зашифрованные данные для передачи
+        // Concatenate IV and encrypted data for transmission
         return iv + encryptedData
     }
 
     /**
-     * Расшифровывает данные с использованием заданного ключа.
+     * Decrypts data using the specified key.
      *
-     * @param keyAlias Псевдоним ключа.
-     * @param encryptedData Зашифрованные данные.
-     * @return Расшифрованные данные.
+     * @param keyAlias The key alias.
+     * @param encryptedData Encrypted data.
+     * @return Decrypted data.
      */
     fun decryptData(keyAlias: String, encryptedData: ByteArray): String {
         val secretKey = keyStore.getKey(keyAlias, null) as SecretKey
         val cipher = Cipher.getInstance("AES/CBC/PKCS7Padding")
 
-        val iv = encryptedData.copyOfRange(0, 16) // Получите IV из начала зашифрованных данных
+        val iv = encryptedData.copyOfRange(0, 16) // Get IV from the beginning of encrypted data
         cipher.init(Cipher.DECRYPT_MODE, secretKey, IvParameterSpec(iv))
 
-        return String(cipher.doFinal(
-            encryptedData,
-            16,
-            encryptedData.size - 16
-        ) )// Проигнорируйте первые 16 байт (IV)
+        return String(
+            cipher.doFinal(
+                encryptedData,
+                16,
+                encryptedData.size - 16
+            )
+        ) // Ignore the first 16 bytes (IV)
     }
 
     fun getTokenAsByteArray(tokenAlias: String): ByteArray? {
         val encryptedToken = keyStore.getKey(tokenAlias, null) as? SecretKey
-        var a = encryptedToken?.encoded
-        return a
+        return encryptedToken?.encoded
     }
 
     /**
-     * Генерирует случайный инициализационный вектор (IV) для шифрования.
+     * Generates a random initialization vector (IV) for encryption.
      *
-     * @return Случайный инициализационный вектор.
+     * @return Random initialization vector.
      */
     private fun generateRandomIv(): ByteArray {
         val iv = ByteArray(16)
@@ -105,4 +106,5 @@ class KeyStore(private val context: Context) {
         return iv
     }
 }
+
 

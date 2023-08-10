@@ -11,51 +11,66 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
+/**
+ * Implementation of the [IGetUserComments] interface providing a method to retrieve a list of user comments by username.
+ */
 class GetUserCommentsRequest : IGetUserComments {
+
+    /**
+     * Retrieves a list of user comments by their username.
+     *
+     * @param context The application context.
+     * @param username The username for which to retrieve comments.
+     * @return The list of user comments.
+     */
     override suspend fun getUserCommentsByUsername(context: Context, username: String): List<Comment> {
-        // Создаем объект для вызова удаленного сервиса
+        // Initialize the HTTP client to fetch user comments.
         val backendService = HttpClientIsLogin.getUserCommentsService
-        // Создаем объект с пустыми полями для использования в случае ошибки
+
+        // An empty list of comments for potential error handling.
         val userForErrorResponse = listOf<Comment>()
 
         try {
-            // Используем suspendCancellableCoroutine для работы с асинхронным кодом
+            // Use a coroutine for asynchronous fetching of comments.
             return suspendCancellableCoroutine { continuation ->
-                // Создаем вызов к удаленному сервису
                 val call = backendService.commentsByUsername(username)
 
-                // Обработка успешного ответа от сервера
+                // Handling successful response from the server.
                 call.enqueue(object : Callback<List<Comment>> {
                     override fun onResponse(call: Call<List<Comment>>, response: Response<List<Comment>>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if (responseBody != null) {
-                                continuation.resume(responseBody) // Возобновляем выполнение корутины с полученным пользователем
+                                continuation.resume(responseBody)
                             } else {
-                                continuation.resume(userForErrorResponse) // В случае отсутствия данных в ответе, возвращаем пустого пользователя
+                                continuation.resume(userForErrorResponse)
                             }
                         } else {
+                            // Handling error response from the server.
                             Log.e("Comments error", response.errorBody().toString())
-                            continuation.resume(userForErrorResponse) // В случае ошибки в ответе, возвращаем пустого пользователя
+                            continuation.resume(userForErrorResponse)
                         }
                     }
 
-                    // Обработка ошибки при выполнении запроса
+                    // Handling error while executing the request.
                     override fun onFailure(call: Call<List<Comment>>, t: Throwable) {
                         Log.e("Network client error", t.message ?: "HTTP client failed to connect")
-                        continuation.resume(userForErrorResponse) // В случае ошибки, возвращаем пустого пользователя
+                        continuation.resume(userForErrorResponse)
                     }
                 })
 
-                // Отменяем вызов при отмене корутины
+                // Canceling the request in case of coroutine cancellation.
                 continuation.invokeOnCancellation {
                     call.cancel()
                 }
             }
         } catch (e: Exception) {
-            Log.e("Ошибка", e.toString()) // Обработка общей ошибки и логирование
+            // Handling potential exceptions.
+            Log.e("Error", e.toString())
         }
 
-        return userForErrorResponse // Возвращаем пустого пользователя в случае возникновения ошибки
+        // Returning an empty list of comments in case of an error.
+        return userForErrorResponse
     }
 }
+

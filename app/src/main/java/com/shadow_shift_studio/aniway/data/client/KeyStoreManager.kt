@@ -1,35 +1,48 @@
 package com.shadow_shift_studio.aniway.data.client
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.data.secure_data.KeyStore
+import com.shadow_shift_studio.aniway.data.secure_data.TokensStore
 
 /**
- * Объект `KeyStoreManager` управляет доступом к хранилищу ключей (KeyStore) и хранит токены доступа и обновления.
+ * The `KeyStoreManager` object manages access to the key store (KeyStore) and stores access and refresh tokens.
  */
 object KeyStoreManager {
-    var keyStore: KeyStore? = null // Экземпляр хранилища ключей
-    var accessToken : ByteArray = ByteArray(16)  // Токен доступа
-    var token : ByteArray = ByteArray(16)   // Токен обновления
+    var keyStore: TokensStore? = null // Key store instance
+    var accessToken: ByteArray = ByteArray(16) // Access token as a byte array
+    var refreshToken: ByteArray = ByteArray(16) // Refresh token as a byte array
 
     /**
-     * Возвращает экземпляр хранилища ключей (KeyStore).
+     * Returns the instance of the key store (KeyStore).
      *
-     * @param context Контекст приложения.
-     * @return Экземпляр хранилища ключей.
+     * @param context The application context.
+     * @return The instance of the key store.
      */
-    fun getKeyStore(context: Context): KeyStore {
+    fun getKeyStore(context: Context): TokensStore {
         if (keyStore == null) {
-            keyStore = KeyStore(context) // Создаем хранилище ключей, если оно еще не было создано
+            keyStore = TokensStore(context) // Create the key store if it hasn't been created yet
         }
-        return keyStore!! // Возвращаем существующее хранилище ключей
+        return keyStore!! // Return the existing key store
     }
 
-    fun getDecryptAccessKey(keyAlies: String) : String {
-        return keyStore?.decryptData(keyAlies, accessToken) ?: ""
+    /**
+     * Decrypts and returns the access token using the specified key alias.
+     *
+     * @param keyAlias The key alias.
+     * @return The decrypted access token as a string.
+     */
+    fun getDecryptAccessKey(keyAlias: String): String {
+        return keyStore?.decryptData(keyAlias, accessToken) ?: ""
     }
 
-    fun getDecryptKey(keyAlies: String) : String {
-        return keyStore?.decryptData(keyAlies, token) ?: ""
+    /**
+     * Decrypts and returns the refresh token using the specified key alias.
+     *
+     * @param keyAlias The key alias.
+     * @return The decrypted refresh token as a string.
+     */
+    fun getDecryptKey(keyAlias: String): String {
+        return keyStore?.decryptData(keyAlias, refreshToken) ?: ""
     }
 }
+
 

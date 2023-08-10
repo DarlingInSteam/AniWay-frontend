@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientNotLogin
 import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
-import com.shadow_shift_studio.aniway.data.credentials.CredentialsForLogin
+import com.shadow_shift_studio.aniway.data.credentials.CredentialsForAuthorization
 import com.shadow_shift_studio.aniway.model.api_response.TokenResponse
 import com.shadow_shift_studio.aniway.domain.repository.ILoginRepository
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -13,69 +13,69 @@ import retrofit2.Response
 import kotlin.coroutines.resume
 
 /**
- * Класс `UserAuthentication` предоставляет метод для аутентификации пользователя с использованием имени
- * пользователя и пароля. Этот класс реализует интерфейс `LoginRepository`.
+ * The `UserAuthentication` class provides a method to authenticate a user using their username
+ * and password. This class implements the `LoginRepository` interface.
  *
- * @constructor Создает экземпляр класса `UserAuthentication`.
+ * @constructor Creates an instance of the `UserAuthentication` class.
  */
 class UserAuthenticationRequest : ILoginRepository {
 
     /**
-     * Аутентифицирует пользователя с использованием имени пользователя и пароля.
+     * Authenticates a user using their username and password.
      *
-     * @param context Контекст приложения.
-     * @param username Имя пользователя для входа.
-     * @param password Пароль пользователя для входа.
-     * @return `true`, если аутентификация прошла успешно, иначе `false`.
+     * @param context The application context.
+     * @param username The user's username for login.
+     * @param password The user's password for login.
+     * @return `true` if authentication is successful, otherwise `false`.
      */
     override suspend fun loginUser(context: Context, username: String, password: String): Boolean {
-        // Создаем объект для вызова удаленного сервиса
+        // Create an instance of the remote service caller
         val backendService = HttpClientNotLogin.loginService
-        // Создаем объект с учетными данными пользователя
-        val credentials = CredentialsForLogin(username, password)
+        // Create an instance with user credentials
+        val credentials = CredentialsForAuthorization(username, password)
 
-        // Используем suspendCancellableCoroutine для работы с асинхронным кодом
+        // Use suspendCancellableCoroutine for handling asynchronous code
         return suspendCancellableCoroutine { continuation ->
-            // Создаем вызов к удаленному сервису
+            // Create a call to the remote service
             val call = backendService.login(credentials)
 
-            // Обработка успешного ответа от сервера
+            // Handling a successful response from the server
             call.enqueue(object : retrofit2.Callback<TokenResponse> {
                 override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
                     if (response.isSuccessful) {
                         val responseBody = response.body()
                         if (responseBody != null) {
-                            // Создаем объект KeyStoreManager для управления хранилищем ключей
+                            // Create a KeyStoreManager object to manage the key store
                             val keyStore = KeyStoreManager.getKeyStore(context)
                             Log.e("123456", responseBody.accessToken)
-                            // Создаем и шифруем токены доступа и обновления
+                            // Create and encrypt access and refresh tokens
                             keyStore.createSecretKey("1")
                             keyStore.createSecretKey("2")
                             val encryptedAccessToken = keyStore.encryptData("1", responseBody.accessToken.toByteArray())
                             val encryptedRefreshToken = keyStore.encryptData("2", responseBody.token.toByteArray())
 
-                            // Сохраняем токены в KeyStoreManager для последующего использования
+                            // Save tokens in KeyStoreManager for future use
                             KeyStoreManager.accessToken = encryptedAccessToken
-                            KeyStoreManager.token = encryptedRefreshToken
+                            KeyStoreManager.refreshToken = encryptedRefreshToken
 
-                            continuation.resume(true) // Возобновляем выполнение корутины с успешным результатом
+                            continuation.resume(true) // Resume the coroutine with a successful result
                         } else {
-                            continuation.resume(false) // В случае отсутствия данных в ответе, возвращаем `false`
+                            continuation.resume(false) // Return `false` in case of missing data in the response
                         }
                     } else {
-                        Log.e("Ошибка входа", response.errorBody().toString())
-                        continuation.resume(false) // В случае ошибки в ответе, возвращаем `false`
+                        Log.e("Auth error", response.errorBody().toString())
+                        continuation.resume(false) // Return `false` in case of an error response
                     }
                 }
 
-                // Обработка ошибки при выполнении запроса
+                // Handling an error while making the request
                 override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
-                    Log.e("Ошибка сети", t.message ?: "Ошибка подключения HTTP-клиента")
-                    continuation.resume(false) // В случае ошибки, возвращаем `false`
+                    Log.e("Client error", t.message ?: "HTTP client failed to connect")
+                    continuation.resume(false) // Return `false` in case of an error
                 }
             })
 
-            // Отменяем вызов при отмене корутины
+            // Cancel the call when the coroutine is canceled
             continuation.invokeOnCancellation {
                 call.cancel()
             }

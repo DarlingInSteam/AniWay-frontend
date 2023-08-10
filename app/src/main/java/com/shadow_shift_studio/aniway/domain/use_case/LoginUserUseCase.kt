@@ -4,21 +4,21 @@ import android.content.Context
 import com.shadow_shift_studio.aniway.domain.repository.ILoginRepository
 
 /**
- * Класс `LoginUserUseCase` представляет собой use case (слой бизнес-логики),
- * который обеспечивает аутентификацию пользователя с использованием имени и пароля.
+ * The `LoginUserUseCase` class is a use case (business logic layer),
+ * which provides user authentication using username and password.
  *
- * @constructor Создает экземпляр класса `LoginUserUseCase`.
- * @param userRepository Репозиторий для аутентификации пользователя.
+ * @constructor Creates an instance of the `LoginUserUseCase` class.
+ * @param userRepository The repository for user authentication.
  */
 class LoginUserUseCase(private val userRepository: ILoginRepository) {
 
     /**
-     * Выполняет аутентификацию пользователя с использованием имени и пароля.
+     * Performs user authentication using username and password.
      *
-     * @param context Контекст приложения.
-     * @param username Имя пользователя для входа.
-     * @param password Пароль пользователя для входа.
-     * @return `true`, если аутентификация прошла успешно, иначе `false`.
+     * @param context Application context.
+     * @param username Username of the user to log in.
+     * @param password The password of the user to log in.
+     * @return `true` if authentication is successful, otherwise `false`.
      */
     suspend fun execute(context: Context, username: String, password: String): Boolean {
         return userRepository.loginUser(context, username, password)
