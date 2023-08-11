@@ -40,12 +40,15 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.AuthError
 import com.shadow_shift_studio.aniway.EnterLoginHint
 import com.shadow_shift_studio.aniway.EnterPasswordHint
+import com.shadow_shift_studio.aniway.FillAllFields
 import com.shadow_shift_studio.aniway.ForgotPasswordText
 import com.shadow_shift_studio.aniway.LoginButtonText
 import com.shadow_shift_studio.aniway.RegistrationText
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_error
 import com.shadow_shift_studio.aniway.view_model.authentication.LoginViewModel
 import kotlinx.coroutines.launch
 
@@ -88,6 +91,7 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
     val context = LocalContext.current
     val viewModelLogin: LoginViewModel = LoginViewModel(context)
     val coroutineScope = rememberCoroutineScope()
+    var isTextVisible by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -113,16 +117,27 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
         Button(
             modifier = Modifier.fillMaxWidth(),
             onClick = {
+                //onAuthorization()
                 coroutineScope.launch {
                     viewModelLogin.loginUser()
 
                     if(viewModelLogin.loginStatusLiveData.value == true) {
                         onAuthorization()
                     }
+                    else
+                        isTextVisible = true
                 }
             },
             content = { Text(text = LoginButtonText, fontSize = 18.sp) }
         )
+        if(isTextVisible) {
+            Text(
+                text = AuthError,
+                color = md_theme_light_error,
+                fontSize = 12.sp,
+                textAlign = TextAlign.Left
+            )
+        }
     }
 }
 

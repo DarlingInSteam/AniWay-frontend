@@ -1,6 +1,8 @@
 package com.shadow_shift_studio.aniway.view.authentication_screen
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -91,7 +94,7 @@ fun Registration(navController: NavController) {
 
             DropdownTextField(listOf("Мужской", "Женский"))
 
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(20.dp))
 
             EmailTextField(viewModelRegistration)
 
@@ -123,9 +126,9 @@ fun Registration(navController: NavController) {
             if(isTextVisible) {
                 Text(
                     text = FillAllFields,
+                    fontSize = 12.sp,
                     color = md_theme_light_error,
-                    modifier = Modifier.fillMaxWidth().padding(start = 23.dp, end = 23.dp),
-                    textAlign = TextAlign.Justify
+                    textAlign = TextAlign.Left
                     )
             }
         }
@@ -159,18 +162,16 @@ fun LoginTextField(viewModelRegistration: RegistrationViewModel)
             .clip(RoundedCornerShape(8.dp)),
         placeholder = { Text(CreateLoginHint) },
         label = { Text(CreateLoginHint) },
-        supportingText = {
-            if (isLoginError && !viewModelRegistration.login.value.isEmpty()) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = loginErrorMessage,
-                    color = md_theme_light_error
-                )
-            }
-        }
     )
+    if (isLoginError && !viewModelRegistration.login.value.isEmpty()) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = loginErrorMessage,
+            fontSize = 12.sp,
+            color = md_theme_light_error
+        )
+    }
 }
-
 @Composable
 fun EmailTextField(viewModelRegistration: RegistrationViewModel)
 {
@@ -187,17 +188,16 @@ fun EmailTextField(viewModelRegistration: RegistrationViewModel)
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp)),
         placeholder = { Text(EnterEmailHint) },
-        label = { Text(EnterEmailHint) },
-        supportingText = {
-            if (isEmailError && viewModelRegistration.email.value.isNotEmpty()) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = InputErrorMessage,
-                    color = md_theme_light_error
-                )
-            }
-        }
+        label = { Text(EnterEmailHint) }
     )
+    if (isEmailError && viewModelRegistration.email.value.isNotEmpty()) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = InputErrorMessage,
+            fontSize = 12.sp,
+            color = md_theme_light_error
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -222,8 +222,12 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
             val tooltipState = rememberRichTooltipState(isPersistent = true)
             val scope = rememberCoroutineScope()
             RichTooltipBox(
-                action = { Text(passwordRules)},
-                text = {},
+                //modifier = Modifier.padding(23.dp),
+                //action = { Text(passwordRules)},
+                text = {
+                    Text(text = passwordRules,
+                        modifier = Modifier.padding(10.dp))
+                },
                 tooltipState = tooltipState,
             ) {
                 IconButton(
@@ -240,17 +244,16 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
         visualTransformation = if (passwordVisability) VisualTransformation.None
-        else PasswordVisualTransformation(),
-        supportingText = {
-            if (isPasswordError && viewModelRegistration.password.value.isNotEmpty()) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = InputErrorMessage,
-                    color = md_theme_light_error
-                )
-            }
-        }
+        else PasswordVisualTransformation()
     )
+    if (isPasswordError && viewModelRegistration.password.value.isNotEmpty()) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = InputErrorMessage,
+            fontSize = 12.sp,
+            color = md_theme_light_error
+        )
+    }
 }
 
 @Composable
@@ -278,17 +281,16 @@ fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewMod
             }
         },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-        supportingText = {
-            if (isPasswordsEqual == false && viewModelRegistration.repeatPassword.value.isNotEmpty()) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(),
-                    text = PasswordsDontMatch,
-                    color = md_theme_light_error
-                )
-            }
-        },
         visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation()
     )
+    if (isPasswordsEqual == false && viewModelRegistration.repeatPassword.value.isNotEmpty()) {
+        Text(
+            modifier = Modifier.fillMaxWidth(),
+            text = PasswordsDontMatch,
+            fontSize = 12.sp,
+            color = md_theme_light_error
+        )
+    }
 }
 

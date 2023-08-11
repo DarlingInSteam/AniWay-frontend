@@ -35,6 +35,7 @@ val BookmarksWillRead: String = "Буду читать"
 val BookmarksAlreadyRead: String = "Прочитано"
 val BookmarksAbandoned: String = "Брошено"
 val BookmarksFavorite: String = "Любимое"
+val AuthError: String = "Неверный логин или пароль"
 
 val loginErrors: Array<String> = arrayOf(
     "Допустимая длина от 3 до 20 символов",
