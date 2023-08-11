@@ -222,8 +222,6 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
             val tooltipState = rememberRichTooltipState(isPersistent = true)
             val scope = rememberCoroutineScope()
             RichTooltipBox(
-                //modifier = Modifier.padding(23.dp),
-                //action = { Text(passwordRules)},
                 text = {
                     Text(text = passwordRules,
                         modifier = Modifier.padding(10.dp))

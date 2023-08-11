@@ -9,7 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.UserRegistrationRequest
+import com.shadow_shift_studio.aniway.domain.repository.IViewModelRepository
 import com.shadow_shift_studio.aniway.domain.use_case.RegisterUserUseCase
+import com.shadow_shift_studio.aniway.domain.use_case.ViewModelUseCase
 import com.shadow_shift_studio.aniway.model.enum.LoginStates
 import com.shadow_shift_studio.aniway.model.enum.Sex
 import kotlinx.coroutines.launch
@@ -80,9 +82,15 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
         return res
     }
 
+    fun removeTrailingSpaces(input: String): String {
+        return input.trimEnd { it.isWhitespace() }
+    }
     suspend fun registerUser() {
         viewModelScope.launch {
-            val status = registrationUserUseCase.userRegister(context, login.value, email.value, password.value, sex.value)
+            var login = removeTrailingSpaces(login.value)
+            var email = removeTrailingSpaces(email.value)
+            var password = removeTrailingSpaces(password.value)
+            val status = registrationUserUseCase.userRegister(context, login, email, password, sex.value)
             registerStatusLiveData.value = status
 
         }.join()
