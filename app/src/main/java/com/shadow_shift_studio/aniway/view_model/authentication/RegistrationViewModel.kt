@@ -28,6 +28,8 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
 
     private val registrationUserUseCase: RegisterUserUseCase =
         RegisterUserUseCase(UserRegistrationRequest())
+    private val vmUserUseCase: ViewModelUseCase =
+        ViewModelUseCase()
 
     fun isLoginValid(login: String): LoginStates {
         val pattern = Regex("^[a-zA-Z0-9!@#\$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?]*$")
@@ -82,14 +84,11 @@ class RegistrationViewModel(private val context: Context) : ViewModel() {
         return res
     }
 
-    fun removeTrailingSpaces(input: String): String {
-        return input.trimEnd { it.isWhitespace() }
-    }
     suspend fun registerUser() {
         viewModelScope.launch {
-            var login = removeTrailingSpaces(login.value)
-            var email = removeTrailingSpaces(email.value)
-            var password = removeTrailingSpaces(password.value)
+            var login = vmUserUseCase.removeTrailingSpaces(login.value)
+            var email = vmUserUseCase.removeTrailingSpaces(email.value)
+            var password = vmUserUseCase.removeTrailingSpaces(password.value)
             val status = registrationUserUseCase.userRegister(context, login, email, password, sex.value)
             registerStatusLiveData.value = status
 
