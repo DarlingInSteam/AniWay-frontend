@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.data.client
 
+import com.shadow_shift_studio.aniway.data.service.IGetAchievementsService
 import com.shadow_shift_studio.aniway.data.service.IGetUserService
 import com.shadow_shift_studio.aniway.data.service.IGetUserCommentsService
 import okhttp3.OkHttpClient
@@ -26,4 +27,5 @@ object HttpClientIsLogin {
     // Creating a service for making requests to the remote server
     val getUserService: IGetUserService = retrofit.create(IGetUserService::class.java)
     val getUserCommentsService: IGetUserCommentsService = retrofit.create(IGetUserCommentsService::class.java)
+    val getUserAchievementsService: IGetAchievementsService = retrofit.create(IGetAchievementsService::class.java)
 }

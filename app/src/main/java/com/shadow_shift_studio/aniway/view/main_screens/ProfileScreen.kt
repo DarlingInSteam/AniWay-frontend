@@ -53,6 +53,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.shadow_shift_studio.aniway.model.entity.Achievement
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
@@ -104,15 +105,21 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
                         .verticalScroll(scrollState)
                 ) {
                     userState.value?.let { it1 -> Wallpaper(navController, it1) }
+
                     Spacer(modifier = Modifier.height(15.dp))
 
                     userState.value?.let { it1 -> NickAndBadge(it1) }
 
                     Spacer(modifier = Modifier.height(15.dp))
+
                     userState.value?.let { it1 -> LvLFragment(it1) }
+
                     Spacer(modifier = Modifier.height(35.dp))
+
                     userState.value?.let { it1 -> InformationAboutUser(it1) }
+
                     Spacer(modifier = Modifier.height(20.dp))
+
                     UserTab(navController, viewModelProfile)
                 }
             }
@@ -157,20 +164,20 @@ fun Comments(comments: List<Comment>) {
 }
 
 @Composable
-fun Achievements() {
+fun Achievements(achievements: List<Achievement>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .height(450.dp),
         content = {
-            items(count = 25) { index ->
+            items(count = achievements.size) { index ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
                         .fillMaxWidth()
                 ) {
-                    AchievementCard()
+                    AchievementCard(achievements[index])
                 }
             }
         }
@@ -237,7 +244,26 @@ fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
         if (selectedTabIndex == 0) {
             Favorites(navController)
         } else if (selectedTabIndex == 1) {
-            Achievements()
+            val achievementsState = remember { mutableStateOf<List<Achievement>?>(null) }
+
+            val achievementObserver = Observer<List<Achievement>> { newAchievements ->
+                achievementsState.value = newAchievements
+            }
+
+            LaunchedEffect(viewModel) {
+                viewModel.getAchievement()
+            }
+
+            DisposableEffect(viewModel) {
+                viewModel.userAchievementsLiveData.observeForever(achievementObserver)
+
+                onDispose {
+                    viewModel.userAchievementsLiveData.removeObserver(achievementObserver)
+                }
+            }
+
+            achievementsState.value?.let { Achievements(it) }
+
         } else if (selectedTabIndex == 2) {
             val commentState = remember { mutableStateOf<List<Comment>?>(null) }
 

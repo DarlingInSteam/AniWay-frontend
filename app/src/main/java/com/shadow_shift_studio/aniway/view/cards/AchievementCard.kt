@@ -26,13 +26,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.R
+import com.shadow_shift_studio.aniway.model.entity.Achievement
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_outlineVariant
 
 @Composable
-fun AchievementCard() {
+fun AchievementCard(achievement: Achievement) {
     Card(
         modifier = Modifier
             .height(90.dp),
@@ -52,13 +54,13 @@ fun AchievementCard() {
                     .padding(start = 12.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                ImageAchievement()
+                ImageAchievement(achievement)
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
-                        text = "Добро пожаловать",
+                        text = achievement.header.toString(),
                         color = Color.White,
                         fontSize = 15.sp,
                         overflow = TextOverflow.Ellipsis,
@@ -70,7 +72,7 @@ fun AchievementCard() {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
-                        text = "Прочитать 10 тайтлов",
+                        text = achievement.text.toString(),
                         color = md_theme_dark_onSurfaceVariant,
                         fontSize = 12.sp
                     )
@@ -81,10 +83,10 @@ fun AchievementCard() {
 }
 
 @Composable
-fun ImageAchievement() {
+fun ImageAchievement(achievement: Achievement) {
     Column {
-        androidx.compose.foundation.Image(
-            painter = painterResource(R.drawable.ava),
+        AsyncImage(
+            model = achievement.avatarUrl.toString(),
             contentDescription = "avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier
