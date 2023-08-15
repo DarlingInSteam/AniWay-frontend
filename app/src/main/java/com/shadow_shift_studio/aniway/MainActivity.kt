@@ -20,6 +20,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -79,7 +80,8 @@ fun NavHostContainer(
     padding: PaddingValues,
     viewModelBottom: BottomNavBarViewModel
 ) {
-    val viewModelCatalog: CatalogViewModel = viewModel()
+    val context = LocalContext.current
+    val viewModelCatalog: CatalogViewModel = CatalogViewModel(context)
     val scrollStateCatalog = rememberLazyGridState()
     val viewModelTops: TopsViewModel = viewModel()
     val scrollStateTops = rememberLazyListState()

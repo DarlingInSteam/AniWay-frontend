@@ -46,8 +46,10 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -56,12 +58,17 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.Genre
+import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
@@ -153,7 +160,7 @@ fun CatalogScreen(
         enter = slideInVertically(initialOffsetY = { height -> height }, animationSpec = tween()),
         exit = slideOutVertically(targetOffsetY = { height -> height }, animationSpec = tween()),
         content = {
-            FilterButtonSheet(onClose = { filterBottomSheetVisible = false })
+            FilterButtonSheet(onClose = { filterBottomSheetVisible = false }, viewModel = viewModel)
         }
     )
 }
@@ -397,7 +404,25 @@ fun ButtonsForSorting(onClose: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
-fun FilterButtonSheet(onClose: () -> Unit) {
+fun FilterButtonSheet(onClose: () -> Unit, viewModel: CatalogViewModel) {
+    val genresState = remember { mutableStateOf<List<Genre>?>(null) }
+
+    val genresObserver = Observer<List<Genre>> { newGenres ->
+        genresState.value = newGenres
+    }
+
+    LaunchedEffect(viewModel) {
+        viewModel.getGenres()
+    }
+
+    DisposableEffect(viewModel) {
+        viewModel.catalogGenresLiveData.observeForever(genresObserver)
+
+        onDispose {
+            viewModel.catalogGenresLiveData.removeObserver(genresObserver)
+        }
+    }
+
     val scaffoldState = rememberModalBottomSheetState()
     ModalBottomSheet(
         onDismissRequest = { onClose() },
@@ -405,19 +430,19 @@ fun FilterButtonSheet(onClose: () -> Unit) {
         modifier = Modifier.height(400.dp),
         containerColor = surface_container_low
     ) {
-        FilterButtons()
+        genresState.value?.let { FilterButtons(it) }
     }
 }
 
 @Composable
-fun FilterButtons() {
+fun FilterButtons(genres: List<Genre>) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
     ) {
         ButtonsType()
         Spacer(modifier = Modifier.height(12.dp))
-        ButtonsGenres()
+        ButtonsGenres(genres)
         Spacer(modifier = Modifier.height(12.dp))
         ButtonsCategory()
         Spacer(modifier = Modifier.height(12.dp))
@@ -428,9 +453,24 @@ fun FilterButtons() {
 }
 
 @Composable
-fun ButtonsGenres() {
+fun GenreButton(genre: Genre, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = genre.name)
+        Checkbox(checked = false, onCheckedChange = onCheckedChange)
+    }
+}
+
+@Composable
+fun ButtonsGenres(genres: List<Genre>) {
+    val selectedGenres = remember { mutableStateListOf<Genre>() }
+
     val isGenresExpanded = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -473,290 +513,15 @@ fun ButtonsGenres() {
                 Column(
                     modifier = Modifier
                         .animateContentSize()
+                        .padding(start = 23.dp, end = 23.dp)
                 ) {
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Романтика")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Комедия")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Драма")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Фэнтези")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Приключения")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Повседневность")
-                            Checkbox(checked = false, onCheckedChange = {})
+                    for (genre in genres) {
+                        GenreButton(genre = genre) { isChecked ->
+                            if (isChecked) {
+                                selectedGenres.add(genre)
+                            } else {
+                                selectedGenres.remove(genre)
+                            }
                         }
                     }
                 }
@@ -764,6 +529,7 @@ fun ButtonsGenres() {
         )
     }
 }
+
 
 @Composable
 fun ButtonsType() {
