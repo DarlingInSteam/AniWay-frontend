@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.view.main_screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -66,7 +67,9 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.data.search_object.Filter
 import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.Category
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
@@ -406,20 +409,31 @@ fun ButtonsForSorting(onClose: () -> Unit) {
 @Composable
 fun FilterButtonSheet(onClose: () -> Unit, viewModel: CatalogViewModel) {
     val genresState = remember { mutableStateOf<List<Genre>?>(null) }
+    val categoriesState = remember { mutableStateOf<List<Category>?>(null) }
 
     val genresObserver = Observer<List<Genre>> { newGenres ->
         genresState.value = newGenres
+    }
+
+    val categoriesObserver = Observer<List<Category>> { newCategories ->
+        categoriesState.value = newCategories
     }
 
     LaunchedEffect(viewModel) {
         viewModel.getGenres()
     }
 
+    LaunchedEffect(viewModel) {
+        viewModel.getCategories()
+    }
+
     DisposableEffect(viewModel) {
         viewModel.catalogGenresLiveData.observeForever(genresObserver)
+        viewModel.catalogCategoriesLiveData.observeForever(categoriesObserver)
 
         onDispose {
             viewModel.catalogGenresLiveData.removeObserver(genresObserver)
+            viewModel.catalogCategoriesLiveData.removeObserver(categoriesObserver)
         }
     }
 
@@ -430,12 +444,12 @@ fun FilterButtonSheet(onClose: () -> Unit, viewModel: CatalogViewModel) {
         modifier = Modifier.height(400.dp),
         containerColor = surface_container_low
     ) {
-        genresState.value?.let { FilterButtons(it) }
+        genresState.value?.let { categoriesState.value?.let { it1 -> FilterButtons(it, it1) } }
     }
 }
 
 @Composable
-fun FilterButtons(genres: List<Genre>) {
+fun FilterButtons(genres: List<Genre>, categories: List<Category>) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -444,7 +458,7 @@ fun FilterButtons(genres: List<Genre>) {
         Spacer(modifier = Modifier.height(12.dp))
         ButtonsGenres(genres)
         Spacer(modifier = Modifier.height(12.dp))
-        ButtonsCategory()
+        ButtonsCategory(categories)
         Spacer(modifier = Modifier.height(12.dp))
         ButtonsTitleStatus()
         Spacer(modifier = Modifier.height(12.dp))
@@ -454,20 +468,35 @@ fun FilterButtons(genres: List<Genre>) {
 
 @Composable
 fun GenreButton(genre: Genre, onCheckedChange: (Boolean) -> Unit) {
+    var isChecked by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = genre.name)
+        Checkbox(checked = isChecked, onCheckedChange = {
+            isChecked = !isChecked
+            onCheckedChange(isChecked)
+        })
+    }
+}
+
+@Composable
+fun CategoryButton(category: Category, onCheckedChange: (Boolean) -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(text = category.text)
         Checkbox(checked = false, onCheckedChange = onCheckedChange)
     }
 }
 
 @Composable
 fun ButtonsGenres(genres: List<Genre>) {
-    val selectedGenres = remember { mutableStateListOf<Genre>() }
-
     val isGenresExpanded = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
@@ -518,9 +547,9 @@ fun ButtonsGenres(genres: List<Genre>) {
                     for (genre in genres) {
                         GenreButton(genre = genre) { isChecked ->
                             if (isChecked) {
-                                selectedGenres.add(genre)
+                                Filter.selectedGenres.add(genre)
                             } else {
-                                selectedGenres.remove(genre)
+                                Filter.selectedGenres.remove(genre)
                             }
                         }
                     }
@@ -641,7 +670,8 @@ fun ButtonsType() {
 }
 
 @Composable
-fun ButtonsCategory() {
+fun ButtonsCategory(categories: List<Category>) {
+    val selectedCategories = remember { mutableStateListOf<Category>() }
     val isCategoryExpanded = remember { mutableStateOf(false) }
 
     Column(
@@ -689,61 +719,13 @@ fun ButtonsCategory() {
                     modifier = Modifier
                         .animateContentSize()
                 ) {
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Веб")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "В цвете")
-                            Checkbox(checked = false, onCheckedChange = {})
-                        }
-                    }
-                    Button(
-                        onClick = { },
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = ButtonColors(
-                            md_theme_dark_bottom_sheet_bottoms,
-                            md_theme_light_surfaceVariant,
-                            Color.White,
-                            Color.White
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Хентай!")
-                            Checkbox(checked = false, onCheckedChange = {})
+                    for (category in categories) {
+                        CategoryButton(category = category) { isChecked ->
+                            if (isChecked) {
+                                selectedCategories.add(category)
+                            } else {
+                                selectedCategories.remove(category)
+                            }
                         }
                     }
                 }
