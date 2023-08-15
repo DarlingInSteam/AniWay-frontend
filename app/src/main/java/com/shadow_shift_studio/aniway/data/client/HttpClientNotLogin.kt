@@ -1,6 +1,6 @@
 package com.shadow_shift_studio.aniway.data.client
 
-import com.shadow_shift_studio.aniway.data.service.ILoginService
+import com.shadow_shift_studio.aniway.data.service.IAuthorizationService
 import com.shadow_shift_studio.aniway.data.service.IRegistrationService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -17,7 +17,7 @@ object HttpClientNotLogin {
         .build()
 
     // Creating services for making requests
-    val loginService: ILoginService = retrofit.create(ILoginService::class.java)
+    val loginService: IAuthorizationService = retrofit.create(IAuthorizationService::class.java)
     val registrationService: IRegistrationService = retrofit.create(IRegistrationService::class.java)
 }
 

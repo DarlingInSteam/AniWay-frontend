@@ -9,7 +9,7 @@ import retrofit2.http.Body
 /**
  * The `LoginService` interface defines methods for making HTTP requests related to authentication.
  */
-interface ILoginService {
+interface IAuthorizationService{
 
     /**
      * Makes a POST request to the `/auth/login` endpoint to authenticate the user.
