@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.data.search_object
+package com.shadow_shift_studio.aniway.data.singleton_object
 
 object SearchUser {
     var username = ""

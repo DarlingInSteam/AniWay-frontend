@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway
 
+import android.R.id.content
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,12 +22,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.view.bottomnav.Constants
 import com.shadow_shift_studio.aniway.view.authentication_screen.Authorization
 import com.shadow_shift_studio.aniway.view.main_screens.CatalogScreen
@@ -53,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     if(isAuthorization) {
                         Scaffold(
                             bottomBar = {
-                                if (viewModelBottom.getFirstVisibleItemIndex())
+                                if (Navbar.getNavbarVisible())
                                     BottomNavigationBar(navController = navController)
                             },
                             content = { padding ->
@@ -69,6 +74,11 @@ class MainActivity : ComponentActivity() {
                         Authorization(navController) { isAuthorization = true }
                 }
             }
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(content)){view, insets ->
+            val bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+            view.updatePadding(bottom=bottom)
+            insets
         }
     }
 }

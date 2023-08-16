@@ -1,6 +1,7 @@
 package com.shadow_shift_studio.aniway.view.authentication_screen
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -29,7 +33,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -50,6 +57,7 @@ import com.shadow_shift_studio.aniway.RegistrationText
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_error
 import com.shadow_shift_studio.aniway.view_model.authentication.LoginViewModel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -86,11 +94,13 @@ fun Authorization(navController: NavController, onAuthorization: () -> Unit) {
 
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun AuthorizationContent(navController: NavController, onAuthorization: () -> Unit) {
     val context = LocalContext.current
     val viewModelLogin: LoginViewModel = LoginViewModel(context)
-    val coroutineScope = rememberCoroutineScope()
+    val bringIntoViewRequester = BringIntoViewRequester()
+
     var isTextVisible by remember { mutableStateOf(false) }
 
     Column(
@@ -100,11 +110,11 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
         verticalArrangement = Arrangement.Center
     )
     {
-        LoginTextField(viewModelLogin)
+        LoginTextField(viewModelLogin, bringIntoViewRequester)
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        PasswordTextField(EnterPasswordHint, viewModelLogin)
+        PasswordTextField(EnterPasswordHint, viewModelLogin, bringIntoViewRequester)
 
         Spacer(modifier = Modifier.height(11.dp))
 
@@ -115,10 +125,11 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
         Spacer(modifier = Modifier.height(20.dp))
 
         Button(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .bringIntoViewRequester(bringIntoViewRequester),
             onClick = {
-                //onAuthorization()
-                coroutineScope.launch {
+                onAuthorization()
+                /*coroutineScope.launch {
                     viewModelLogin.loginUser()
 
                     if(viewModelLogin.loginStatusLiveData.value == true) {
@@ -126,7 +137,7 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
                     }
                     else
                         isTextVisible = true
-                }
+                }*/
             },
             content = { Text(text = LoginButtonText, fontSize = 18.sp) }
         )
@@ -141,23 +152,40 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LoginTextField(viewModelLogin: LoginViewModel) {
+fun LoginTextField(viewModelLogin: LoginViewModel,bringIntoViewRequester: BringIntoViewRequester ) {
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
     TextField(
         value = viewModelLogin.login.value,
         onValueChange = { newText -> viewModelLogin.login.value = newText },
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .onFocusEvent { event ->
+                if (event.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         placeholder = { Text(EnterLoginHint) },
         label = { Text(EnterLoginHint) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {focusManager.clearFocus()}
+        )
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun PasswordTextField(Hint: String, viewModelLogin: LoginViewModel) {
+fun PasswordTextField(Hint: String, viewModelLogin: LoginViewModel, bringIntoViewRequester: BringIntoViewRequester) {
     var passwordVisability by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     TextField(
         value = viewModelLogin.password.value,
@@ -165,7 +193,14 @@ fun PasswordTextField(Hint: String, viewModelLogin: LoginViewModel) {
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .onFocusEvent { event ->
+                if (event.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         placeholder = { Text(Hint) },
         label = { Text(Hint) },
         trailingIcon = {
@@ -176,7 +211,10 @@ fun PasswordTextField(Hint: String, viewModelLogin: LoginViewModel) {
                 )
             }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {focusManager.clearFocus()}
+        ),
         visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation()
     )

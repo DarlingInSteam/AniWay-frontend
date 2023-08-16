@@ -7,13 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.GetCatalogCategoriesRequest
 import com.shadow_shift_studio.aniway.data.api_request.GetCatalogGenresRequest
-import com.shadow_shift_studio.aniway.data.api_request.GetUserRequest
-import com.shadow_shift_studio.aniway.data.search_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.domain.use_case.GetCatalogCategoriesUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.GetCatalogGenresUseCase
-import com.shadow_shift_studio.aniway.domain.use_case.GetUserUseCase
 import com.shadow_shift_studio.aniway.model.entity.Category
-import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import kotlinx.coroutines.launch
 

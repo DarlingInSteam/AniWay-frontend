@@ -1,6 +1,5 @@
 package com.shadow_shift_studio.aniway.view.main_screens
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
@@ -58,8 +57,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
@@ -67,11 +66,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.shadow_shift_studio.aniway.data.search_object.Filter
-import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.data.singleton_object.Filter
+import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Category
 import com.shadow_shift_studio.aniway.model.entity.Genre
-import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
@@ -232,6 +230,7 @@ fun SearchBar() {
     var expanded by remember { mutableStateOf(false) }
     val horizontalPadding = animateDpAsState(if (expanded) 0.dp else 23.dp).value
     val verticalPadding = animateDpAsState(if (expanded) 0.dp else 11.dp).value
+    Navbar.setNavbarVisible(!active)
 
     Column(
         modifier = Modifier
@@ -239,7 +238,8 @@ fun SearchBar() {
             .padding(horizontal = horizontalPadding, vertical = verticalPadding)
     ) {
         SearchBar(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth()
+                .onFocusEvent {  },
             query = searchText,
             onQueryChange = {
                 searchText = it
@@ -247,6 +247,7 @@ fun SearchBar() {
             onSearch = {
                 active = false
                 expanded = false
+                Navbar.setNavbarVisible(index = false)
             },
             active = active,
             onActiveChange = {

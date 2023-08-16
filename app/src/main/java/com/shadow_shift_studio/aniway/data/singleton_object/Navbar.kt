@@ -1,10 +1,9 @@
-package com.shadow_shift_studio.aniway.view_model.bottomnav
+package com.shadow_shift_studio.aniway.data.singleton_object
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 
-class BottomNavBarViewModel : ViewModel() {
-   /* private val isNavbarVisible = mutableStateOf(true)
+object Navbar {
+    private val isNavbarVisible = mutableStateOf(true)
 
     fun setNavbarVisible(index: Boolean) {
         isNavbarVisible.value = index
@@ -12,5 +11,5 @@ class BottomNavBarViewModel : ViewModel() {
 
     fun getNavbarVisible(): Boolean {
         return isNavbarVisible.value
-    }*/
+    }
 }

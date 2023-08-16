@@ -1,6 +1,5 @@
 package com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens
 
-import CommentCard
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
@@ -88,6 +87,7 @@ import com.shadow_shift_studio.aniway.GenresButtonText
 import com.shadow_shift_studio.aniway.LastCommentButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
+import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
@@ -109,7 +109,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
 
     NavHost(navController = navControllerMangaPage, startDestination = "main") {
         composable("main") {
-            viewModelBottom.setFirstVisibleItemIndex(true)
+            Navbar.setNavbarVisible(true)
 
             val scrollState = rememberScrollState()
             var description =
@@ -192,7 +192,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
         }
         composable("ReadScreen")
         {
-            viewModelBottom.setFirstVisibleItemIndex(false)
+            Navbar.setNavbarVisible(false)
             ReadScreen(navControllerMangaPage, viewModelBottom)
         }
     }

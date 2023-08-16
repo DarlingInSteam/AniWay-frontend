@@ -1,4 +1,4 @@
-package com.shadow_shift_studio.aniway.data.search_object
+package com.shadow_shift_studio.aniway.data.singleton_object
 
 import com.shadow_shift_studio.aniway.model.entity.User
 

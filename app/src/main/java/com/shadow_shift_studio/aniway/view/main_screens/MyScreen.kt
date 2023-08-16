@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
@@ -144,7 +145,7 @@ fun MyScreenSearchBar(selectedTabTitle: String) {
     var expanded by remember { mutableStateOf(false) }
     val horizontalPadding = animateDpAsState(if (expanded) 0.dp else 23.dp).value
     val verticalPadding = animateDpAsState(if (expanded) 0.dp else 11.dp).value
-
+    Navbar.setNavbarVisible(!active)
     Column(
         modifier = Modifier
             .fillMaxWidth()

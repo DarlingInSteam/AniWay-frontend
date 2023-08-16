@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.GetAchievementsRequest
 import com.shadow_shift_studio.aniway.data.api_request.GetUserRequest
 import com.shadow_shift_studio.aniway.data.api_request.GetUserCommentsRequest
-import com.shadow_shift_studio.aniway.data.search_object.AuthorizedUser
+import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.domain.use_case.GetAchievementsUseCase
 import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.domain.use_case.GetUserUseCase

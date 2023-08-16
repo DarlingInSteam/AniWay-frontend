@@ -2,6 +2,7 @@ package com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens
 
 import CommentCard
 import android.annotation.SuppressLint
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,6 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
@@ -24,16 +28,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -66,10 +76,15 @@ fun AddComment(navController: NavController) {
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CommentTextField() {
     var comment by remember { mutableStateOf("") }
     val maxLength = 350
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+    val bringIntoViewRequester = BringIntoViewRequester()
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -83,7 +98,15 @@ fun CommentTextField() {
             TextField(
                 modifier = Modifier
                     .height(60.dp)
-                    .weight(1f),
+                    .weight(1f)
+                    .onFocusEvent { event ->
+                        if (event.isFocused) {
+                            coroutineScope.launch {
+                                bringIntoViewRequester.bringIntoView()
+                            }
+                        }
+                        Navbar.setNavbarVisible(!event.isFocused)
+                    },
                 value = comment,
                 enabled = true,
                 onValueChange = { if (it.length <= maxLength) comment = it },
@@ -92,6 +115,10 @@ fun CommentTextField() {
                     fontSize = 16.sp,
                     textAlign = TextAlign.Start
                 ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {focusManager.clearFocus()}
+                )
             )
             IconButton(onClick = {}) {
                 Icon(

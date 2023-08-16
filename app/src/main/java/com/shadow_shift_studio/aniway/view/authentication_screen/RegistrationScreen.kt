@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.view.authentication_screen
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,7 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -35,8 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -61,12 +68,14 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_error
 import com.shadow_shift_studio.aniway.view_model.authentication.RegistrationViewModel
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Registration(navController: NavController) {
     val context = LocalContext.current
     val viewModelRegistration: RegistrationViewModel = RegistrationViewModel(context)
     var isTextVisible by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val bringIntoViewRequester = BringIntoViewRequester()
 
     Column {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -88,7 +97,7 @@ fun Registration(navController: NavController) {
             verticalArrangement = Arrangement.Top
         )
         {
-            LoginTextField(viewModelRegistration)
+            LoginTextField(viewModelRegistration, bringIntoViewRequester)
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -96,20 +105,21 @@ fun Registration(navController: NavController) {
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            EmailTextField(viewModelRegistration)
+            EmailTextField(viewModelRegistration, bringIntoViewRequester)
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            RegPasswordField(EnterPasswordHint, viewModelRegistration)
+            RegPasswordField(EnterPasswordHint, viewModelRegistration, bringIntoViewRequester)
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            RepeatPasswordField(RepeatPasswordHint, viewModelRegistration)
+            RepeatPasswordField(RepeatPasswordHint, viewModelRegistration, bringIntoViewRequester)
 
             Spacer(modifier = Modifier.height(20.dp))
 
             Button(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .bringIntoViewRequester(bringIntoViewRequester),
                 onClick = {
                     if(viewModelRegistration.isAllDataEntered()){
                         coroutineScope.launch {
@@ -135,11 +145,14 @@ fun Registration(navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LoginTextField(viewModelRegistration: RegistrationViewModel)
+fun LoginTextField(viewModelRegistration: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
 {
     var isLoginError by remember { mutableStateOf(false) }
     var loginErrorMessage by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     TextField(
         value = viewModelRegistration.login.value,
@@ -159,9 +172,20 @@ fun LoginTextField(viewModelRegistration: RegistrationViewModel)
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .onFocusEvent { event ->
+                if (event.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         placeholder = { Text(CreateLoginHint) },
         label = { Text(CreateLoginHint) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {focusManager.clearFocus()}
+        )
     )
     if (isLoginError && !viewModelRegistration.login.value.isEmpty()) {
         Text(
@@ -172,11 +196,14 @@ fun LoginTextField(viewModelRegistration: RegistrationViewModel)
         )
     }
 }
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun EmailTextField(viewModelRegistration: RegistrationViewModel)
+fun EmailTextField(viewModelRegistration: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
 {
 
     var isEmailError by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     TextField(
         value = viewModelRegistration.email.value,
@@ -186,9 +213,20 @@ fun EmailTextField(viewModelRegistration: RegistrationViewModel)
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .onFocusEvent { event ->
+                if (event.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         placeholder = { Text(EnterEmailHint) },
-        label = { Text(EnterEmailHint) }
+        label = { Text(EnterEmailHint) },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {focusManager.clearFocus()}
+        )
     )
     if (isEmailError && viewModelRegistration.email.value.isNotEmpty()) {
         Text(
@@ -200,12 +238,15 @@ fun EmailTextField(viewModelRegistration: RegistrationViewModel)
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
+fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
 {
     var passwordVisability by remember { mutableStateOf(false) }
     var isPasswordError by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+
     TextField(
         value = viewModelRegistration.password.value,
         onValueChange = {
@@ -214,7 +255,14 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .onFocusEvent { event ->
+                if (event.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         placeholder = { Text(Hint) },
         label = { Text(Hint) },
         trailingIcon =
@@ -240,7 +288,10 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
                 }
             }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {focusManager.clearFocus()}
+        ),
         visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation()
     )
@@ -254,11 +305,14 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel)
+fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
 {
     var passwordVisability by remember { mutableStateOf(false) }
     var isPasswordsEqual by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
 
     TextField(
         value = viewModelRegistration.repeatPassword.value,
@@ -267,7 +321,14 @@ fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewMod
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp)),
+            .clip(RoundedCornerShape(8.dp))
+            .onFocusEvent { event ->
+                if (event.isFocused) {
+                    coroutineScope.launch {
+                        bringIntoViewRequester.bringIntoView()
+                    }
+                }
+            },
         placeholder = { Text(Hint) },
         label = { Text(Hint) },
         trailingIcon = {
@@ -278,7 +339,10 @@ fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewMod
                 )
             }
         },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        keyboardActions = KeyboardActions(
+            onDone = {focusManager.clearFocus()}
+        ),
         visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation()
     )
