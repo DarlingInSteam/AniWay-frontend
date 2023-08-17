@@ -18,7 +18,7 @@ import retrofit2.create
  */
 object HttpClientIsLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.0.7:8080") // Base URL of the remote server (replace with the actual URL)
+        .baseUrl("http://192.168.0.159:8080") // Base URL of the remote server (replace with the actual URL)
         .addConverterFactory(GsonConverterFactory.create()) // Converter for JSON processing
         .client(OkHttpClient.Builder().addInterceptor { chain ->
             // Adding the Bearer token authorization header to the request

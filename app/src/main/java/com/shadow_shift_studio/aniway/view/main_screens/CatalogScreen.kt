@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -442,7 +443,8 @@ fun FilterButtonSheet(onClose: () -> Unit, viewModel: CatalogViewModel) {
     ModalBottomSheet(
         onDismissRequest = { onClose() },
         sheetState = scaffoldState,
-        modifier = Modifier.height(400.dp),
+        modifier = Modifier
+            .heightIn(400.dp, 800.dp),
         containerColor = surface_container_low
     ) {
         genresState.value?.let { categoriesState.value?.let { it1 -> FilterButtons(it, it1) } }
@@ -468,8 +470,8 @@ fun FilterButtons(genres: List<Genre>, categories: List<Category>) {
 }
 
 @Composable
-fun GenreButton(genre: Genre, onCheckedChange: (Boolean) -> Unit) {
-    var isChecked by remember { mutableStateOf(false) }
+fun GenreButton(genre: Genre, checkStatus: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    var isChecked by remember { mutableStateOf(checkStatus) }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -485,14 +487,18 @@ fun GenreButton(genre: Genre, onCheckedChange: (Boolean) -> Unit) {
 }
 
 @Composable
-fun CategoryButton(category: Category, onCheckedChange: (Boolean) -> Unit) {
+fun CategoryButton(category: Category, checkStatus: Boolean, onCheckedChange: (Boolean) -> Unit) {
+    var isChecked by remember { mutableStateOf(checkStatus) }
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = category.text)
-        Checkbox(checked = false, onCheckedChange = onCheckedChange)
+        Checkbox(checked = isChecked, onCheckedChange = {
+            isChecked = !isChecked
+            onCheckedChange(isChecked)
+        })
     }
 }
 
@@ -546,7 +552,12 @@ fun ButtonsGenres(genres: List<Genre>) {
                         .padding(start = 23.dp, end = 23.dp)
                 ) {
                     for (genre in genres) {
-                        GenreButton(genre = genre) { isChecked ->
+                        var checkStatus: Boolean = false
+                        for (selectedGenre in Filter.selectedGenres) {
+                           if (genre.id == selectedGenre.id)
+                               checkStatus = true
+                        }
+                        GenreButton(genre = genre, checkStatus) { isChecked ->
                             if (isChecked) {
                                 Filter.selectedGenres.add(genre)
                             } else {
@@ -719,13 +730,19 @@ fun ButtonsCategory(categories: List<Category>) {
                 Column(
                     modifier = Modifier
                         .animateContentSize()
+                        .padding(start=23.dp, end=23.dp)
                 ) {
                     for (category in categories) {
-                        CategoryButton(category = category) { isChecked ->
+                        var checkStatus: Boolean = false
+                        for(selectedCategory in Filter.selectedCategories) {
+                            if(selectedCategory.id == category.id)
+                                checkStatus = true
+                        }
+                        CategoryButton(category = category, checkStatus) { isChecked ->
                             if (isChecked) {
-                                selectedCategories.add(category)
+                                Filter.selectedCategories.add(category)
                             } else {
-                                selectedCategories.remove(category)
+                                Filter.selectedCategories.remove(category)
                             }
                         }
                     }

@@ -100,6 +100,7 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
     val context = LocalContext.current
     val viewModelLogin: LoginViewModel = LoginViewModel(context)
     val bringIntoViewRequester = BringIntoViewRequester()
+    val coroutineScope = rememberCoroutineScope()
 
     var isTextVisible by remember { mutableStateOf(false) }
 
@@ -128,8 +129,8 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
             modifier = Modifier.fillMaxWidth()
                 .bringIntoViewRequester(bringIntoViewRequester),
             onClick = {
-                onAuthorization()
-                /*coroutineScope.launch {
+                //onAuthorization()
+                coroutineScope.launch {
                     viewModelLogin.loginUser()
 
                     if(viewModelLogin.loginStatusLiveData.value == true) {
@@ -137,7 +138,7 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
                     }
                     else
                         isTextVisible = true
-                }*/
+                }
             },
             content = { Text(text = LoginButtonText, fontSize = 18.sp) }
         )
