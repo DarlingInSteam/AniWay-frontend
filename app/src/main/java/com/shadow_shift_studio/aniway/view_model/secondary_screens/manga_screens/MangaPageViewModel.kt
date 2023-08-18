@@ -1,4 +1,28 @@
 package com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens
 
-class MangaPageViewModel {
+import android.content.Context
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.shadow_shift_studio.aniway.data.api_request.GetTitleRequest
+import com.shadow_shift_studio.aniway.domain.use_case.GetTitleUseCase
+import com.shadow_shift_studio.aniway.model.entity.Genre
+import com.shadow_shift_studio.aniway.model.entity.Title
+import kotlinx.coroutines.launch
+
+class MangaPageViewModel(private val context: Context) : ViewModel() {
+    var id = mutableLongStateOf(0)
+    val titleLiveData: MutableLiveData<Title> = MutableLiveData()
+
+    private val getTitle: GetTitleUseCase =
+        GetTitleUseCase(GetTitleRequest())
+
+    suspend fun getTitle() {
+        viewModelScope.launch {
+            val title = getTitle.getTitle(context, id.longValue)
+            titleLiveData.value = title
+        }.join()
+    }
 }

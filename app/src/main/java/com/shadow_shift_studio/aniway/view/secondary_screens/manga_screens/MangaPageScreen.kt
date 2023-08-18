@@ -46,6 +46,7 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,6 +63,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.style.TextAlign
@@ -71,6 +73,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -88,7 +91,8 @@ import com.shadow_shift_studio.aniway.LastCommentButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
-import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
+import com.shadow_shift_studio.aniway.model.entity.Genre
+import com.shadow_shift_studio.aniway.model.entity.Title
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onPrimary
@@ -101,12 +105,33 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_contai
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
-import com.shadow_shift_studio.aniway.view_model.main_screens.CatalogViewModel
+import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.MangaPageViewModel
 
 @Composable
 fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel, id: Long) {
     val navControllerMangaPage = rememberNavController()
     var bookmarksBottomSheetVisible by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val viewModel = MangaPageViewModel(context)
+    viewModel.id.longValue = id
+
+    val titleState = remember { mutableStateOf<Title?>(null) }
+
+    val titleObserver = Observer<Title> { newTitle ->
+        titleState.value = newTitle
+    }
+
+    LaunchedEffect(viewModel) {
+        viewModel.getTitle()
+    }
+
+    DisposableEffect(viewModel) {
+        viewModel.titleLiveData.observeForever(titleObserver)
+
+        onDispose {
+            viewModel.titleLiveData.removeObserver(titleObserver)
+        }
+    }
 
     NavHost(navController = navControllerMangaPage, startDestination = "main") {
         composable("main") {
@@ -114,7 +139,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
 
             val scrollState = rememberScrollState()
             var description =
-                "Король Грей обладает непревзойденной силой, богатством и престижем в мире, управляемом боевыми способностями. Однако одиночество тесно связано с теми, кто обладает большой властью. Под гламурной внешностью могущественного короля скрывается оболочка человека, лишенного целей и воли. Перевоплотившись в новом мире, наполненном магией и монстрами, король получает второй шанс вновь прожить свою жизнь. Однако исправление ошибок прошлого будет не единственной его задачей. Под миром и процветанием нового мира скрывается подводное течение, угрожающее разрушить все, ради чего он работал, подвергая сомнению его роль и причину рождения заново."
+                titleState.value?.description.toString()
 
             Column(
                 modifier = Modifier
@@ -144,7 +169,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
                         modifier = Modifier
                             .padding(top = 120.dp)
                     ) {
-                        MangaInfo()
+                        titleState.value?.let { it1 -> MangaInfo(it1) }
                     }
                 }
                 Spacer(
@@ -157,20 +182,11 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
                     modifier = Modifier.height(11.dp)
                 )
 
-                Genres(
-                    listOf(
-                        "Мистика",
-                        "Приключения",
-                        "Фэнтези",
-                        "В цвете",
-                        "Демоны",
-                        "Зверолюди",
-                        "Кто",
-                        "Прочитал",
-                        "Тот",
-                        "Лапочка"
+                titleState.value?.genres?.let { it1 ->
+                    Genres(
+                        it1
                     )
-                )
+                }
                 Spacer(modifier = Modifier.height(11.dp))
 
                 ExpandableText(text = description)
@@ -307,14 +323,15 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
 }
 
 @Composable
-fun MangaInfo() {
-    var titleName = "Токийские мстители"
-    var titleType = "Манга"
-    var year = "2018"
-    var status = "Продолжается"
-    var views = "1.5M"
+fun MangaInfo(title: Title) {
+    var titleName = title.name.toString()
+    var titleType = title.type.toString()
+    var year = title.year.toString()
+    var status = title.status.toString()
+    var views = title.views.toString()
     var likes = "21K"
     var bookMarks = "12K"
+
     Column {
         Row(
             modifier = Modifier
@@ -493,7 +510,7 @@ fun MangaActionsButtons(navController: NavController) {
 
 
 @Composable
-fun Genres(genresList: List<String>) {
+fun Genres(genresList: List<Genre>) {
     var currentRow by remember { mutableStateOf(0) }
     var expended by remember { mutableStateOf(false) }
     val isGenreExpanded = remember { mutableStateOf(false) }
@@ -549,7 +566,7 @@ fun Genres(genresList: List<String>) {
                 ) {
                     genresList.forEach { word ->
                         Text(
-                            word,
+                            word.name,
                             color = md_theme_dark_onSurface,
                             modifier = Modifier
                                 .background(

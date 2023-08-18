@@ -45,7 +45,7 @@ fun MangaPreviewCard(navController: NavController, title: Title, onId: (id : Lon
             .widthIn(108.dp, 108.dp)
             .height(220.dp)
             .clickable {
-                onId(title.id)
+                title.id?.let { onId(it) }
                 navController.navigate("fullScreen")
             },
         colors = CardColors(

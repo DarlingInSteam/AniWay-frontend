@@ -4,6 +4,7 @@ import com.shadow_shift_studio.aniway.data.service.IGetAchievementsService
 import com.shadow_shift_studio.aniway.data.service.IGetCatalogCategoriesService
 import com.shadow_shift_studio.aniway.data.service.IGetCatalogGenresService
 import com.shadow_shift_studio.aniway.data.service.IGetCatalogService
+import com.shadow_shift_studio.aniway.data.service.IGetTitleService
 import com.shadow_shift_studio.aniway.data.service.IGetUserService
 import com.shadow_shift_studio.aniway.data.service.IGetUserCommentsService
 import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogCategories
@@ -39,4 +40,5 @@ object HttpClientIsLogin {
     val getCatalogGenres: IGetCatalogGenresService = retrofit.create(IGetCatalogGenresService::class.java)
     val getCatalogCategories: IGetCatalogCategoriesService = retrofit.create(IGetCatalogCategoriesService::class.java)
     val getCatalog: IGetCatalogService = retrofit.create(IGetCatalogService::class.java)
+    val getTitle: IGetTitleService = retrofit.create(IGetTitleService::class.java)
 }
