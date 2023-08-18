@@ -110,7 +110,7 @@ fun TopsScreen(
                 composable("fullScreen") {
                     viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
                     viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
-                    MangaPage(navController = navControllerTop, viewModelBottom)
+                    MangaPage(navController = navControllerTop, viewModelBottom, 0)
                 }
             }
         }

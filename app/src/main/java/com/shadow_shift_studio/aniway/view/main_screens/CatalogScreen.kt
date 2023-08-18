@@ -50,9 +50,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -71,6 +74,10 @@ import com.shadow_shift_studio.aniway.data.singleton_object.Filter
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Category
 import com.shadow_shift_studio.aniway.model.entity.Genre
+import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.enum.AgeRating
+import com.shadow_shift_studio.aniway.model.enum.TitleStatus
+import com.shadow_shift_studio.aniway.model.enum.TitleType
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
@@ -79,6 +86,7 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVarian
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.main_screens.CatalogViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,9 +98,14 @@ fun CatalogScreen(
     var sortingBottomSheetVisible by remember { mutableStateOf(false) }
     var filterBottomSheetVisible by remember { mutableStateOf(false) }
     val navController = rememberNavController()
-    var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
-    var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var prevFirstVisibleItemIndex by remember { mutableIntStateOf(0) }
+    var currentFirstVisibleItemIndex by remember { mutableIntStateOf(0) }
     var searchBarVisible by remember { mutableStateOf(true) }
+    var idValue by remember { mutableLongStateOf(0) }
+
+    LaunchedEffect(viewModel) {
+        viewModel.getCatalog()
+    }
 
     Column(
         modifier = Modifier
@@ -139,13 +152,15 @@ fun CatalogScreen(
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    CardsList(navController = navController, scrollState)
+                    CardsList(navController = navController, scrollState, viewModel) { id: Long ->
+                        idValue = id
+                    }
                 }
             }
             composable("fullScreen") {
                 viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
                 viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
-                MangaPage(navController = navController, viewModelBottom)
+                MangaPage(navController = navController, viewModelBottom, idValue)
             }
         }
     }
@@ -239,8 +254,9 @@ fun SearchBar() {
             .padding(horizontal = horizontalPadding, vertical = verticalPadding)
     ) {
         SearchBar(
-            modifier = Modifier.fillMaxWidth()
-                .onFocusEvent {  },
+            modifier = Modifier
+                .fillMaxWidth()
+                .onFocusEvent { },
             query = searchText,
             onQueryChange = {
                 searchText = it
@@ -280,7 +296,21 @@ fun SearchBar() {
 }
 
 @Composable
-fun CardsList(navController: NavController, scrollState: LazyGridState) {
+fun CardsList(navController: NavController, scrollState: LazyGridState, viewModel: CatalogViewModel, onId: (id : Long) -> Unit) {
+    val catalogState = remember { mutableStateOf<List<Title>?>(null) }
+
+    val catalogObserver = Observer<List<Title>> { newCatalog ->
+        catalogState.value = newCatalog
+    }
+
+    DisposableEffect(viewModel) {
+        viewModel.catalogTitles.observeForever(catalogObserver)
+
+        onDispose {
+            viewModel.catalogTitles.removeObserver(catalogObserver)
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -294,8 +324,10 @@ fun CardsList(navController: NavController, scrollState: LazyGridState) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items(count = 25, key = null) { index ->
-                MangaPreviewCard(navController)
+            catalogState.value?.let {
+                items(count = it.size, key = null) { index ->
+                    MangaPreviewCard(navController, it[index], onId)
+                }
             }
         }
     }
@@ -447,12 +479,14 @@ fun FilterButtonSheet(onClose: () -> Unit, viewModel: CatalogViewModel) {
             .heightIn(400.dp, 800.dp),
         containerColor = surface_container_low
     ) {
-        genresState.value?.let { categoriesState.value?.let { it1 -> FilterButtons(it, it1) } }
+        genresState.value?.let { categoriesState.value?.let { it1 -> FilterButtons(it, it1, viewModel, {onClose()}) } }
     }
 }
 
 @Composable
-fun FilterButtons(genres: List<Genre>, categories: List<Category>) {
+fun FilterButtons(genres: List<Genre>, categories: List<Category>, viewModel: CatalogViewModel, onClose:() -> Unit) {
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -466,6 +500,38 @@ fun FilterButtons(genres: List<Genre>, categories: List<Category>) {
         ButtonsTitleStatus()
         Spacer(modifier = Modifier.height(12.dp))
         ButtonsAge()
+        Spacer(modifier = Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 23.dp, end = 23.dp),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    coroutineScope.launch {
+                        viewModel.getCatalog()
+                    }
+                    onClose()
+                }
+            ) {
+                Text(text = "Применить")
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Button(
+                onClick = {
+                    Filter.resetAllSelected()
+
+                    coroutineScope.launch {
+                        viewModel.getCatalog()
+                    }
+
+                    onClose()
+                }
+            ) {
+                Text(text = "Сбросить")
+            }
+        }
     }
 }
 
@@ -554,14 +620,14 @@ fun ButtonsGenres(genres: List<Genre>) {
                     for (genre in genres) {
                         var checkStatus: Boolean = false
                         for (selectedGenre in Filter.selectedGenres) {
-                           if (genre.id == selectedGenre.id)
+                           if (genre.name == selectedGenre)
                                checkStatus = true
                         }
                         GenreButton(genre = genre, checkStatus) { isChecked ->
                             if (isChecked) {
-                                Filter.selectedGenres.add(genre)
+                                Filter.selectedGenres.add(genre.name)
                             } else {
-                                Filter.selectedGenres.remove(genre)
+                                Filter.selectedGenres.remove(genre.name)
                             }
                         }
                     }
@@ -575,6 +641,26 @@ fun ButtonsGenres(genres: List<Genre>) {
 @Composable
 fun ButtonsType() {
     val isTypeExpanded = remember { mutableStateOf(false) }
+    var isMangaSelected = remember {
+        mutableStateOf(false)
+    }
+    var isManhwaSelected = remember {
+        mutableStateOf(false)
+    }
+    var isManhuaSelected = remember {
+        mutableStateOf(false)
+    }
+    var isCartoonSelected = remember {
+        mutableStateOf(false)
+    }
+
+
+    for (type in Filter.selectedTitleType) {
+        if (type == TitleType.MANGA) isMangaSelected.value = true
+        if (type == TitleType.MANHWA) isManhwaSelected.value = true
+        if (type == TitleType.MANHUA) isManhuaSelected.value = true
+        if (type == TitleType.CARTOON) isCartoonSelected.value = true
+    }
 
     Column(
         modifier = Modifier
@@ -634,7 +720,17 @@ fun ButtonsType() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Манга")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isMangaSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleType.add(TitleType.MANGA)
+                                    } else {
+                                        Filter.selectedTitleType.remove(TitleType.MANGA)
+                                        isMangaSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                     Button(
@@ -653,7 +749,17 @@ fun ButtonsType() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Манхва")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isManhwaSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleType.add(TitleType.MANHWA)
+                                    } else {
+                                        Filter.selectedTitleType.remove(TitleType.MANHWA)
+                                        isManhwaSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                     Button(
@@ -672,7 +778,46 @@ fun ButtonsType() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Маньхуа")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isManhuaSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleType.add(TitleType.MANHUA)
+                                    } else {
+                                        Filter.selectedTitleType.remove(TitleType.MANHUA)
+                                        isManhuaSelected.value = false
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    Button(
+                        onClick = { },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonColors(
+                            md_theme_dark_bottom_sheet_bottoms,
+                            md_theme_light_surfaceVariant,
+                            Color.White,
+                            Color.White
+                        )
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = "Комикс")
+                            Checkbox(
+                                checked = isCartoonSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleType.add(TitleType.CARTOON)
+                                    } else {
+                                        Filter.selectedTitleType.remove(TitleType.CARTOON)
+                                        isCartoonSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                 }
@@ -730,19 +875,19 @@ fun ButtonsCategory(categories: List<Category>) {
                 Column(
                     modifier = Modifier
                         .animateContentSize()
-                        .padding(start=23.dp, end=23.dp)
+                        .padding(start = 23.dp, end = 23.dp)
                 ) {
                     for (category in categories) {
                         var checkStatus: Boolean = false
                         for(selectedCategory in Filter.selectedCategories) {
-                            if(selectedCategory.id == category.id)
+                            if(selectedCategory == category.text)
                                 checkStatus = true
                         }
                         CategoryButton(category = category, checkStatus) { isChecked ->
                             if (isChecked) {
-                                Filter.selectedCategories.add(category)
+                                Filter.selectedCategories.add(category.text)
                             } else {
-                                Filter.selectedCategories.remove(category)
+                                Filter.selectedCategories.remove(category.text)
                             }
                         }
                     }
@@ -755,6 +900,17 @@ fun ButtonsCategory(categories: List<Category>) {
 @Composable
 fun ButtonsTitleStatus() {
     val isTitleStatusExpanded = remember { mutableStateOf(false) }
+    var isOngoingSelected = remember { mutableStateOf(false) }
+    var isFinishedSelected = remember { mutableStateOf(false) }
+    var isFreezedSelected = remember { mutableStateOf(false) }
+    var isAnnouncedSelected = remember { mutableStateOf(false) }
+
+    for (status in Filter.selectedTitleStatus) {
+        if (status == TitleStatus.ONGOING) isOngoingSelected.value = true
+        if (status == TitleStatus.FINISHED) isFinishedSelected.value = true
+        if (status == TitleStatus.FREEZED) isFreezedSelected.value = true
+        if (status == TitleStatus.ANNOUNCED) isAnnouncedSelected.value = true
+    }
 
     Column(
         modifier = Modifier
@@ -817,7 +973,17 @@ fun ButtonsTitleStatus() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Закончен")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isFinishedSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleStatus.add(TitleStatus.FINISHED)
+                                    } else {
+                                        Filter.selectedTitleStatus.remove(TitleStatus.FINISHED)
+                                        isFinishedSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                     Button(
@@ -836,7 +1002,18 @@ fun ButtonsTitleStatus() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Продолжается")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isOngoingSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleStatus.add(TitleStatus.ONGOING)
+                                    } else {
+                                        Filter.selectedTitleStatus.remove(TitleStatus.ONGOING)
+                                        isOngoingSelected.value = false
+                                    }
+
+                                }
+                            )
                         }
                     }
                     Button(
@@ -855,7 +1032,17 @@ fun ButtonsTitleStatus() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Заморожен")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isFreezedSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleStatus.add(TitleStatus.FREEZED)
+                                    } else {
+                                        Filter.selectedTitleStatus.remove(TitleStatus.FREEZED)
+                                        isFreezedSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                     Button(
@@ -874,7 +1061,17 @@ fun ButtonsTitleStatus() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Анонс")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isAnnouncedSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedTitleStatus.add(TitleStatus.ANNOUNCED)
+                                    } else {
+                                        Filter.selectedTitleStatus.remove(TitleStatus.ANNOUNCED)
+                                        isAnnouncedSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                 }
@@ -886,6 +1083,21 @@ fun ButtonsTitleStatus() {
 @Composable
 fun ButtonsAge() {
     val isAgeExpanded = remember { mutableStateOf(false) }
+    var isEveryoneSelected = remember {
+        mutableStateOf(false)
+    }
+    var isTeenagerSelected = remember {
+        mutableStateOf(false)
+    }
+    var isAdultSelected = remember {
+        mutableStateOf(false)
+    }
+
+    for(age in Filter.selectedAgeRatings) {
+        if (age == AgeRating.EVERYONE) isEveryoneSelected.value = true
+        if (age == AgeRating.TEENAGER) isTeenagerSelected.value = true
+        if (age == AgeRating.ADULT) isAdultSelected.value = true
+    }
 
     Column(
         modifier = Modifier
@@ -945,7 +1157,17 @@ fun ButtonsAge() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "Для всех")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isEveryoneSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedAgeRatings.add(AgeRating.EVERYONE)
+                                    } else {
+                                        Filter.selectedAgeRatings.remove(AgeRating.EVERYONE)
+                                        isEveryoneSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                     Button(
@@ -964,7 +1186,17 @@ fun ButtonsAge() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "16+")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isTeenagerSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedAgeRatings.add(AgeRating.TEENAGER)
+                                    } else {
+                                        Filter.selectedAgeRatings.remove(AgeRating.TEENAGER)
+                                        isTeenagerSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                     Button(
@@ -983,7 +1215,17 @@ fun ButtonsAge() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(text = "18+")
-                            Checkbox(checked = false, onCheckedChange = {})
+                            Checkbox(
+                                checked = isAdultSelected.value,
+                                onCheckedChange = { isChecked ->
+                                    if (isChecked) {
+                                        Filter.selectedAgeRatings.add(AgeRating.ADULT)
+                                    } else {
+                                        Filter.selectedAgeRatings.remove(AgeRating.ADULT)
+                                        isAdultSelected.value = false
+                                    }
+                                }
+                            )
                         }
                     }
                 }

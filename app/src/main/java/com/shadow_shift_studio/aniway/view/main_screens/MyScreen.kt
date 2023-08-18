@@ -109,7 +109,7 @@ fun MyScreen(
             composable("fullScreen") {
                 viewModel.setFirstVisibleItemIndex(scrollState.firstVisibleItemIndex)
                 viewModel.setFirstVisibleItemScrollOffset((scrollState.firstVisibleItemScrollOffset))
-                MangaPage(navController, viewModelBottom)
+                MangaPage(navController, viewModelBottom, 0)
             }
         }
     }
@@ -131,7 +131,7 @@ fun MyScreenCards(navController: NavController, scrollState: LazyGridState) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 25) { index ->
-                MangaPreviewCard(navController)
+//                MangaPreviewCard(navController)
             }
         }
     }

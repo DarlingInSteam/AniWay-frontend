@@ -28,14 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.shadow_shift_studio.aniway.model.entity.Title
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_tertiaryContainer
 
 @Composable
-fun MangaPreviewCard(navController: NavController) {
-    val titleName = "Подземелье демона"
-    val titleType = "Манхва"
+fun MangaPreviewCard(navController: NavController, title: Title, onId: (id : Long) -> Unit) {
+    val titleName = title.name.toString()
+    val titleType = title.type.toString()
     val rating = "4,9"
 
     androidx.compose.material3.Card(
@@ -43,7 +44,10 @@ fun MangaPreviewCard(navController: NavController) {
             .width(108.dp)
             .widthIn(108.dp, 108.dp)
             .height(220.dp)
-            .clickable { navController.navigate("fullScreen") },
+            .clickable {
+                onId(title.id)
+                navController.navigate("fullScreen")
+            },
         colors = CardColors(
             md_theme_dark_background,
             md_theme_dark_background,

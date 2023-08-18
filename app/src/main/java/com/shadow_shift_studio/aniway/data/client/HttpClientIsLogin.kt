@@ -3,6 +3,7 @@ package com.shadow_shift_studio.aniway.data.client
 import com.shadow_shift_studio.aniway.data.service.IGetAchievementsService
 import com.shadow_shift_studio.aniway.data.service.IGetCatalogCategoriesService
 import com.shadow_shift_studio.aniway.data.service.IGetCatalogGenresService
+import com.shadow_shift_studio.aniway.data.service.IGetCatalogService
 import com.shadow_shift_studio.aniway.data.service.IGetUserService
 import com.shadow_shift_studio.aniway.data.service.IGetUserCommentsService
 import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogCategories
@@ -16,9 +17,11 @@ import retrofit2.create
  * The `HttpClientIsLogin` object provides an instance of `Retrofit` configured for making HTTP requests
  * to a remote server with a Bearer token authorization header.
  */
+
+//саша ip 192.168.0.159
 object HttpClientIsLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://192.168.0.159:8080") // Base URL of the remote server (replace with the actual URL)
+        .baseUrl("http://192.168.0.7:8080") // Base URL of the remote server (replace with the actual URL)
         .addConverterFactory(GsonConverterFactory.create()) // Converter for JSON processing
         .client(OkHttpClient.Builder().addInterceptor { chain ->
             // Adding the Bearer token authorization header to the request
@@ -35,4 +38,5 @@ object HttpClientIsLogin {
     val getUserAchievementsService: IGetAchievementsService = retrofit.create(IGetAchievementsService::class.java)
     val getCatalogGenres: IGetCatalogGenresService = retrofit.create(IGetCatalogGenresService::class.java)
     val getCatalogCategories: IGetCatalogCategoriesService = retrofit.create(IGetCatalogCategoriesService::class.java)
+    val getCatalog: IGetCatalogService = retrofit.create(IGetCatalogService::class.java)
 }

@@ -124,7 +124,7 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
                 }
             }
             composable("fullScreen") {
-                MangaPage(navController, viewModelBottom)
+                MangaPage(navController, viewModelBottom, 0)
             }
             composable("settings") {
                 Settings(navController)
@@ -200,7 +200,7 @@ fun Favorites(navController: NavController) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             items(count = 6) { index ->
-                MangaPreviewCard(navController)
+//                MangaPreviewCard(navController)
             }
         }
     }

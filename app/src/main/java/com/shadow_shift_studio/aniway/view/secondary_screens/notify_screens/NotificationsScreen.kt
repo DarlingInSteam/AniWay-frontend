@@ -55,7 +55,7 @@ fun Notification(navController: NavController, viewModelBottom: BottomNavBarView
             }
 
             composable("fullScreen") {
-                MangaPage(navController = navControllerNotify, viewModelBottom)
+                MangaPage(navController = navControllerNotify, viewModelBottom, 0)
             }
         }
     }

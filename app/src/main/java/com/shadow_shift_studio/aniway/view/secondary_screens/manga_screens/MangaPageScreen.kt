@@ -101,9 +101,10 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_contai
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.main_screens.CatalogViewModel
 
 @Composable
-fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel) {
+fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel, id: Long) {
     val navControllerMangaPage = rememberNavController()
     var bookmarksBottomSheetVisible by remember { mutableStateOf(false) }
 
@@ -712,9 +713,9 @@ fun SimilarWorks(navController: NavController) {
                 .padding(start = 23.dp, end = 23.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            MangaPreviewCard(navController)
-            MangaPreviewCard(navController)
-            MangaPreviewCard(navController)
+//            MangaPreviewCard(navController)
+//            MangaPreviewCard(navController)
+//            MangaPreviewCard(navController)
         }
     }
 }
