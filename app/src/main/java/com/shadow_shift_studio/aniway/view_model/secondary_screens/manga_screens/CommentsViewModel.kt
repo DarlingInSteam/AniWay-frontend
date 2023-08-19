@@ -32,7 +32,7 @@ class CommentsViewModel(private val context: Context) : ViewModel() {
             val updatedComments = currentComments.toMutableList()
             updatedComments.addAll(comments)
 
-            commentsLiveData.value = comments
+            commentsLiveData.value = updatedComments
 
             page += 1
         }.join()

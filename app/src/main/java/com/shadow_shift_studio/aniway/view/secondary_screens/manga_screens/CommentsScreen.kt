@@ -152,6 +152,7 @@ fun CommentTextField(viewModel: CommentsViewModel) {
                 onClick = {
                     coroutineScope.launch {
                         viewModel.createTitleComment()
+                        viewModel.getTitleComments()
                     }
                 }
             ) {
