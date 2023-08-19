@@ -1,6 +1,6 @@
 package com.shadow_shift_studio.aniway.data.service
 
-import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
 import com.shadow_shift_studio.aniway.model.enum.TitleType
@@ -18,5 +18,5 @@ interface IGetCatalogService {
         @Query("categories") categories: List<String>?,
         @Query("ageRatings")  ageRatings: List<AgeRating>?,
         @Query("page") page: Int
-    ): Call<List<Title>>
+    ): Call<List<TitlePreview>>
 }

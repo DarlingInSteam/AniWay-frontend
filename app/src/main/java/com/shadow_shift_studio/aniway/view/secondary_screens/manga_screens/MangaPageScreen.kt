@@ -93,6 +93,7 @@ import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onPrimary
@@ -201,7 +202,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
             }
         }
         composable("commentsScreen") {
-            AddComment(navControllerMangaPage)
+            titleState.value?.id?.let { it1 -> AddComment(navControllerMangaPage, it1.toLong()) }
         }
         composable("chaptersScreen")
         {

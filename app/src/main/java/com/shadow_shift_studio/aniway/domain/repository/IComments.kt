@@ -2,12 +2,11 @@ package com.shadow_shift_studio.aniway.domain.repository
 
 import android.content.Context
 import com.shadow_shift_studio.aniway.model.entity.Comment
-import com.shadow_shift_studio.aniway.model.entity.User
 
 /**
  * The `IGetUserComments` interface defines a method for retrieving user comments by their username.
  */
-interface IGetUserComments {
+interface IComments {
     /**
      * Retrieves a list of comments for the user based on their username.
      *
@@ -16,5 +15,8 @@ interface IGetUserComments {
      * @return A list of user comments.
      */
     suspend fun getUserCommentsByUsername(context: Context, username: String): List<Comment>
+    suspend fun getTitleComments(context: Context, titleId: Long, page: Int): List<Comment>
+
+    suspend fun createComment(context: Context, titleId: Long, chapterId: Long, text: String): String
 }
 

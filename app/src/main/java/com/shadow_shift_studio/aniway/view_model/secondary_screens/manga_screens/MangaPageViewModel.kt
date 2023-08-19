@@ -2,14 +2,13 @@ package com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screen
 
 import android.content.Context
 import androidx.compose.runtime.mutableLongStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.GetTitleRequest
 import com.shadow_shift_studio.aniway.domain.use_case.GetTitleUseCase
-import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import kotlinx.coroutines.launch
 
 class MangaPageViewModel(private val context: Context) : ViewModel() {

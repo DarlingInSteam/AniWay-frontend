@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
 import com.shadow_shift_studio.aniway.domain.repository.IGetCatalog
-import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
 import com.shadow_shift_studio.aniway.model.enum.TitleType
@@ -23,12 +23,12 @@ class GetCatalogRequest : IGetCatalog {
         categories: List<String>,
         ageRatings: List<AgeRating>,
         page: Int
-    ): List<Title> {
+    ): List<TitlePreview> {
 
         val backendService = HttpClientIsLogin.getCatalog
 
         // An empty list of comments for potential error handling.
-        val titleForErrorResponse = listOf<Title>()
+        val titleForErrorResponse = listOf<TitlePreview>()
 
         try {
             // Use a coroutine for asynchronous fetching of comments.
@@ -36,8 +36,8 @@ class GetCatalogRequest : IGetCatalog {
                 val call = backendService.getCatalogTitles(genres, statuses, types, categories, ageRatings, page)
 
                 // Handling successful response from the server.
-                call.enqueue(object : Callback<List<Title>> {
-                    override fun onResponse(call: Call<List<Title>>, response: Response<List<Title>>) {
+                call.enqueue(object : Callback<List<TitlePreview>> {
+                    override fun onResponse(call: Call<List<TitlePreview>>, response: Response<List<TitlePreview>>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if (responseBody != null) {
@@ -53,7 +53,7 @@ class GetCatalogRequest : IGetCatalog {
                     }
 
                     // Handling error while executing the request.
-                    override fun onFailure(call: Call<List<Title>>, t: Throwable) {
+                    override fun onFailure(call: Call<List<TitlePreview>>, t: Throwable) {
                         Log.e("Network client error", t.message ?: "HTTP client failed to connect")
                         continuation.resume(titleForErrorResponse)
                     }

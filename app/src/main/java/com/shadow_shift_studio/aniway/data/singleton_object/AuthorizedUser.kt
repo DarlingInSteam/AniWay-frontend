@@ -4,5 +4,6 @@ import com.shadow_shift_studio.aniway.model.entity.User
 
 object AuthorizedUser {
     var username = ""
+    var id: Long = 0
     var user: User? = null
 }

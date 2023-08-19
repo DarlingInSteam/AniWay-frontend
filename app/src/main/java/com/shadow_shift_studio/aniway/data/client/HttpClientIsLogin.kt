@@ -6,13 +6,10 @@ import com.shadow_shift_studio.aniway.data.service.IGetCatalogGenresService
 import com.shadow_shift_studio.aniway.data.service.IGetCatalogService
 import com.shadow_shift_studio.aniway.data.service.IGetTitleService
 import com.shadow_shift_studio.aniway.data.service.IGetUserService
-import com.shadow_shift_studio.aniway.data.service.IGetUserCommentsService
-import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogCategories
-import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogGenres
+import com.shadow_shift_studio.aniway.data.service.ICommentsService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.create
 
 /**
  * The `HttpClientIsLogin` object provides an instance of `Retrofit` configured for making HTTP requests
@@ -23,7 +20,7 @@ import retrofit2.create
 //артем 192.168.0.7
 object HttpClientIsLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
-        .baseUrl("http://10.0.2.2:8080") // Base URL of the remote server (replace with the actual URL)
+        .baseUrl("http://192.168.0.7:8080") // Base URL of the remote server (replace with the actual URL)
         .addConverterFactory(GsonConverterFactory.create()) // Converter for JSON processing
         .client(OkHttpClient.Builder().addInterceptor { chain ->
             // Adding the Bearer token authorization header to the request
@@ -36,7 +33,7 @@ object HttpClientIsLogin {
 
     // Creating a service for making requests to the remote server
     val getUserService: IGetUserService = retrofit.create(IGetUserService::class.java)
-    val getUserCommentsService: IGetUserCommentsService = retrofit.create(IGetUserCommentsService::class.java)
+    val CommentsService: ICommentsService = retrofit.create(ICommentsService::class.java)
     val getUserAchievementsService: IGetAchievementsService = retrofit.create(IGetAchievementsService::class.java)
     val getCatalogGenres: IGetCatalogGenresService = retrofit.create(IGetCatalogGenresService::class.java)
     val getCatalogCategories: IGetCatalogCategoriesService = retrofit.create(IGetCatalogCategoriesService::class.java)

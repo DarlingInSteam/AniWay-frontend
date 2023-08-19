@@ -28,13 +28,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_tertiaryContainer
 
 @Composable
-fun MangaPreviewCard(navController: NavController, title: Title, onId: (id : Long) -> Unit) {
+fun MangaPreviewCard(navController: NavController, title: TitlePreview, onId: (id : Long) -> Unit) {
     val titleName = title.name.toString()
     val titleType = title.type.toString()
     val rating = "4,9"

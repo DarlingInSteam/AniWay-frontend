@@ -14,7 +14,6 @@ data class Title(
     var type : TitleType?,
     var views : Int?,
     var backgroundUrl : String?,
-    var comments : List<Comment>?,
     var categories: List<Category>?,
     var genres: List<Genre>?,
     var ageRating: AgeRating?

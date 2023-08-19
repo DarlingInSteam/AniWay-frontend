@@ -2,7 +2,7 @@ package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
 import com.shadow_shift_studio.aniway.domain.repository.IGetCatalog
-import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
 import com.shadow_shift_studio.aniway.model.enum.TitleType
@@ -16,7 +16,7 @@ class GetCatalogUseCase(private val catalog : IGetCatalog) {
         categories: List<String>,
         ageRatings: List<AgeRating>,
         page: Int
-    ): List<Title> {
+    ): List<TitlePreview> {
         return catalog.getCatalog(context, genres, statuses, types, categories, ageRatings, page)
     }
 }

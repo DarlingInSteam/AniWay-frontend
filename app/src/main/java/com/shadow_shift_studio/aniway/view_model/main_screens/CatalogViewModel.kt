@@ -2,7 +2,6 @@ package com.shadow_shift_studio.aniway.view_model.main_screens
 
 import android.content.Context
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,7 +14,7 @@ import com.shadow_shift_studio.aniway.domain.use_case.GetCatalogGenresUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.GetCatalogUseCase
 import com.shadow_shift_studio.aniway.model.entity.Category
 import com.shadow_shift_studio.aniway.model.entity.Genre
-import com.shadow_shift_studio.aniway.model.entity.Title
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import kotlinx.coroutines.launch
 
 class CatalogViewModel(private val context: Context) : ViewModel() {
@@ -24,7 +23,7 @@ class CatalogViewModel(private val context: Context) : ViewModel() {
     var page = Filter.page
     val catalogGenresLiveData: MutableLiveData<List<Genre>> = MutableLiveData()
     val catalogCategoriesLiveData: MutableLiveData<List<Category>> = MutableLiveData()
-    val catalogTitles: MutableLiveData<List<Title>> = MutableLiveData()
+    val catalogTitles: MutableLiveData<List<TitlePreview>> = MutableLiveData()
     var firstVisibleItemIndex = _firstVisibleItemIndex
     var initCatalog = false
 

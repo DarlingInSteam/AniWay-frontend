@@ -9,7 +9,7 @@ import java.util.Date
  * @property username The name of the user who left the comment.
  * @property titleName The name of the title to which the comment was left.
  * @property avatarUrl The URL of the user's avatar.
- * @property date The date and time the comment was left.
+ * @property createdAt The date and time the comment was left.
  * @constructor Creates an instance of the `Comment` class.
  */
 data class Comment(
@@ -17,5 +17,5 @@ data class Comment(
     var username: String?,
     var titleName: String?,
     var avatarUrl: String?,
-    var date: Date?
+    var createdAt: Date?
 )

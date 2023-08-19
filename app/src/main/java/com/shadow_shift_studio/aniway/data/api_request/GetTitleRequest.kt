@@ -4,8 +4,9 @@ import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
 import com.shadow_shift_studio.aniway.domain.repository.IGetTitle
+import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.Title
-import com.shadow_shift_studio.aniway.model.entity.User
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
@@ -17,7 +18,7 @@ class GetTitleRequest : IGetTitle {
         // Create an instance of the remote service caller
         val backendService = HttpClientIsLogin.getTitle
         // Create an instance with empty fields to use in case of an error
-        val titleForErrorResponse = Title(null, null, null,  null, null, null, null, null, null, null, null, null, null)
+        val titleForErrorResponse = Title(null, null, null,  null, null, null, null, null, null, null, null, null)
 
         try {
             // Use suspendCancellableCoroutine for handling asynchronous code
