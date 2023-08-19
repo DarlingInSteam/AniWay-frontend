@@ -3,7 +3,7 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
-import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogGenres
+import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogGenresRepository
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
@@ -11,10 +11,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
-class GetCatalogGenresRequest : IGetCatalogGenres {
+class GetCatalogGenresRequest : IGetCatalogGenresRepository {
     override suspend fun getCatalogGenres(context: Context): List<Genre> {
         // Initialize the HTTP client to fetch user comments.
-        val backendService = HttpClientIsLogin.getCatalogGenres
+        val backendService = HttpClientIsLogin.getCatalogGenresService
 
         // An empty list of comments for potential error handling.
         val genresForErrorResponse = listOf<Genre>()

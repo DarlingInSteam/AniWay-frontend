@@ -56,7 +56,9 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.model.entity.Achievement
 import com.shadow_shift_studio.aniway.model.entity.Comment
+import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.entity.User
+import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
 import com.shadow_shift_studio.aniway.view.secondary_screens.notify_screens.Notification
@@ -125,7 +127,7 @@ fun ProfileScreen(viewModelBottom: BottomNavBarViewModel) {
                 }
             }
             composable("fullScreen") {
-                MangaPage(navController, viewModelBottom, 0)
+                MangaPage(navController, viewModelBottom, viewModelProfile.id)
             }
             composable("settings") {
                 Settings(navController)
@@ -197,7 +199,25 @@ fun Achievements(achievements: List<Achievement>) {
 }
 
 @Composable
-fun Favorites(navController: NavController) {
+fun Favorites(navController: NavController, viewModel: ProfileViewModel) {
+    val titlesState = remember { mutableStateOf<List<TitlePreview>?>(null) }
+
+    val titlesObserver = Observer<List<TitlePreview>> { newTitles ->
+        titlesState.value = newTitles
+    }
+
+    LaunchedEffect(viewModel) {
+        viewModel.getUserManga(ReadingStatus.FAVOURITE)
+    }
+
+    DisposableEffect(viewModel) {
+        viewModel.userTitlesLiveData.observeForever(titlesObserver)
+
+        onDispose {
+            viewModel.userTitlesLiveData.removeObserver(titlesObserver)
+        }
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -211,8 +231,12 @@ fun Favorites(navController: NavController) {
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            items(count = 6) { index ->
-//                MangaPreviewCard(navController)
+            titlesState.value?.size?.let {
+                items(count = it) { index ->
+                    MangaPreviewCard(navController, titlesState.value!![index]) { id: Long ->
+                        viewModel.id = id
+                    }
+                }
             }
         }
     }
@@ -254,7 +278,9 @@ fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
         Spacer(modifier = Modifier.height(20.dp))
 
         if (selectedTabIndex == 0) {
-            Favorites(navController)
+
+
+            Favorites(navController, viewModel)
         } else if (selectedTabIndex == 1) {
             val achievementsState = remember { mutableStateOf<List<Achievement>?>(null) }
 

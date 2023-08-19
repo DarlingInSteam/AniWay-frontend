@@ -3,7 +3,7 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
-import com.shadow_shift_studio.aniway.domain.repository.IGetUser
+import com.shadow_shift_studio.aniway.domain.repository.IGetUserRepository
 import com.shadow_shift_studio.aniway.model.entity.User
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
@@ -18,7 +18,7 @@ import kotlin.coroutines.resume
  *
  * @constructor Creates an instance of the `GetUserRequest` class.
  */
-class GetUserRequest : IGetUser {
+class GetUserRequest : IGetUserRepository {
 
     /**
      * Retrieves user information by their username.

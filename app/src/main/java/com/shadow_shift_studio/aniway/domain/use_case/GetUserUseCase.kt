@@ -2,7 +2,7 @@ package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
 import com.shadow_shift_studio.aniway.model.entity.User
-import com.shadow_shift_studio.aniway.domain.repository.IGetUser
+import com.shadow_shift_studio.aniway.domain.repository.IGetUserRepository
 
 /**
  * The `GetUserByUsernameUseCase` class is a use case (business logic layer),
@@ -11,7 +11,7 @@ import com.shadow_shift_studio.aniway.domain.repository.IGetUser
  * @constructor Creates an instance of the `GetUserByUsernameUseCase` class.
  * @param getUserByUsernameRepository A repository for retrieving user information by username.
  */
-class GetUserUseCase(private val getUserByUsernameRepository: IGetUser) {
+class GetUserUseCase(private val getUserByUsernameRepository: IGetUserRepository) {
 
     /**
      * Performs a query to get user information about a user by username.

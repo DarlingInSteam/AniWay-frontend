@@ -51,6 +51,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -94,6 +95,7 @@ import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.Title
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
+import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onPrimary
@@ -107,6 +109,7 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVarian
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.MangaPageViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel, id: Long) {
@@ -160,7 +163,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
                         )
                     }
                     Row {
-                        TopMangaBar(navController = navController, viewModelBottom, changeBookmarksSheetVisible = { bookmarksBottomSheetVisible = true })
+                        TopMangaBar(navController = navController, viewModelBottom, viewModel, changeBookmarksSheetVisible = { bookmarksBottomSheetVisible = true })
                     }
                     Spacer(
                         modifier = Modifier
@@ -218,7 +221,7 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
         visible = bookmarksBottomSheetVisible,
         enter = slideInVertically(initialOffsetY = { height -> height }, animationSpec = tween()),
         exit = slideOutVertically(targetOffsetY = { height -> height }, animationSpec = tween()),
-        content = {BookmarksBottomSheet(onClose = {
+        content = {BookmarksBottomSheet(viewModel, onClose = {
             bookmarksBottomSheetVisible = false
         })
         }
@@ -267,7 +270,7 @@ fun GradientImage(startColor: Color, endColor: Color) {
 
 
 @Composable
-fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel, changeBookmarksSheetVisible: () -> Unit) {
+fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewModel, viewModel: MangaPageViewModel, changeBookmarksSheetVisible: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -277,7 +280,6 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
 
 
     ) {
-
         ExtendedFloatingActionButton(
             onClick = {
                 navController.popBackStack()
@@ -793,7 +795,8 @@ fun CommentsMangaPage(navController: NavController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BookmarksBottomSheet(onClose: () -> Unit) {
+fun BookmarksBottomSheet(viewModel: MangaPageViewModel, onClose: () -> Unit) {
+
     val scaffoldState = rememberModalBottomSheetState()
     ModalBottomSheet(
         onDismissRequest = { onClose() },
@@ -801,16 +804,22 @@ fun BookmarksBottomSheet(onClose: () -> Unit) {
         modifier = Modifier.height(400.dp),
         containerColor = surface_container_low
     ) {
-        ButtonsForBookmarks(onClose = { onClose() })
+        ButtonsForBookmarks(viewModel, onClose = { onClose() })
     }
 }
 
 @Composable
-fun ButtonsForBookmarks(onClose: () -> Unit) {
+fun ButtonsForBookmarks(viewModel: MangaPageViewModel, onClose: () -> Unit) {
+    val coroutineScope = rememberCoroutineScope()
+
     Column {
         Button(
             shape = RoundedCornerShape(7.dp),
-            onClick = {/*TODO*/
+            onClick = {
+                coroutineScope.launch {
+                    viewModel.setReadingStatus(ReadingStatus.IN_PROGRESS)
+                }
+
                 onClose()
             },
             modifier = Modifier
@@ -827,7 +836,11 @@ fun ButtonsForBookmarks(onClose: () -> Unit) {
         }
         Button(
             shape = RoundedCornerShape(7.dp),
-            onClick = {/*TODO*/
+            onClick = {
+                coroutineScope.launch {
+                    viewModel.setReadingStatus(ReadingStatus.PLANNED)
+                }
+
                 onClose()
             },
             modifier = Modifier
@@ -844,7 +857,11 @@ fun ButtonsForBookmarks(onClose: () -> Unit) {
         }
         Button(
             shape = RoundedCornerShape(7.dp),
-            onClick = {/*TODO*/
+            onClick = {
+                coroutineScope.launch {
+                    viewModel.setReadingStatus(ReadingStatus.COMPLETED)
+                }
+
                 onClose()
             },
             modifier = Modifier
@@ -861,7 +878,11 @@ fun ButtonsForBookmarks(onClose: () -> Unit) {
         }
         Button(
             shape = RoundedCornerShape(7.dp),
-            onClick = {/*TODO*/
+            onClick = {
+                coroutineScope.launch {
+                    viewModel.setReadingStatus(ReadingStatus.POSTPONED)
+                }
+
                 onClose()
             },
             modifier = Modifier
@@ -878,7 +899,11 @@ fun ButtonsForBookmarks(onClose: () -> Unit) {
         }
         Button(
             shape = RoundedCornerShape(7.dp),
-            onClick = {/*TODO*/
+            onClick = {
+                coroutineScope.launch {
+                    viewModel.setReadingStatus(ReadingStatus.FAVOURITE)
+                }
+
                 onClose()
             },
             modifier = Modifier

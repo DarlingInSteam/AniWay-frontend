@@ -3,18 +3,17 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
-import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogCategories
+import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogCategoriesRepository
 import com.shadow_shift_studio.aniway.model.entity.Category
-import com.shadow_shift_studio.aniway.model.entity.Genre
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
-class GetCatalogCategoriesRequest : IGetCatalogCategories {
+class GetCatalogCategoriesRequest : IGetCatalogCategoriesRepository {
     override suspend fun getCatalogCategories(context: Context): List<Category> {
-        val backendService = HttpClientIsLogin.getCatalogCategories
+        val backendService = HttpClientIsLogin.getCatalogCategoriesService
 
         // An empty list of comments for potential error handling.
         val genresForErrorResponse = listOf<Category>()

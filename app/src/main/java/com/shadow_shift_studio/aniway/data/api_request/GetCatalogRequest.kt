@@ -3,7 +3,7 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
-import com.shadow_shift_studio.aniway.domain.repository.IGetCatalog
+import com.shadow_shift_studio.aniway.domain.repository.IGetCatalogRepository
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
@@ -14,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
-class GetCatalogRequest : IGetCatalog {
+class GetCatalogRequest : IGetCatalogRepository {
     override suspend fun getCatalog(
         context: Context,
         genres: List<String>,
@@ -25,7 +25,7 @@ class GetCatalogRequest : IGetCatalog {
         page: Int
     ): List<TitlePreview> {
 
-        val backendService = HttpClientIsLogin.getCatalog
+        val backendService = HttpClientIsLogin.getCatalogService
 
         // An empty list of comments for potential error handling.
         val titleForErrorResponse = listOf<TitlePreview>()

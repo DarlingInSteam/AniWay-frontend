@@ -2,15 +2,12 @@ package com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screen
 
 import android.content.Context
 import android.util.Log
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.CommentsRequest
-import com.shadow_shift_studio.aniway.data.api_request.GetTitleRequest
 import com.shadow_shift_studio.aniway.domain.use_case.CommentsUseCase
-import com.shadow_shift_studio.aniway.domain.use_case.GetTitleUseCase
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import kotlinx.coroutines.launch
 

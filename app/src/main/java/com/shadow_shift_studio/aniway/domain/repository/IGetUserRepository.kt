@@ -6,7 +6,7 @@ import com.shadow_shift_studio.aniway.model.entity.User
 /**
  * The `IGetUserIdUsername` interface defines methods for retrieving user information by username and user ID.
  */
-interface IGetUser {
+interface IGetUserRepository {
     /**
      * Retrieves information about a user based on their username.
      *

@@ -5,7 +5,7 @@ import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
 import com.shadow_shift_studio.aniway.data.credentials.CredentialsForCreateComment
 import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
-import com.shadow_shift_studio.aniway.domain.repository.IComments
+import com.shadow_shift_studio.aniway.domain.repository.ICommentsRepository
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
@@ -14,9 +14,9 @@ import retrofit2.Response
 import kotlin.coroutines.resume
 
 /**
- * Implementation of the [IComments] interface providing a method to retrieve a list of user comments by username.
+ * Implementation of the [ICommentsRepository] interface providing a method to retrieve a list of user comments by username.
  */
-class CommentsRequest : IComments {
+class CommentsRequest : ICommentsRepository {
 
     /**
      * Retrieves a list of user comments by their username.

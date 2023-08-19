@@ -3,7 +3,7 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
-import com.shadow_shift_studio.aniway.domain.repository.IGetAchievements
+import com.shadow_shift_studio.aniway.domain.repository.IGetAchievementsRepository
 import com.shadow_shift_studio.aniway.model.entity.Achievement
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
@@ -11,7 +11,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
-class GetAchievementsRequest : IGetAchievements {
+class GetAchievementsRequest : IGetAchievementsRepository {
     override suspend fun getAchievementByUsername(context: Context, username: String, received: Boolean): List<Achievement> {
         // Initialize the HTTP client to fetch user comments.
         val backendService = HttpClientIsLogin.getUserAchievementsService

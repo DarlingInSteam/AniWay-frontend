@@ -6,7 +6,7 @@ import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
 import com.shadow_shift_studio.aniway.model.enum.TitleType
 
-interface IGetCatalog {
+interface IGetCatalogRepository {
     suspend fun getCatalog(
         context: Context,
         genres: List<String>,

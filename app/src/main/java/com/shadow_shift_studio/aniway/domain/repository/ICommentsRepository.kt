@@ -6,7 +6,7 @@ import com.shadow_shift_studio.aniway.model.entity.Comment
 /**
  * The `IGetUserComments` interface defines a method for retrieving user comments by their username.
  */
-interface IComments {
+interface ICommentsRepository {
     /**
      * Retrieves a list of comments for the user based on their username.
      *

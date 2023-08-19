@@ -1,7 +1,7 @@
 package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.domain.repository.IComments
+import com.shadow_shift_studio.aniway.domain.repository.ICommentsRepository
 import com.shadow_shift_studio.aniway.model.entity.Comment
 
 /**
@@ -10,7 +10,7 @@ import com.shadow_shift_studio.aniway.model.entity.Comment
  * @property comment Repository for retrieving user comments.
  * @constructor Creates an instance of the `GetUserCommentsUseCase` class.
  */
-class CommentsUseCase(private val comment: IComments) {
+class CommentsUseCase(private val comment: ICommentsRepository) {
     /**
      * Gets a list of user comments by user name.
      *
