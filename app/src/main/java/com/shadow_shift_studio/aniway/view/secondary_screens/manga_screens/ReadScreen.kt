@@ -1,24 +1,39 @@
 package com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens
 
 import android.annotation.SuppressLint
+
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.Easing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIos
@@ -31,13 +46,28 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.draw.CacheDrawScope
+import androidx.compose.ui.draw.DrawResult
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontVariation.width
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -45,8 +75,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.shadow_shift_studio.aniway.view.modifiers.drawVerticalScrollbar
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
+
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -145,11 +177,18 @@ fun TopBar(navController: NavController, viewModelBottom: BottomNavBarViewModel)
     }
 }
 
+
+
 @Composable
 fun ImageList(imagesResource: Array<String>, onChangeVisible: () -> Unit) {
     val interactionSource = remember { MutableInteractionSource() }
-
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+    val listState = rememberLazyListState()
+    LazyColumn(
+        state = listState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .drawVerticalScrollbar(state = listState)
+    ) {
         items(imagesResource) { i ->
             AsyncImage(
                 model = i,
@@ -169,10 +208,6 @@ fun ImageList(imagesResource: Array<String>, onChangeVisible: () -> Unit) {
 @Composable
 fun BottomBar(imagesResource: Array<String>) {
     var likeCount: Int = 22
-    var imageIndex: Int = 1
-    var imageCount: Int = imagesResource.size
-    var slash: String = "/"
-    var indexCountText: String = "$imageIndex$slash$imageCount"
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -188,15 +223,10 @@ fun BottomBar(imagesResource: Array<String>) {
                     Icons.Default.FavoriteBorder, ""
                 )
                 Text(
-                    text = likeCount.toString()
+                    text = likeCount.toString(),
+                    fontSize = 20.sp
                 )
                 Spacer(modifier = Modifier.width(11.dp))
-                Icon(
-                    Icons.Default.PhotoLibrary, ""
-                )
-                Text(
-                    text = indexCountText
-                )
             }
         }
         Column {
@@ -214,3 +244,35 @@ fun BottomBar(imagesResource: Array<String>) {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
