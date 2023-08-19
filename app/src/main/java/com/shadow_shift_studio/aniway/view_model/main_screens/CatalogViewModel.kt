@@ -1,8 +1,8 @@
 package com.shadow_shift_studio.aniway.view_model.main_screens
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,10 +21,15 @@ import kotlinx.coroutines.launch
 class CatalogViewModel(private val context: Context) : ViewModel() {
     private val _firstVisibleItemIndex = mutableIntStateOf(0)
     private val _firstVisibleItemScrollOffset = mutableIntStateOf(0)
+    var page = Filter.page
     val catalogGenresLiveData: MutableLiveData<List<Genre>> = MutableLiveData()
     val catalogCategoriesLiveData: MutableLiveData<List<Category>> = MutableLiveData()
     val catalogTitles: MutableLiveData<List<Title>> = MutableLiveData()
     var firstVisibleItemIndex = _firstVisibleItemIndex
+    var initCatalog = false
+
+
+
 
     private val getCatalogGenresUseCase: GetCatalogGenresUseCase =
         GetCatalogGenresUseCase(GetCatalogGenresRequest())
@@ -65,9 +70,20 @@ class CatalogViewModel(private val context: Context) : ViewModel() {
                 Filter.selectedTitleStatus,
                 Filter.selectedTitleType,
                 Filter.selectedCategories,
-                Filter.selectedAgeRatings
+                Filter.selectedAgeRatings,
+                page
             )
-            catalogTitles.value = titles
+
+            if (page != 0) {
+                val currentTitles = catalogTitles.value ?: emptyList()
+                val updatedTitles = currentTitles.toMutableList()
+                updatedTitles.addAll(titles)
+
+                catalogTitles.value = updatedTitles
+            } else {
+                catalogTitles.value = titles
+            }
+            page += 1
         }.join()
     }
 }

@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -63,6 +64,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
@@ -103,8 +105,11 @@ fun CatalogScreen(
     var searchBarVisible by remember { mutableStateOf(true) }
     var idValue by remember { mutableLongStateOf(0) }
 
-    LaunchedEffect(viewModel) {
-        viewModel.getCatalog()
+    if (!viewModel.initCatalog) {
+        LaunchedEffect(viewModel) {
+            viewModel.getCatalog()
+        }
+        viewModel.initCatalog = true
     }
 
     Column(
@@ -298,9 +303,16 @@ fun SearchBar() {
 @Composable
 fun CardsList(navController: NavController, scrollState: LazyGridState, viewModel: CatalogViewModel, onId: (id : Long) -> Unit) {
     val catalogState = remember { mutableStateOf<List<Title>?>(null) }
-
     val catalogObserver = Observer<List<Title>> { newCatalog ->
         catalogState.value = newCatalog
+    }
+
+    LaunchedEffect(scrollState.isScrollInProgress) {
+        val lastVisibleItemIndex = scrollState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: return@LaunchedEffect
+        val totalItemsCount = catalogState.value?.size ?: return@LaunchedEffect
+        if (lastVisibleItemIndex >= totalItemsCount - 1) {
+            viewModel.getCatalog() // Вызывает запрос следующей страницы данных
+        }
     }
 
     DisposableEffect(viewModel) {
@@ -442,6 +454,7 @@ fun ButtonsForSorting(onClose: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun FilterButtonSheet(onClose: () -> Unit, viewModel: CatalogViewModel) {
+    val coroutineScope = rememberCoroutineScope()
     val genresState = remember { mutableStateOf<List<Genre>?>(null) }
     val categoriesState = remember { mutableStateOf<List<Category>?>(null) }
 
@@ -473,13 +486,20 @@ fun FilterButtonSheet(onClose: () -> Unit, viewModel: CatalogViewModel) {
 
     val scaffoldState = rememberModalBottomSheetState()
     ModalBottomSheet(
-        onDismissRequest = { onClose() },
+        onDismissRequest = {
+            if (Filter.page == 0) {
+                coroutineScope.launch {
+                    viewModel.getCatalog()
+                }
+            }
+            onClose()
+        },
         sheetState = scaffoldState,
         modifier = Modifier
             .heightIn(400.dp, 800.dp),
         containerColor = surface_container_low
     ) {
-        genresState.value?.let { categoriesState.value?.let { it1 -> FilterButtons(it, it1, viewModel, {onClose()}) } }
+        genresState.value?.let { categoriesState.value?.let { it1 -> FilterButtons(it, it1, viewModel) { onClose() } } }
     }
 }
 
@@ -491,15 +511,15 @@ fun FilterButtons(genres: List<Genre>, categories: List<Category>, viewModel: Ca
         modifier = Modifier
             .fillMaxSize(),
     ) {
-        ButtonsType()
+        ButtonsType(viewModel)
         Spacer(modifier = Modifier.height(12.dp))
-        ButtonsGenres(genres)
+        ButtonsGenres(genres, viewModel)
         Spacer(modifier = Modifier.height(12.dp))
-        ButtonsCategory(categories)
+        ButtonsCategory(categories, viewModel)
         Spacer(modifier = Modifier.height(12.dp))
-        ButtonsTitleStatus()
+        ButtonsTitleStatus(viewModel)
         Spacer(modifier = Modifier.height(12.dp))
-        ButtonsAge()
+        ButtonsAge(viewModel)
         Spacer(modifier = Modifier.height(12.dp))
         Row(
             modifier = Modifier
@@ -510,7 +530,9 @@ fun FilterButtons(genres: List<Genre>, categories: List<Category>, viewModel: Ca
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        viewModel.getCatalog()
+                        if (Filter.page == 0) {
+                            viewModel.getCatalog()
+                        }
                     }
                     onClose()
                 }
@@ -521,11 +543,9 @@ fun FilterButtons(genres: List<Genre>, categories: List<Category>, viewModel: Ca
             Button(
                 onClick = {
                     Filter.resetAllSelected()
-
                     coroutineScope.launch {
                         viewModel.getCatalog()
                     }
-
                     onClose()
                 }
             ) {
@@ -536,7 +556,7 @@ fun FilterButtons(genres: List<Genre>, categories: List<Category>, viewModel: Ca
 }
 
 @Composable
-fun GenreButton(genre: Genre, checkStatus: Boolean, onCheckedChange: (Boolean) -> Unit) {
+fun GenreButton(genre: Genre, checkStatus: Boolean, viewModel: CatalogViewModel, onCheckedChange: (Boolean) -> Unit) {
     var isChecked by remember { mutableStateOf(checkStatus) }
 
     Row(
@@ -547,13 +567,14 @@ fun GenreButton(genre: Genre, checkStatus: Boolean, onCheckedChange: (Boolean) -
         Text(text = genre.name)
         Checkbox(checked = isChecked, onCheckedChange = {
             isChecked = !isChecked
+            viewModel.page = 0
             onCheckedChange(isChecked)
         })
     }
 }
 
 @Composable
-fun CategoryButton(category: Category, checkStatus: Boolean, onCheckedChange: (Boolean) -> Unit) {
+fun CategoryButton(category: Category, checkStatus: Boolean, viewModel: CatalogViewModel, onCheckedChange: (Boolean) -> Unit) {
     var isChecked by remember { mutableStateOf(checkStatus) }
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -563,13 +584,14 @@ fun CategoryButton(category: Category, checkStatus: Boolean, onCheckedChange: (B
         Text(text = category.text)
         Checkbox(checked = isChecked, onCheckedChange = {
             isChecked = !isChecked
+            viewModel.page = 0
             onCheckedChange(isChecked)
         })
     }
 }
 
 @Composable
-fun ButtonsGenres(genres: List<Genre>) {
+fun ButtonsGenres(genres: List<Genre>, catalogViewModel: CatalogViewModel) {
     val isGenresExpanded = remember { mutableStateOf(false) }
     val scrollState = rememberScrollState()
 
@@ -618,13 +640,13 @@ fun ButtonsGenres(genres: List<Genre>) {
                         .padding(start = 23.dp, end = 23.dp)
                 ) {
                     for (genre in genres) {
-                        var checkStatus: Boolean = false
+                        var checkStatus = false
                         for (selectedGenre in Filter.selectedGenres) {
                            if (genre.name == selectedGenre)
                                checkStatus = true
                         }
-                        GenreButton(genre = genre, checkStatus) { isChecked ->
-                            if (isChecked) {
+                        GenreButton(genre = genre, checkStatus, catalogViewModel) { isChecked ->
+                            if (isChecked && !checkStatus) {
                                 Filter.selectedGenres.add(genre.name)
                             } else {
                                 Filter.selectedGenres.remove(genre.name)
@@ -639,7 +661,7 @@ fun ButtonsGenres(genres: List<Genre>) {
 
 
 @Composable
-fun ButtonsType() {
+fun ButtonsType(viewModel: CatalogViewModel) {
     val isTypeExpanded = remember { mutableStateOf(false) }
     var isMangaSelected = remember {
         mutableStateOf(false)
@@ -725,8 +747,10 @@ fun ButtonsType() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleType.add(TitleType.MANGA)
+                                        viewModel.page = 0
                                     } else {
                                         Filter.selectedTitleType.remove(TitleType.MANGA)
+                                        viewModel.page = 0
                                         isMangaSelected.value = false
                                     }
                                 }
@@ -754,8 +778,10 @@ fun ButtonsType() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleType.add(TitleType.MANHWA)
+                                        viewModel.page = 0
                                     } else {
                                         Filter.selectedTitleType.remove(TitleType.MANHWA)
+                                        viewModel.page = 0
                                         isManhwaSelected.value = false
                                     }
                                 }
@@ -783,8 +809,10 @@ fun ButtonsType() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleType.add(TitleType.MANHUA)
+                                        viewModel.page = 0
                                     } else {
                                         Filter.selectedTitleType.remove(TitleType.MANHUA)
+                                        viewModel.page = 0
                                         isManhuaSelected.value = false
                                     }
                                 }
@@ -812,8 +840,10 @@ fun ButtonsType() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleType.add(TitleType.CARTOON)
+                                        viewModel.page = 0
                                     } else {
                                         Filter.selectedTitleType.remove(TitleType.CARTOON)
+                                        viewModel.page = 0
                                         isCartoonSelected.value = false
                                     }
                                 }
@@ -827,8 +857,7 @@ fun ButtonsType() {
 }
 
 @Composable
-fun ButtonsCategory(categories: List<Category>) {
-    val selectedCategories = remember { mutableStateListOf<Category>() }
+fun ButtonsCategory(categories: List<Category>, viewModel: CatalogViewModel) {
     val isCategoryExpanded = remember { mutableStateOf(false) }
 
     Column(
@@ -883,7 +912,7 @@ fun ButtonsCategory(categories: List<Category>) {
                             if(selectedCategory == category.text)
                                 checkStatus = true
                         }
-                        CategoryButton(category = category, checkStatus) { isChecked ->
+                        CategoryButton(category = category, checkStatus, viewModel) { isChecked ->
                             if (isChecked) {
                                 Filter.selectedCategories.add(category.text)
                             } else {
@@ -898,7 +927,7 @@ fun ButtonsCategory(categories: List<Category>) {
 }
 
 @Composable
-fun ButtonsTitleStatus() {
+fun ButtonsTitleStatus(viewModel: CatalogViewModel) {
     val isTitleStatusExpanded = remember { mutableStateOf(false) }
     var isOngoingSelected = remember { mutableStateOf(false) }
     var isFinishedSelected = remember { mutableStateOf(false) }
@@ -978,8 +1007,11 @@ fun ButtonsTitleStatus() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleStatus.add(TitleStatus.FINISHED)
+                                        viewModel.page = 0
+
                                     } else {
                                         Filter.selectedTitleStatus.remove(TitleStatus.FINISHED)
+                                        viewModel.page = 0
                                         isFinishedSelected.value = false
                                     }
                                 }
@@ -1007,8 +1039,12 @@ fun ButtonsTitleStatus() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleStatus.add(TitleStatus.ONGOING)
+                                        viewModel.page = 0
+
                                     } else {
                                         Filter.selectedTitleStatus.remove(TitleStatus.ONGOING)
+                                        viewModel.page = 0
+
                                         isOngoingSelected.value = false
                                     }
 
@@ -1037,8 +1073,12 @@ fun ButtonsTitleStatus() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleStatus.add(TitleStatus.FREEZED)
+                                        viewModel.page = 0
+
                                     } else {
                                         Filter.selectedTitleStatus.remove(TitleStatus.FREEZED)
+                                        viewModel.page = 0
+
                                         isFreezedSelected.value = false
                                     }
                                 }
@@ -1066,8 +1106,12 @@ fun ButtonsTitleStatus() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedTitleStatus.add(TitleStatus.ANNOUNCED)
+                                        viewModel.page = 0
+
                                     } else {
                                         Filter.selectedTitleStatus.remove(TitleStatus.ANNOUNCED)
+                                        viewModel.page = 0
+
                                         isAnnouncedSelected.value = false
                                     }
                                 }
@@ -1081,7 +1125,7 @@ fun ButtonsTitleStatus() {
 }
 
 @Composable
-fun ButtonsAge() {
+fun ButtonsAge(viewModel: CatalogViewModel) {
     val isAgeExpanded = remember { mutableStateOf(false) }
     var isEveryoneSelected = remember {
         mutableStateOf(false)
@@ -1162,8 +1206,12 @@ fun ButtonsAge() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedAgeRatings.add(AgeRating.EVERYONE)
+                                        viewModel.page = 0
+
                                     } else {
                                         Filter.selectedAgeRatings.remove(AgeRating.EVERYONE)
+                                        viewModel.page = 0
+
                                         isEveryoneSelected.value = false
                                     }
                                 }
@@ -1191,8 +1239,12 @@ fun ButtonsAge() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedAgeRatings.add(AgeRating.TEENAGER)
+                                        viewModel.page = 0
+
                                     } else {
                                         Filter.selectedAgeRatings.remove(AgeRating.TEENAGER)
+                                        viewModel.page = 0
+
                                         isTeenagerSelected.value = false
                                     }
                                 }
@@ -1220,8 +1272,12 @@ fun ButtonsAge() {
                                 onCheckedChange = { isChecked ->
                                     if (isChecked) {
                                         Filter.selectedAgeRatings.add(AgeRating.ADULT)
+                                        viewModel.page = 0
+
                                     } else {
                                         Filter.selectedAgeRatings.remove(AgeRating.ADULT)
+                                        viewModel.page = 0
+
                                         isAdultSelected.value = false
                                     }
                                 }

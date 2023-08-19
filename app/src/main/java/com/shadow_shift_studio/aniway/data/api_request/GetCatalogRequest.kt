@@ -21,7 +21,8 @@ class GetCatalogRequest : IGetCatalog {
         statuses: List<TitleStatus>,
         types: List<TitleType>,
         categories: List<String>,
-        ageRatings: List<AgeRating>
+        ageRatings: List<AgeRating>,
+        page: Int
     ): List<Title> {
 
         val backendService = HttpClientIsLogin.getCatalog
@@ -32,7 +33,7 @@ class GetCatalogRequest : IGetCatalog {
         try {
             // Use a coroutine for asynchronous fetching of comments.
             return suspendCancellableCoroutine { continuation ->
-                val call = backendService.getCatalogTitles(genres, statuses, types, categories, ageRatings)
+                val call = backendService.getCatalogTitles(genres, statuses, types, categories, ageRatings, page)
 
                 // Handling successful response from the server.
                 call.enqueue(object : Callback<List<Title>> {

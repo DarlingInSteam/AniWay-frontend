@@ -14,8 +14,9 @@ class GetCatalogUseCase(private val catalog : IGetCatalog) {
         statuses: List<TitleStatus>,
         types: List<TitleType>,
         categories: List<String>,
-        ageRatings: List<AgeRating>
+        ageRatings: List<AgeRating>,
+        page: Int
     ): List<Title> {
-        return catalog.getCatalog(context, genres, statuses, types, categories, ageRatings)
+        return catalog.getCatalog(context, genres, statuses, types, categories, ageRatings, page)
     }
 }

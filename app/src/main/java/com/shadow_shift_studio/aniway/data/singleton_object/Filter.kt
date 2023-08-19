@@ -9,12 +9,13 @@ import com.shadow_shift_studio.aniway.model.enum.TitleStatus
 import com.shadow_shift_studio.aniway.model.enum.TitleType
 
 object Filter {
-    val selectedCategories =  mutableStateListOf<String>()
+    val selectedCategories = mutableStateListOf<String>()
     val selectedGenres = mutableStateListOf<String>()
     val selectedAgeRatings = mutableStateListOf<AgeRating>()
     val selectedTitleType = mutableStateListOf<TitleType>()
     val selectedTitleStatus = mutableStateListOf<TitleStatus>()
     val selectedSorting = mutableStateListOf<TitleSorting>()
+    var page = 0
 
     fun resetAllSelected() {
         selectedCategories.clear()

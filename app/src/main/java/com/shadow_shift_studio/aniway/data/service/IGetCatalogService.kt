@@ -16,6 +16,7 @@ interface IGetCatalogService {
         @Query("statuses") statuses: List<TitleStatus>?,
         @Query("types") types: List<TitleType>?,
         @Query("categories") categories: List<String>?,
-        @Query("ageRatings")  ageRatings: List<AgeRating>?
+        @Query("ageRatings")  ageRatings: List<AgeRating>?,
+        @Query("page") page: Int
     ): Call<List<Title>>
 }

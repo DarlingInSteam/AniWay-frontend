@@ -13,6 +13,7 @@ interface IGetCatalog {
         statuses: List<TitleStatus>,
         types: List<TitleType>,
         categories: List<String>,
-        ageRatings: List<AgeRating>
+        ageRatings: List<AgeRating>,
+        page: Int
     ): List<Title>
 }
