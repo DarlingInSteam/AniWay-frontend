@@ -14,7 +14,7 @@ interface IComments {
      * @param username The username of the user for whom to retrieve comments.
      * @return A list of user comments.
      */
-    suspend fun getUserCommentsByUsername(context: Context, username: String): List<Comment>
+    suspend fun getUserCommentsByUsername(context: Context, username: String, page: Int): List<Comment>
     suspend fun getTitleComments(context: Context, titleId: Long, page: Int): List<Comment>
 
     suspend fun createComment(context: Context, titleId: Long, chapterId: Long, text: String): String

@@ -20,7 +20,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
     val userByUsernameLiveData: MutableLiveData<User> = MutableLiveData()
     val userCommentsLiveData: MutableLiveData<List<Comment>> = MutableLiveData()
     val userAchievementsLiveData: MutableLiveData<List<Achievement>> = MutableLiveData()
-
+    var page = 0
 
     private val getUserByUsernameUseCase: GetUserUseCase =
         GetUserUseCase(GetUserRequest())
@@ -42,8 +42,15 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
 
     suspend fun getUserComments() {
         viewModelScope.launch {
-            val comments = getUserCommentsUseCase.getUserCommentsByUsername(context, AuthorizedUser.username)
-            userCommentsLiveData.value = comments
+            val comments = getUserCommentsUseCase.getUserCommentsByUsername(context, AuthorizedUser.username, page)
+
+            val currentComments = userCommentsLiveData.value ?: emptyList()
+            val updatedTitles = currentComments.toMutableList()
+            updatedTitles.addAll(comments)
+
+            userCommentsLiveData.value = updatedTitles
+
+            page += 1
         }.join()
     }
 

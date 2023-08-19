@@ -27,7 +27,8 @@ class CommentsRequest : IComments {
      */
     override suspend fun getUserCommentsByUsername(
         context: Context,
-        username: String
+        username: String,
+        page: Int
     ): List<Comment> {
         // Initialize the HTTP client to fetch user comments.
         val backendService = HttpClientIsLogin.CommentsService
@@ -38,7 +39,7 @@ class CommentsRequest : IComments {
         try {
             // Use a coroutine for asynchronous fetching of comments.
             return suspendCancellableCoroutine { continuation ->
-                val call = backendService.commentsByUsername(username)
+                val call = backendService.commentsByUsername(username, page)
 
                 // Handling successful response from the server.
                 call.enqueue(object : Callback<List<Comment>> {

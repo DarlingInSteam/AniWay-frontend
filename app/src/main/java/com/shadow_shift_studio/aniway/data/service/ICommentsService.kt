@@ -20,7 +20,10 @@ interface ICommentsService {
      * @return An object of type `Call<List<Comment>>`, representing the request's result.
      */
     @GET("/comment/get_comments/{username}")
-    fun commentsByUsername(@Path("username") username: String): Call<List<Comment>>
+    fun commentsByUsername(
+        @Path("username") username: String,
+        @Query("page") page: Int
+    ): Call<List<Comment>>
 
     @GET("/comment/title")
     fun titleComments(

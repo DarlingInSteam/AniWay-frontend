@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -143,11 +144,22 @@ fun Balance() {
 }
 
 @Composable
-fun Comments(comments: List<Comment>) {
+fun Comments(comments: List<Comment>, viewModel: ProfileViewModel) {
+    val state = rememberLazyListState()
+
+    LaunchedEffect(state.isScrollInProgress) {
+        val lastVisibleItemIndex = state.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: return@LaunchedEffect
+        val totalItemsCount = comments.size ?: return@LaunchedEffect
+        if (lastVisibleItemIndex >= totalItemsCount - 1) {
+            viewModel.getUserComments() // Вызывает запрос следующей страницы данных
+        }
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .height(450.dp),
+        state = state,
         content = {
             items(count = comments.size) { index ->
                 Row(
@@ -283,7 +295,7 @@ fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
                 }
             }
 
-            commentState.value?.let { Comments(it) }
+            commentState.value?.let { Comments(it, viewModel) }
         } else if (selectedTabIndex == 3) {
             Balance()
         }

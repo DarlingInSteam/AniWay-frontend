@@ -18,8 +18,8 @@ class CommentsUseCase(private val comment: IComments) {
      * @param username The name of the user for whom you want to retrieve comments.
      * @return List of user's comments.
      */
-    suspend fun getUserCommentsByUsername(context: Context, username: String): List<Comment> {
-        return comment.getUserCommentsByUsername(context, username)
+    suspend fun getUserCommentsByUsername(context: Context, username: String, page: Int): List<Comment> {
+        return comment.getUserCommentsByUsername(context, username, page)
     }
     suspend fun getTitleComments(context: Context, titleId: Long, page: Int): List<Comment> {
         return comment.getTitleComments(context, titleId, page)
