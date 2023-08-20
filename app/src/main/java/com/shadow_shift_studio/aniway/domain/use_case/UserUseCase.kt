@@ -1,9 +1,9 @@
 package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.domain.repository.IUserRepository
 import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.User
 
 /**
  * The `GetUserByUsernameUseCase` class is a use case (business logic layer),

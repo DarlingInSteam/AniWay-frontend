@@ -4,17 +4,17 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shadow_shift_studio.aniway.data.api_request.UserRequest
 import com.shadow_shift_studio.aniway.data.api_request.CommentsRequest
 import com.shadow_shift_studio.aniway.data.api_request.TitleRequest
+import com.shadow_shift_studio.aniway.data.api_request.UserRequest
 import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
-import com.shadow_shift_studio.aniway.model.entity.User
-import com.shadow_shift_studio.aniway.domain.use_case.UserUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.CommentsUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.TitleUseCase
+import com.shadow_shift_studio.aniway.domain.use_case.UserUseCase
 import com.shadow_shift_studio.aniway.model.entity.Achievement
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
+import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
 import kotlinx.coroutines.launch
 

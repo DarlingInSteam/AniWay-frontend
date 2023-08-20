@@ -61,8 +61,8 @@ import com.shadow_shift_studio.aniway.model.entity.User
 import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
 import com.shadow_shift_studio.aniway.view.cards.AchievementCard
 import com.shadow_shift_studio.aniway.view.cards.MangaPreviewCard
-import com.shadow_shift_studio.aniway.view.secondary_screens.notify_screens.Notification
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.MangaPage
+import com.shadow_shift_studio.aniway.view.secondary_screens.notify_screens.Notification
 import com.shadow_shift_studio.aniway.view.secondary_screens.settings.Settings
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface

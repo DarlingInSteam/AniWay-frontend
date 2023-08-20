@@ -50,14 +50,12 @@ import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.AuthError
 import com.shadow_shift_studio.aniway.EnterLoginHint
 import com.shadow_shift_studio.aniway.EnterPasswordHint
-import com.shadow_shift_studio.aniway.FillAllFields
 import com.shadow_shift_studio.aniway.ForgotPasswordText
 import com.shadow_shift_studio.aniway.LoginButtonText
 import com.shadow_shift_studio.aniway.RegistrationText
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_error
 import com.shadow_shift_studio.aniway.view_model.authentication.LoginViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")

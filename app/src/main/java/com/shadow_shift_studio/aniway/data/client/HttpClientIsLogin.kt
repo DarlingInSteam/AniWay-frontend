@@ -1,9 +1,9 @@
 package com.shadow_shift_studio.aniway.data.client
 
-import com.shadow_shift_studio.aniway.data.service.ITitlesListService
-import com.shadow_shift_studio.aniway.data.service.ITitleService
-import com.shadow_shift_studio.aniway.data.service.IUserService
 import com.shadow_shift_studio.aniway.data.service.ICommentsService
+import com.shadow_shift_studio.aniway.data.service.ITitleService
+import com.shadow_shift_studio.aniway.data.service.ITitlesListService
+import com.shadow_shift_studio.aniway.data.service.IUserService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

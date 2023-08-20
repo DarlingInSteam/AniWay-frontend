@@ -9,7 +9,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.UserRegistrationRequest
-import com.shadow_shift_studio.aniway.domain.repository.IViewModelRepository
 import com.shadow_shift_studio.aniway.domain.use_case.RegisterUserUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.ViewModelUseCase
 import com.shadow_shift_studio.aniway.model.enum.LoginStates

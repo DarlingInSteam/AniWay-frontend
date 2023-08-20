@@ -3,8 +3,8 @@ package com.shadow_shift_studio.aniway.data.service
 import com.shadow_shift_studio.aniway.data.credentials.CredentialsForAuthorization
 import com.shadow_shift_studio.aniway.model.api_response.TokenResponse
 import retrofit2.Call
-import retrofit2.http.POST
 import retrofit2.http.Body
+import retrofit2.http.POST
 
 /**
  * The `LoginService` interface defines methods for making HTTP requests related to authentication.

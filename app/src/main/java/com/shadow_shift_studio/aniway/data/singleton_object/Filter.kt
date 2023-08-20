@@ -1,8 +1,6 @@
 package com.shadow_shift_studio.aniway.data.singleton_object
 
 import androidx.compose.runtime.mutableStateListOf
-import com.shadow_shift_studio.aniway.model.entity.Category
-import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleSorting
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus

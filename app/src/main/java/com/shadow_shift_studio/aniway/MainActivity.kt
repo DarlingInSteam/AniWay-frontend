@@ -32,8 +32,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
-import com.shadow_shift_studio.aniway.view.bottomnav.Constants
 import com.shadow_shift_studio.aniway.view.authentication_screen.Authorization
+import com.shadow_shift_studio.aniway.view.bottomnav.Constants
 import com.shadow_shift_studio.aniway.view.main_screens.CatalogScreen
 import com.shadow_shift_studio.aniway.view.main_screens.MyScreen
 import com.shadow_shift_studio.aniway.view.main_screens.ProfileScreen

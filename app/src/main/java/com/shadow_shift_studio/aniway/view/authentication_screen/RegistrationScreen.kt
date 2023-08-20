@@ -1,9 +1,7 @@
 package com.shadow_shift_studio.aniway.view.authentication_screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -40,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.ImeAction
@@ -59,8 +56,8 @@ import com.shadow_shift_studio.aniway.InputErrorMessage
 import com.shadow_shift_studio.aniway.PasswordsDontMatch
 import com.shadow_shift_studio.aniway.RegisterButtonText
 import com.shadow_shift_studio.aniway.RepeatPasswordHint
-import com.shadow_shift_studio.aniway.model.enum.LoginStates
 import com.shadow_shift_studio.aniway.loginErrors
+import com.shadow_shift_studio.aniway.model.enum.LoginStates
 import com.shadow_shift_studio.aniway.passwordRules
 import com.shadow_shift_studio.aniway.view.secondary_screens.settings.DropdownTextField
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface

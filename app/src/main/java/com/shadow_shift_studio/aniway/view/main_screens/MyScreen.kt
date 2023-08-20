@@ -56,7 +56,6 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.main_screens.MyViewModel
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 
 @SuppressLint("FrequentlyChangedStateReadInComposition")
