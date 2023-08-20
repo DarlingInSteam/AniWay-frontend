@@ -1,12 +1,13 @@
-package com.shadow_shift_studio.aniway.domain.repository
+package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
+import com.shadow_shift_studio.aniway.domain.repository.IGetTitlesListRepository
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
 import com.shadow_shift_studio.aniway.model.enum.TitleType
 
-interface IGetCatalogRepository {
+class GetTitlesListUseCase(private val catalog : IGetTitlesListRepository) {
     suspend fun getCatalog(
         context: Context,
         genres: List<String>,
@@ -15,5 +16,7 @@ interface IGetCatalogRepository {
         categories: List<String>,
         ageRatings: List<AgeRating>,
         page: Int
-    ): List<TitlePreview>
+    ): List<TitlePreview> {
+        return catalog.getCatalog(context, genres, statuses, types, categories, ageRatings, page)
+    }
 }

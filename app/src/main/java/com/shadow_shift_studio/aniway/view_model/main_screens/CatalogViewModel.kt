@@ -11,7 +11,7 @@ import com.shadow_shift_studio.aniway.data.api_request.GetCatalogRequest
 import com.shadow_shift_studio.aniway.data.singleton_object.Filter
 import com.shadow_shift_studio.aniway.domain.use_case.GetCatalogCategoriesUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.GetCatalogGenresUseCase
-import com.shadow_shift_studio.aniway.domain.use_case.GetCatalogUseCase
+import com.shadow_shift_studio.aniway.domain.use_case.GetTitlesListUseCase
 import com.shadow_shift_studio.aniway.model.entity.Category
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
@@ -36,8 +36,8 @@ class CatalogViewModel(private val context: Context) : ViewModel() {
     private val getCatalogCategoriesUseCase: GetCatalogCategoriesUseCase =
         GetCatalogCategoriesUseCase(GetCatalogCategoriesRequest())
 
-    private val getCatalog: GetCatalogUseCase =
-        GetCatalogUseCase(GetCatalogRequest())
+    private val getCatalog: GetTitlesListUseCase =
+        GetTitlesListUseCase(GetCatalogRequest())
 
     fun setFirstVisibleItemIndex(index: Int) {
         _firstVisibleItemIndex.intValue = index

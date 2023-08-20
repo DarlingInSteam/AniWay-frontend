@@ -91,11 +91,11 @@ fun NavHostContainer(
     viewModelBottom: BottomNavBarViewModel
 ) {
     val context = LocalContext.current
-    val viewModelCatalog: CatalogViewModel = CatalogViewModel(context)
+    val viewModelCatalog = CatalogViewModel(context)
     val scrollStateCatalog = rememberLazyGridState()
     val viewModelTops: TopsViewModel = viewModel()
     val scrollStateTops = rememberLazyListState()
-    val viewModelMy: MyViewModel = viewModel()
+    val viewModelMy = MyViewModel(context)
     val scrollStateMy = rememberLazyGridState()
 
     NavHost(
