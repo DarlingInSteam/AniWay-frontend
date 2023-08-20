@@ -33,7 +33,7 @@ class TitleRequest : ITitleRepository {
      */
     override suspend fun getTitle(context: Context, id: Long): Title {
         // Create an instance of the remote service caller
-        val backendService = HttpClientIsLogin.titleService
+        val backendService = HttpClientIsLogin.TitleService
         // Create an instance with empty fields to use in case of an error
         val titleForErrorResponse = Title(null, null, null,  null, null, null, null, null, null, null, null, null)
 
@@ -95,7 +95,7 @@ class TitleRequest : ITitleRepository {
         titleId: Long,
         status: ReadingStatus
     ): String {
-        val backendService = HttpClientIsLogin.titleService
+        val backendService = HttpClientIsLogin.TitleService
         // Create an instance with empty fields to use in case of an error
         val titleForErrorResponse = ""
 
@@ -154,7 +154,7 @@ class TitleRequest : ITitleRepository {
         username: String,
         readingStatus: ReadingStatus
     ): List<TitlePreview> {
-        val backendService = HttpClientIsLogin.titleService
+        val backendService = HttpClientIsLogin.TitleService
 
         // An empty list of title previews for potential error handling.
         val titleForErrorResponse = listOf<TitlePreview>()

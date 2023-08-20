@@ -48,7 +48,7 @@ class TitlesListRequest : ITitlesListRepository {
         page: Int
     ): List<TitlePreview> {
 
-        val backendService = HttpClientIsLogin.getCatalogService
+        val backendService = HttpClientIsLogin.CatalogService
 
         // An empty list of title previews for potential error handling.
         val titleForErrorResponse = listOf<TitlePreview>()
@@ -104,7 +104,7 @@ class TitlesListRequest : ITitlesListRepository {
      *         An empty list will be returned in case of errors or lack of categories.
      */
     override suspend fun getCatalogCategories(context: Context): List<Category> {
-        val backendService = HttpClientIsLogin.getCatalogService
+        val backendService = HttpClientIsLogin.CatalogService
 
         // An empty list of categories for potential error handling.
         val genresForErrorResponse = listOf<Category>()
@@ -161,7 +161,7 @@ class TitlesListRequest : ITitlesListRepository {
      */
     override suspend fun getCatalogGenres(context: Context): List<Genre> {
         // Initialize the HTTP client to fetch catalog genres.
-        val backendService = HttpClientIsLogin.getCatalogService
+        val backendService = HttpClientIsLogin.CatalogService
 
         // An empty list of genres for potential error handling.
         val genresForErrorResponse = listOf<Genre>()

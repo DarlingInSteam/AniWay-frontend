@@ -31,7 +31,7 @@ class UserRequest : IUserRepository {
      */
     override suspend fun getUserByUsername(context: Context, username: String): User {
         // Create an instance of the remote service caller
-        val backendService = HttpClientIsLogin.getUserService
+        val backendService = HttpClientIsLogin.UserService
         // Create an instance with empty fields to use in case of an error
         val userForErrorResponse = User(null, null, null,  null, null, null, null, null, null, null, null, null)
 
@@ -102,7 +102,7 @@ class UserRequest : IUserRepository {
      */
     override suspend fun getUserById(context: Context, id: String): User {
         // Create an instance of the remote service caller
-        val backendService = HttpClientIsLogin.getUserService
+        val backendService = HttpClientIsLogin.UserService
         // Create an instance with empty fields to use in case of an error
         val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null,  null, null)
 
@@ -173,7 +173,7 @@ class UserRequest : IUserRepository {
      */
     override suspend fun getAchievementByUsername(context: Context, username: String, received: Boolean): List<Achievement> {
         // Initialize the HTTP client to fetch user achievements.
-        val backendService = HttpClientIsLogin.getUserService
+        val backendService = HttpClientIsLogin.UserService
 
         // An empty list of achievements for potential error handling.
         val achievementForErrorResponse = listOf<Achievement>()

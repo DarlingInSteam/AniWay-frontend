@@ -29,8 +29,8 @@ object HttpClientIsLogin {
         .build()
 
     // Creating a service for making requests to the remote server
-    val getUserService: IUserService = retrofit.create(IUserService::class.java)
+    val UserService: IUserService = retrofit.create(IUserService::class.java)
     val CommentsService: ICommentsService = retrofit.create(ICommentsService::class.java)
-    val getCatalogService: ITitlesListService = retrofit.create(ITitlesListService::class.java)
-    val titleService: ITitleService = retrofit.create(ITitleService::class.java)
+    val CatalogService: ITitlesListService = retrofit.create(ITitlesListService::class.java)
+    val TitleService: ITitleService = retrofit.create(ITitleService::class.java)
 }
