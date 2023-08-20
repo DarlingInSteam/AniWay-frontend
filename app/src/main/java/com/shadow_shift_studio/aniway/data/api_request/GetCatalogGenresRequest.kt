@@ -11,16 +11,31 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
+/**
+ * Repository implementation for fetching catalog genres.
+ *
+ * This repository utilizes an HTTP client to communicate with the backend service and retrieve catalog genres.
+ *
+ * @constructor Creates an instance of GetCatalogGenresRequest.
+ */
 class GetCatalogGenresRequest : IGetCatalogGenresRepository {
+
+    /**
+     * Asynchronously retrieves a list of catalog genres.
+     *
+     * @param context The application context.
+     * @return A list of Genre objects representing the catalog genres.
+     *         An empty list will be returned in case of errors or lack of genres.
+     */
     override suspend fun getCatalogGenres(context: Context): List<Genre> {
-        // Initialize the HTTP client to fetch user comments.
+        // Initialize the HTTP client to fetch catalog genres.
         val backendService = HttpClientIsLogin.getCatalogGenresService
 
-        // An empty list of comments for potential error handling.
+        // An empty list of genres for potential error handling.
         val genresForErrorResponse = listOf<Genre>()
 
         try {
-            // Use a coroutine for asynchronous fetching of comments.
+            // Use a coroutine for asynchronous genre fetching.
             return suspendCancellableCoroutine { continuation ->
                 val call = backendService.getCatalogGenres()
 
@@ -36,7 +51,7 @@ class GetCatalogGenresRequest : IGetCatalogGenresRepository {
                             }
                         } else {
                             // Handling error response from the server.
-                            Log.e("Comments get error", response.errorBody().toString())
+                            Log.e("Genres get error", response.errorBody().toString())
                             continuation.resume(genresForErrorResponse)
                         }
                     }
@@ -58,7 +73,7 @@ class GetCatalogGenresRequest : IGetCatalogGenresRepository {
             Log.e("Unknown Error", e.toString())
         }
 
-        // Returning an empty list of comments in case of an error.
+        // Returning an empty list of genres in case of an error.
         return genresForErrorResponse
     }
 

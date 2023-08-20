@@ -14,7 +14,23 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
+/**
+ * Repository implementation for managing titles and their information.
+ *
+ * This repository uses an HTTP client to communicate with the backend service and perform operations on titles.
+ *
+ * @constructor Creates an instance of TitleRequest.
+ */
 class TitleRequest : ITitleRepository {
+
+    /**
+     * Asynchronously retrieves detailed information about a specific title identified by its ID.
+     *
+     * @param context The application context.
+     * @param id The unique ID of the title being retrieved.
+     * @return A Title object representing the detailed information about the requested title.
+     *         An instance with empty fields will be returned in case of errors or lack of data.
+     */
     override suspend fun getTitle(context: Context, id: Long): Title {
         // Create an instance of the remote service caller
         val backendService = HttpClientIsLogin.titleService
@@ -33,22 +49,22 @@ class TitleRequest : ITitleRepository {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if (responseBody != null) {
-                                // Create a User object based on the received data
+                                // Create a Title object based on the received data
                                 val title = responseBody
-                                continuation.resume(title) // Resume the coroutine with the received user
+                                continuation.resume(title) // Resume the coroutine with the received title
                             } else {
-                                continuation.resume(titleForErrorResponse) // Return an empty user object in case of missing data in the response
+                                continuation.resume(titleForErrorResponse) // Return an empty title object in case of missing data in the response
                             }
                         } else {
-                            Log.e("Get User error", response.errorBody().toString())
-                            continuation.resume(titleForErrorResponse) // Return an empty user object in case of an error response
+                            Log.e("Get Title error", response.errorBody().toString())
+                            continuation.resume(titleForErrorResponse) // Return an empty title object in case of an error response
                         }
                     }
 
                     // Handling an error while making the request
                     override fun onFailure(call: Call<Title>, t: Throwable) {
                         Log.e("Network client error", t.message ?: "HTTP client failed to connect")
-                        continuation.resume(titleForErrorResponse) // Return an empty user object in case of an error
+                        continuation.resume(titleForErrorResponse) // Return an empty title object in case of an error
                     }
                 })
 
@@ -64,6 +80,15 @@ class TitleRequest : ITitleRepository {
         return titleForErrorResponse
     }
 
+    /**
+     * Asynchronously updates the reading status of a specific title for a given user.
+     *
+     * @param context The application context.
+     * @param username The username of the user performing the action.
+     * @param titleId The unique ID of the title being updated.
+     * @param status The new reading status to be set for the title.
+     * @return A string indicating the result of the operation. A success message or an empty string in case of errors.
+     */
     override suspend fun setTitleReadingStatus(
         context: Context,
         username: String,
@@ -86,22 +111,20 @@ class TitleRequest : ITitleRepository {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
                             if (responseBody != null) {
-                                // Create a User object based on the received data
-                                val title = responseBody
-                                continuation.resume(title) // Resume the coroutine with the received user
+                                continuation.resume(responseBody) // Resume the coroutine with the response message
                             } else {
-                                continuation.resume(titleForErrorResponse) // Return an empty user object in case of missing data in the response
+                                continuation.resume(titleForErrorResponse) // Return an empty string in case of missing data in the response
                             }
                         } else {
-                            Log.e("Get User error", response.errorBody().toString())
-                            continuation.resume(titleForErrorResponse) // Return an empty user object in case of an error response
+                            Log.e("Set Reading Status error", response.errorBody().toString())
+                            continuation.resume(titleForErrorResponse) // Return an empty string in case of an error response
                         }
                     }
 
                     // Handling an error while making the request
                     override fun onFailure(call: Call<String>, t: Throwable) {
                         Log.e("Network client error", t.message ?: "HTTP client failed to connect")
-                        continuation.resume(titleForErrorResponse) // Return an empty user object in case of an error
+                        continuation.resume(titleForErrorResponse) // Return an empty string in case of an error
                     }
                 })
 
@@ -117,6 +140,15 @@ class TitleRequest : ITitleRepository {
         return titleForErrorResponse
     }
 
+    /**
+     * Asynchronously retrieves a list of title previews for titles that are bookmarked by a specific user with a given reading status.
+     *
+     * @param context The application context.
+     * @param username The username of the user whose bookmarked titles are being retrieved.
+     * @param readingStatus The reading status of the titles to be retrieved.
+     * @return A list of TitlePreview objects representing the bookmarked titles with the specified reading status.
+     *         An empty list will be returned in case of errors or lack of titles.
+     */
     override suspend fun getBookmarksTitles(
         context: Context,
         username: String,
@@ -124,11 +156,11 @@ class TitleRequest : ITitleRepository {
     ): List<TitlePreview> {
         val backendService = HttpClientIsLogin.titleService
 
-        // An empty list of comments for potential error handling.
+        // An empty list of title previews for potential error handling.
         val titleForErrorResponse = listOf<TitlePreview>()
 
         try {
-            // Use a coroutine for asynchronous fetching of comments.
+            // Use a coroutine for asynchronous fetching of titles.
             return suspendCancellableCoroutine { continuation ->
                 val call = backendService.getUserTitles(username, readingStatus)
 
@@ -144,7 +176,7 @@ class TitleRequest : ITitleRepository {
                             }
                         } else {
                             // Handling error response from the server.
-                            Log.e("Comments get error", response.errorBody().toString())
+                            Log.e("Titles get error", response.errorBody().toString())
                             continuation.resume(titleForErrorResponse)
                         }
                     }
@@ -166,7 +198,7 @@ class TitleRequest : ITitleRepository {
             Log.e("Unknown Error", e.toString())
         }
 
-        // Returning an empty list of comments in case of an error.
+        // Returning an empty list of title previews in case of an error.
         return titleForErrorResponse
     }
 }

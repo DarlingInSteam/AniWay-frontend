@@ -11,15 +11,30 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
+/**
+ * Repository implementation for fetching catalog categories.
+ *
+ * This repository uses an HTTP client to communicate with the backend service and retrieve catalog categories.
+ *
+ * @constructor Creates an instance of GetCatalogCategoriesRequest.
+ */
 class GetCatalogCategoriesRequest : IGetCatalogCategoriesRepository {
+
+    /**
+     * Asynchronously retrieves a list of catalog categories.
+     *
+     * @param context The application context.
+     * @return A list of Category objects representing the catalog categories.
+     *         An empty list will be returned in case of errors or lack of categories.
+     */
     override suspend fun getCatalogCategories(context: Context): List<Category> {
         val backendService = HttpClientIsLogin.getCatalogCategoriesService
 
-        // An empty list of comments for potential error handling.
+        // An empty list of categories for potential error handling.
         val genresForErrorResponse = listOf<Category>()
 
         try {
-            // Use a coroutine for asynchronous fetching of comments.
+            // Use a coroutine for asynchronous category fetching.
             return suspendCancellableCoroutine { continuation ->
                 val call = backendService.getCatalogCategories()
 
@@ -35,7 +50,7 @@ class GetCatalogCategoriesRequest : IGetCatalogCategoriesRepository {
                             }
                         } else {
                             // Handling error response from the server.
-                            Log.e("Comments get error", response.errorBody().toString())
+                            Log.e("Categories get error", response.errorBody().toString())
                             continuation.resume(genresForErrorResponse)
                         }
                     }
@@ -57,7 +72,7 @@ class GetCatalogCategoriesRequest : IGetCatalogCategoriesRepository {
             Log.e("Unknown Error", e.toString())
         }
 
-        // Returning an empty list of comments in case of an error.
+        // Returning an empty list of categories in case of an error.
         return genresForErrorResponse
     }
 }

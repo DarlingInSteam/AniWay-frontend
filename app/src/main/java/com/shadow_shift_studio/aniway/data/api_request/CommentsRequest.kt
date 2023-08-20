@@ -82,6 +82,15 @@ class CommentsRequest : ICommentsRepository {
         return userForErrorResponse
     }
 
+    /**
+     * Asynchronously fetches a paginated list of user comments for a specific title identified by its ID.
+     *
+     * @param context The application context.
+     * @param titleId The unique ID of the title for which comments are to be fetched.
+     * @param page The page number of comments to be retrieved.
+     * @return A list of Comment objects representing the user comments for the specified title and page.
+     *         An empty list will be returned in case of errors or lack of comments.
+     */
     override suspend fun getTitleComments(
         context: Context,
         titleId: Long,
@@ -138,6 +147,18 @@ class CommentsRequest : ICommentsRepository {
         return commentsForErrorResponse
     }
 
+
+    /**
+     * Asynchronously creates a new user comment for a specific title and chapter identified by their IDs.
+     *
+     * @param context The application context.
+     * @param titleId The unique ID of the title for which the comment is being created.
+     * @param chapterId The unique ID of the chapter to which the comment belongs.
+     * @param text The content of the comment to be created.
+     * @return A string representing the result of the comment creation process. In case of success,
+     *         the response might contain additional information or identifiers related to the created comment.
+     *         If an error occurs, an empty string is returned.
+     */
     override suspend fun createComment(
         context: Context,
         titleId: Long,
@@ -147,13 +168,15 @@ class CommentsRequest : ICommentsRepository {
         // Initialize the HTTP client to fetch user comments.
         val backendService = HttpClientIsLogin.CommentsService
 
-        // An empty list of comments for potential error handling.
+        // An empty string for potential error handling.
         val userForErrorResponse = ""
 
         try {
-            // Use a coroutine for asynchronous fetching of comments.
+            // Use a coroutine for asynchronous comment creation.
             return suspendCancellableCoroutine { continuation ->
-                val call = backendService.createComment(CredentialsForCreateComment(AuthorizedUser.id, titleId, chapterId, text))
+                val call = backendService.createComment(
+                    CredentialsForCreateComment(AuthorizedUser.id, titleId, chapterId, text)
+                )
 
                 // Handling successful response from the server.
                 call.enqueue(object : Callback<String> {
@@ -189,8 +212,9 @@ class CommentsRequest : ICommentsRepository {
             Log.e("Unknown Error", e.toString())
         }
 
-        // Returning an empty list of comments in case of an error.
+        // Returning an empty string in case of an error.
         return userForErrorResponse
     }
+
 }
 

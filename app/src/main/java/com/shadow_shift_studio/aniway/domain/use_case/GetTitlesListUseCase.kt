@@ -7,7 +7,25 @@ import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
 import com.shadow_shift_studio.aniway.model.enum.TitleType
 
-class GetTitlesListUseCase(private val catalog : IGetTitlesListRepository) {
+/**
+ * The `GetTitlesListUseCase` class represents a use case for retrieving a list of titles with specified filters.
+ *
+ * @property catalog Repository for retrieving a list of titles with specified filters.
+ * @constructor Creates an instance of the `GetTitlesListUseCase` class.
+ */
+class GetTitlesListUseCase(private val catalog: IGetTitlesListRepository) {
+    /**
+     * Retrieves a list of titles based on specified filters.
+     *
+     * @param context The application context.
+     * @param genres A list of genre names for filtering titles.
+     * @param statuses A list of title statuses for filtering titles.
+     * @param types A list of title types for filtering titles.
+     * @param categories A list of category names for filtering titles.
+     * @param ageRatings A list of age ratings for filtering titles.
+     * @param page The page number of titles to retrieve.
+     * @return A list of title previews.
+     */
     suspend fun getCatalog(
         context: Context,
         genres: List<String>,

@@ -11,16 +11,33 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
+/**
+ * Repository implementation for fetching achievements associated with a specific user by their username.
+ *
+ * This repository utilizes an HTTP client to communicate with the backend service and retrieve achievements.
+ *
+ * @constructor Creates an instance of GetAchievementsRequest.
+ */
 class GetAchievementsRequest : IGetAchievementsRepository {
+
+    /**
+     * Asynchronously retrieves a list of achievements associated with a user identified by their username.
+     *
+     * @param context The application context.
+     * @param username The username of the user whose achievements are being fetched.
+     * @param received Indicates whether to fetch received achievements (true) or not-received ones (false).
+     * @return A list of Achievement objects representing the user's achievements based on the received status.
+     *         An empty list will be returned in case of errors or lack of achievements.
+     */
     override suspend fun getAchievementByUsername(context: Context, username: String, received: Boolean): List<Achievement> {
-        // Initialize the HTTP client to fetch user comments.
+        // Initialize the HTTP client to fetch user achievements.
         val backendService = HttpClientIsLogin.getUserAchievementsService
 
-        // An empty list of comments for potential error handling.
+        // An empty list of achievements for potential error handling.
         val achievementForErrorResponse = listOf<Achievement>()
 
         try {
-            // Use a coroutine for asynchronous fetching of comments.
+            // Use a coroutine for asynchronous achievement fetching.
             return suspendCancellableCoroutine { continuation ->
                 val call = backendService.achievementByUsername(username, received)
 
@@ -36,7 +53,7 @@ class GetAchievementsRequest : IGetAchievementsRepository {
                             }
                         } else {
                             // Handling error response from the server.
-                            Log.e("Comments get error", response.errorBody().toString())
+                            Log.e("Achievements get error", response.errorBody().toString())
                             continuation.resume(achievementForErrorResponse)
                         }
                     }
@@ -58,7 +75,7 @@ class GetAchievementsRequest : IGetAchievementsRepository {
             Log.e("Unknown Error", e.toString())
         }
 
-        // Returning an empty list of comments in case of an error.
+        // Returning an empty list of achievements in case of an error.
         return achievementForErrorResponse
     }
 }

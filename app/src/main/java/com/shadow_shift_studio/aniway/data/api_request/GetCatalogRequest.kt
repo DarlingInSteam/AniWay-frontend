@@ -14,7 +14,28 @@ import retrofit2.Callback
 import retrofit2.Response
 import kotlin.coroutines.resume
 
+/**
+ * Repository implementation for fetching titles in the catalog based on specified parameters.
+ *
+ * This repository utilizes an HTTP client to communicate with the backend service and retrieve catalog titles.
+ *
+ * @constructor Creates an instance of GetCatalogRequest.
+ */
 class GetCatalogRequest : IGetTitlesListRepository {
+
+    /**
+     * Asynchronously retrieves a list of title previews from the catalog based on specified filters.
+     *
+     * @param context The application context.
+     * @param genres A list of genre names for filtering titles.
+     * @param statuses A list of title statuses for filtering titles.
+     * @param types A list of title types for filtering titles.
+     * @param categories A list of category names for filtering titles.
+     * @param ageRatings A list of age ratings for filtering titles.
+     * @param page The page number of titles to be retrieved.
+     * @return A list of TitlePreview objects representing the filtered titles in the catalog.
+     *         An empty list will be returned in case of errors or lack of titles.
+     */
     override suspend fun getCatalog(
         context: Context,
         genres: List<String>,
@@ -27,11 +48,11 @@ class GetCatalogRequest : IGetTitlesListRepository {
 
         val backendService = HttpClientIsLogin.getCatalogService
 
-        // An empty list of comments for potential error handling.
+        // An empty list of title previews for potential error handling.
         val titleForErrorResponse = listOf<TitlePreview>()
 
         try {
-            // Use a coroutine for asynchronous fetching of comments.
+            // Use a coroutine for asynchronous fetching of titles.
             return suspendCancellableCoroutine { continuation ->
                 val call = backendService.getCatalogTitles(genres, statuses, types, categories, ageRatings, page)
 
@@ -47,7 +68,7 @@ class GetCatalogRequest : IGetTitlesListRepository {
                             }
                         } else {
                             // Handling error response from the server.
-                            Log.e("Comments get error", response.errorBody().toString())
+                            Log.e("Titles get error", response.errorBody().toString())
                             continuation.resume(titleForErrorResponse)
                         }
                     }
@@ -69,7 +90,7 @@ class GetCatalogRequest : IGetTitlesListRepository {
             Log.e("Unknown Error", e.toString())
         }
 
-        // Returning an empty list of comments in case of an error.
+        // Returning an empty list of title previews in case of an error.
         return titleForErrorResponse
 
     }
