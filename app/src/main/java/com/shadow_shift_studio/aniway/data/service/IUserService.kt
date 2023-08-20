@@ -1,15 +1,17 @@
 package com.shadow_shift_studio.aniway.data.service
 
+import com.shadow_shift_studio.aniway.model.entity.Achievement
 import com.shadow_shift_studio.aniway.model.entity.User
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * The `IUserByIdUsername` interface defines methods for making HTTP requests to retrieve user information
  * based on the username or ID.
  */
-interface IGetUserService {
+interface IUserService {
 
     /**
      * Executes a GET request to the `/user/username/{username}` endpoint to retrieve user information
@@ -30,6 +32,19 @@ interface IGetUserService {
      */
     @GET("/user/username/{id}")
     fun userById(@Path("id") id: String): Call<User>
+
+    /**
+     * Retrieves a list of achievements for the specified user's username and received status.
+     *
+     * @param username The username of the user for whom to retrieve achievements.
+     * @param received The received status indicating whether to retrieve received or pending achievements.
+     * @return A `Call` object representing the asynchronous request to retrieve achievements.
+     */
+    @GET("/achievement/get_achievements/{username}")
+    fun achievementByUsername(
+        @Path("username") username: String,
+        @Query("received") received: Boolean
+    ): Call<List<Achievement>>
 }
 
 

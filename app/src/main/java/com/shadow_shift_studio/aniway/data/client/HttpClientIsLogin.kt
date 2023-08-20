@@ -1,11 +1,8 @@
 package com.shadow_shift_studio.aniway.data.client
 
-import com.shadow_shift_studio.aniway.data.service.IGetAchievementsService
-import com.shadow_shift_studio.aniway.data.service.IGetCatalogCategoriesService
-import com.shadow_shift_studio.aniway.data.service.IGetCatalogGenresService
-import com.shadow_shift_studio.aniway.data.service.IGetCatalogService
+import com.shadow_shift_studio.aniway.data.service.ITitlesListService
 import com.shadow_shift_studio.aniway.data.service.ITitleService
-import com.shadow_shift_studio.aniway.data.service.IGetUserService
+import com.shadow_shift_studio.aniway.data.service.IUserService
 import com.shadow_shift_studio.aniway.data.service.ICommentsService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -32,11 +29,8 @@ object HttpClientIsLogin {
         .build()
 
     // Creating a service for making requests to the remote server
-    val getUserService: IGetUserService = retrofit.create(IGetUserService::class.java)
+    val getUserService: IUserService = retrofit.create(IUserService::class.java)
     val CommentsService: ICommentsService = retrofit.create(ICommentsService::class.java)
-    val getUserAchievementsService: IGetAchievementsService = retrofit.create(IGetAchievementsService::class.java)
-    val getCatalogGenresService: IGetCatalogGenresService = retrofit.create(IGetCatalogGenresService::class.java)
-    val getCatalogCategoriesService: IGetCatalogCategoriesService = retrofit.create(IGetCatalogCategoriesService::class.java)
-    val getCatalogService: IGetCatalogService = retrofit.create(IGetCatalogService::class.java)
+    val getCatalogService: ITitlesListService = retrofit.create(ITitlesListService::class.java)
     val titleService: ITitleService = retrofit.create(ITitleService::class.java)
 }

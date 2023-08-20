@@ -2,7 +2,8 @@ package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
 import com.shadow_shift_studio.aniway.model.entity.User
-import com.shadow_shift_studio.aniway.domain.repository.IGetUserRepository
+import com.shadow_shift_studio.aniway.domain.repository.IUserRepository
+import com.shadow_shift_studio.aniway.model.entity.Achievement
 
 /**
  * The `GetUserByUsernameUseCase` class is a use case (business logic layer),
@@ -11,7 +12,7 @@ import com.shadow_shift_studio.aniway.domain.repository.IGetUserRepository
  * @constructor Creates an instance of the `GetUserByUsernameUseCase` class.
  * @param getUserByUsernameRepository A repository for retrieving user information by username.
  */
-class GetUserUseCase(private val getUserByUsernameRepository: IGetUserRepository) {
+class UserUseCase(private val getUserByUsernameRepository: IUserRepository) {
 
     /**
      * Performs a query to get user information about a user by username.
@@ -34,5 +35,17 @@ class GetUserUseCase(private val getUserByUsernameRepository: IGetUserRepository
      */
     suspend fun userById(context: Context, id: String): User {
         return getUserByUsernameRepository.getUserById(context, id)
+    }
+
+    /**
+     * Retrieves a list of user achievements by username and received status.
+     *
+     * @param context The application context.
+     * @param username The username of the user for whom you want to retrieve achievements.
+     * @param received The received status indicating whether to retrieve received or pending achievements.
+     * @return A list of user achievements.
+     */
+    suspend fun getAchievementsByUsername(context: Context, username: String, received: Boolean): List<Achievement> {
+        return getUserByUsernameRepository.getAchievementByUsername(context, username, received)
     }
 }

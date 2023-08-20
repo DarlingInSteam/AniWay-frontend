@@ -1,5 +1,7 @@
 package com.shadow_shift_studio.aniway.data.service
 
+import com.shadow_shift_studio.aniway.model.entity.Category
+import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
@@ -11,7 +13,7 @@ import retrofit2.http.Query
 /**
  * The `IGetCatalogService` interface provides a method for retrieving catalog titles with specified filters through an API.
  */
-interface IGetCatalogService {
+interface ITitlesListService {
     /**
      * Retrieves a list of catalog titles based on specified filters.
      *
@@ -33,4 +35,20 @@ interface IGetCatalogService {
         @Query("ageRatings")  ageRatings: List<AgeRating>?,
         @Query("page") page: Int
     ): Call<List<TitlePreview>>
+
+    /**
+     * Retrieves a list of catalog categories.
+     *
+     * @return A `Call` object representing the asynchronous request to retrieve catalog categories.
+     */
+    @GET("/category/all")
+    fun getCatalogCategories(): Call<List<Category>>
+
+    /**
+     * Retrieves a list of catalog genres.
+     *
+     * @return A `Call` object representing the asynchronous request to retrieve catalog genres.
+     */
+    @GET("/genre/all")
+    fun getCatalogGenres(): Call<List<Genre>>
 }

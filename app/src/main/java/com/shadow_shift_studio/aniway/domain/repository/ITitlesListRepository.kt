@@ -1,6 +1,8 @@
 package com.shadow_shift_studio.aniway.domain.repository
 
 import android.content.Context
+import com.shadow_shift_studio.aniway.model.entity.Category
+import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
@@ -9,7 +11,7 @@ import com.shadow_shift_studio.aniway.model.enum.TitleType
 /**
  * The `IGetTitlesListRepository` interface defines a method for retrieving a list of titles with specified filters.
  */
-interface IGetTitlesListRepository {
+interface ITitlesListRepository {
     /**
      * Retrieves a list of titles based on specified filters.
      *
@@ -31,4 +33,20 @@ interface IGetTitlesListRepository {
         ageRatings: List<AgeRating>,
         page: Int
     ): List<TitlePreview>
+
+    /**
+     * Retrieves a list of catalog categories.
+     *
+     * @param context The application context.
+     * @return A list of catalog categories.
+     */
+    suspend fun getCatalogCategories(context: Context): List<Category>
+
+    /**
+     * Retrieves a list of catalog genres.
+     *
+     * @param context The application context.
+     * @return A list of catalog genres.
+     */
+    suspend fun getCatalogGenres(context: Context): List<Genre>
 }

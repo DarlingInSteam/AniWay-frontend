@@ -1,7 +1,9 @@
 package com.shadow_shift_studio.aniway.domain.use_case
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.domain.repository.IGetTitlesListRepository
+import com.shadow_shift_studio.aniway.domain.repository.ITitlesListRepository
+import com.shadow_shift_studio.aniway.model.entity.Category
+import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.enum.AgeRating
 import com.shadow_shift_studio.aniway.model.enum.TitleStatus
@@ -13,7 +15,7 @@ import com.shadow_shift_studio.aniway.model.enum.TitleType
  * @property catalog Repository for retrieving a list of titles with specified filters.
  * @constructor Creates an instance of the `GetTitlesListUseCase` class.
  */
-class GetTitlesListUseCase(private val catalog: IGetTitlesListRepository) {
+class TitlesListUseCase(private val catalog: ITitlesListRepository) {
     /**
      * Retrieves a list of titles based on specified filters.
      *
@@ -36,5 +38,25 @@ class GetTitlesListUseCase(private val catalog: IGetTitlesListRepository) {
         page: Int
     ): List<TitlePreview> {
         return catalog.getCatalog(context, genres, statuses, types, categories, ageRatings, page)
+    }
+
+    /**
+     * Retrieves a list of catalog categories.
+     *
+     * @param context The application context.
+     * @return A list of catalog categories.
+     */
+    suspend fun getCatalogCategories(context: Context): List<Category> {
+        return catalog.getCatalogCategories(context)
+    }
+
+    /**
+     * Retrieves a list of catalog genres.
+     *
+     * @param context The application context.
+     * @return A list of catalog genres.
+     */
+    suspend fun getCatalogGenres(context: Context): List<Genre> {
+        return catalog.getCatalogGenres(context)
     }
 }

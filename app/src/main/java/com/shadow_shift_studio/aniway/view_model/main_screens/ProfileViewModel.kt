@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.shadow_shift_studio.aniway.data.api_request.GetAchievementsRequest
-import com.shadow_shift_studio.aniway.data.api_request.GetUserRequest
+import com.shadow_shift_studio.aniway.data.api_request.UserRequest
 import com.shadow_shift_studio.aniway.data.api_request.CommentsRequest
 import com.shadow_shift_studio.aniway.data.api_request.TitleRequest
 import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
-import com.shadow_shift_studio.aniway.domain.use_case.GetAchievementsUseCase
 import com.shadow_shift_studio.aniway.model.entity.User
-import com.shadow_shift_studio.aniway.domain.use_case.GetUserUseCase
+import com.shadow_shift_studio.aniway.domain.use_case.UserUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.CommentsUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.TitleUseCase
 import com.shadow_shift_studio.aniway.model.entity.Achievement
@@ -28,14 +26,11 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
     var id: Long = 0
     var page = 0
 
-    private val getUserByUsernameUseCase: GetUserUseCase =
-        GetUserUseCase(GetUserRequest())
+    private val getUserByUsernameUseCase: UserUseCase =
+        UserUseCase(UserRequest())
 
     private val getUserCommentsUseCase: CommentsUseCase =
         CommentsUseCase(CommentsRequest())
-
-    private val getAchievementsUseCase: GetAchievementsUseCase =
-        GetAchievementsUseCase(GetAchievementsRequest())
 
     private val getUserManga: TitleUseCase =
         TitleUseCase(TitleRequest())
@@ -65,7 +60,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
 
     suspend fun getAchievement() {
         viewModelScope.launch {
-            val achievements = getAchievementsUseCase.getAchievementsByUsername(context, AuthorizedUser.username, true)
+            val achievements = getUserByUsernameUseCase.getAchievementsByUsername(context, AuthorizedUser.username, true)
             userAchievementsLiveData.value = achievements
         }.join()
     }
