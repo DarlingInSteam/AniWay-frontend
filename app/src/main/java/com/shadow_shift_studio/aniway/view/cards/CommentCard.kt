@@ -2,6 +2,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,13 +14,33 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandCircleDown
+import androidx.compose.material.icons.filled.ExpandLess
+import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.ExpandCircleDown
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.MoreHoriz
+import androidx.compose.material.icons.outlined.MoreVert
+import androidx.compose.material.icons.rounded.MoreHoriz
+import androidx.compose.material.icons.rounded.MoreVert
+import androidx.compose.material3.Button
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,9 +71,27 @@ fun CommentCard(comment: Comment) {
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .padding(start = 12.dp, top = 6.dp), verticalArrangement = Arrangement.Center
+                    .padding(start = 12.dp, top = 6.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ImageComment(comment)
+                Row(horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = {/*TODO*/ },
+                        modifier = Modifier.height(22.dp).width(20.dp)) {
+                        Icon(Icons.Outlined.ExpandLess, "")
+                    }
+                    Text(
+                        text = "24",
+                        color = md_theme_dark_onSurfaceVariant,
+                        fontSize = 15.sp
+                    )
+                    IconButton(onClick = {/*TODO*/ },
+                        modifier = Modifier.height(22.dp).width(20.dp)) {
+                        Icon(Icons.Outlined.ExpandMore, "",)
+                    }
+                }
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(
@@ -61,12 +100,22 @@ fun CommentCard(comment: Comment) {
                     .padding(top = 6.dp, end = 12.dp, bottom = 6.dp),
                 verticalArrangement = Arrangement.Top
             ) {
-                Row(modifier = Modifier.fillMaxWidth()) {
+                Row(modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.Bottom) {
                     Text(
                         text = comment.username.toString(),
                         color = Color.White,
                         fontSize = 15.sp,
                     )
+                    IconButton(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.height(20.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.MoreHoriz, "",
+                        )
+                    }
                 }
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -81,7 +130,7 @@ fun CommentCard(comment: Comment) {
                 }
                 Spacer(modifier = Modifier.height(6.dp))
                 Row(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier.fillMaxSize(),
                 ) {
                     Text(
                         text = comment.text.toString(),

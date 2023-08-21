@@ -127,7 +127,6 @@ fun AuthorizationContent(navController: NavController, onAuthorization: () -> Un
             modifier = Modifier.fillMaxWidth()
                 .bringIntoViewRequester(bringIntoViewRequester),
             onClick = {
-                //onAuthorization()
                 coroutineScope.launch {
                     viewModelLogin.loginUser()
 
