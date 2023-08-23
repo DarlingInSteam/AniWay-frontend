@@ -13,6 +13,8 @@ import java.util.Date
  * @constructor Creates an instance of the `Comment` class.
  */
 data class Comment(
+    var id : Long,
+    var author_id : Long,
     var text: String?,
     var username: String?,
     var titleName: String?,

@@ -36,6 +36,15 @@ val BookmarksAlreadyRead: String = "Прочитано"
 val BookmarksAbandoned: String = "Брошено"
 val BookmarksFavorite: String = "Любимое"
 val AuthError: String = "Неверный логин или пароль"
+val CopyComment: String = "Копировать текст"
+val EditComment: String = "Редактировать"
+val DeleteComment: String = "Удалить"
+val Complain: String = "Пожаловаться"
+val Spam: String = "Спам"
+val FakeAccount: String = "Фейковый аккаунт"
+val Offense: String = "Оскорбление"
+val CallForBullying: String = "Призыв к травле"
+val Spoiler: String = "Спойлер"
 
 val loginErrors: Array<String> = arrayOf(
     "Допустимая длина от 3 до 20 символов",
