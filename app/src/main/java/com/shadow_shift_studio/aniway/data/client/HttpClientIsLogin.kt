@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  * to a remote server with a Bearer token authorization header.
  */
 
-//саша ip 192.168.0.159
+//саша ip 192.168.0.159 192.168.0.101
 //артем 192.168.0.7
 object HttpClientIsLogin {
     private val retrofit: Retrofit = Retrofit.Builder()

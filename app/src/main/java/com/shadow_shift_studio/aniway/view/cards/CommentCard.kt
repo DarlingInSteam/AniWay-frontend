@@ -21,6 +21,8 @@ import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.outlined.ArrowCircleDown
+import androidx.compose.material.icons.outlined.ArrowCircleUp
 import androidx.compose.material.icons.outlined.ExpandCircleDown
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
@@ -30,18 +32,23 @@ import androidx.compose.material.icons.rounded.MoreHoriz
 import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -52,6 +59,9 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_outlineVariant
 
 @Composable
 fun CommentCard(comment: Comment) {
+
+    val expanded = remember { mutableStateOf(false) }
+
 
     androidx.compose.material3.Card(
         modifier = Modifier
@@ -76,22 +86,6 @@ fun CommentCard(comment: Comment) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 ImageComment(comment)
-                Row(horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = {/*TODO*/ },
-                        modifier = Modifier.height(22.dp).width(20.dp)) {
-                        Icon(Icons.Outlined.ExpandLess, "")
-                    }
-                    Text(
-                        text = "24",
-                        color = md_theme_dark_onSurfaceVariant,
-                        fontSize = 15.sp
-                    )
-                    IconButton(onClick = {/*TODO*/ },
-                        modifier = Modifier.height(22.dp).width(20.dp)) {
-                        Icon(Icons.Outlined.ExpandMore, "",)
-                    }
-                }
             }
             Spacer(modifier = Modifier.width(12.dp))
             Column(
@@ -109,12 +103,19 @@ fun CommentCard(comment: Comment) {
                         fontSize = 15.sp,
                     )
                     IconButton(
-                        onClick = { /*TODO*/ },
+                        onClick = { expanded.value = true },
                         modifier = Modifier.height(20.dp)
                     ) {
                         Icon(
                             Icons.Default.MoreHoriz, "",
                         )
+                        DropdownMenu( expanded = expanded.value,
+                            onDismissRequest = { expanded.value = false },
+                            offset = DpOffset((-40).dp, (-40).dp)){
+                            Text("Редактировать", fontSize=18.sp, modifier = Modifier.padding(10.dp).clickable(onClick={}))
+                            Text("Удалить", fontSize=18.sp, modifier = Modifier.padding(10.dp).clickable(onClick={}))
+                            Text("Пожаловаться", fontSize=18.sp, modifier = Modifier.padding(10.dp).clickable(onClick={}))
+                        }
                     }
                 }
                 Row(
@@ -137,6 +138,23 @@ fun CommentCard(comment: Comment) {
                         color = Color.White,
                         fontSize = 15.sp,
                     )
+                }
+                Row(modifier = Modifier.fillMaxSize(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically){
+                    IconButton(onClick = {/*TODO*/ },
+                        modifier = Modifier.height(35.dp).width(35.dp)) {
+                        Icon(Icons.Outlined.ExpandLess, "",
+                            tint = md_theme_dark_onSurfaceVariant)
+                    }
+                    Text(
+                        text = "24",
+                        color = md_theme_dark_onSurfaceVariant,
+                        fontSize =15.sp
+                    )
+                    IconButton(onClick = {/*TODO*/ },
+                        modifier = Modifier.height(35.dp).width(35.dp)) {
+                        Icon(Icons.Outlined.ExpandMore, "",
+                            tint = md_theme_dark_onSurfaceVariant)
+                    }
                 }
 
             }

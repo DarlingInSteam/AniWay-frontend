@@ -13,8 +13,11 @@ import com.shadow_shift_studio.aniway.domain.use_case.ViewModelUseCase
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val context: Context): ViewModel() {
-    var login: MutableState<String> = mutableStateOf("")
-    var password: MutableState<String> = mutableStateOf("")
+    /*var login: MutableState<String> = mutableStateOf("")
+    var password: MutableState<String> = mutableStateOf("")*/
+    var login: MutableState<String> = mutableStateOf("horny")
+    var password: MutableState<String> = mutableStateOf("Sc5210115)")
+
     val loginStatusLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     private val loginUserUseCase: LoginUserUseCase =
