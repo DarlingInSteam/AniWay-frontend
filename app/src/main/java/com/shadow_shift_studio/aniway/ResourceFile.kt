@@ -45,6 +45,7 @@ val FakeAccount: String = "Фейковый аккаунт"
 val Offense: String = "Оскорбление"
 val CallForBullying: String = "Призыв к травле"
 val Spoiler: String = "Спойлер"
+val TextIsCopy: String = "Текст скопирован"
 
 val loginErrors: Array<String> = arrayOf(
     "Допустимая длина от 3 до 20 символов",
