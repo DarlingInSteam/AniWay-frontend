@@ -5,6 +5,7 @@ import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
 import com.shadow_shift_studio.aniway.domain.repository.IUserRepository
 import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.Badge
 import com.shadow_shift_studio.aniway.model.entity.User
 import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
@@ -33,7 +34,7 @@ class UserRequest : IUserRepository {
         // Create an instance of the remote service caller
         val backendService = HttpClientIsLogin.UserService
         // Create an instance with empty fields to use in case of an error
-        val userForErrorResponse = User(null, null, null,  null, null, null, null, null, null, null, null, null)
+        val userForErrorResponse = User(null,null, null, null,  null, null, null, null, null, null, null, null, null)
 
         try {
             // Use suspendCancellableCoroutine for handling asynchronous code
@@ -61,6 +62,7 @@ class UserRequest : IUserRepository {
                                     commentsCount = responseBody.commentsCount,
                                     avatarUrl = responseBody.avatarUrl,
                                     backgroundUrl = responseBody.backgroundUrl,
+                                    badge = responseBody.badge
                                 )
                                 continuation.resume(user) // Resume the coroutine with the received user
                             } else {
@@ -104,7 +106,7 @@ class UserRequest : IUserRepository {
         // Create an instance of the remote service caller
         val backendService = HttpClientIsLogin.UserService
         // Create an instance with empty fields to use in case of an error
-        val userForErrorResponse = User(null, null, null, null, null, null, null, null, null, null,  null, null)
+        val userForErrorResponse = User(null,null, null, null, null, null, null, null, null, null, null,  null, null)
 
         try {
             // Use suspendCancellableCoroutine for handling asynchronous code
@@ -132,6 +134,7 @@ class UserRequest : IUserRepository {
                                     commentsCount = responseBody.commentsCount,
                                     avatarUrl = responseBody.avatarUrl,
                                     backgroundUrl = responseBody.backgroundUrl,
+                                    badge = responseBody.badge
                                 )
                                 continuation.resume(user) // Resume the coroutine with the received user
                             } else {
@@ -220,5 +223,104 @@ class UserRequest : IUserRepository {
         // Returning an empty list of achievements in case of an error.
         return achievementForErrorResponse
     }
-}
 
+    override suspend fun getUserBadges(context: Context, username: String): List<Badge> {
+        // Initialize the HTTP client to fetch user achievements.
+        val backendService = HttpClientIsLogin.UserService
+
+        // An empty list of achievements for potential error handling.
+        val achievementForErrorResponse = listOf<Badge>()
+
+        try {
+            // Use a coroutine for asynchronous achievement fetching.
+            return suspendCancellableCoroutine { continuation ->
+                val call = backendService.userBadges(username)
+
+                // Handling successful response from the server.
+                call.enqueue(object : Callback<List<Badge>> {
+                    override fun onResponse(call: Call<List<Badge>>, response: Response<List<Badge>>) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body()
+                            if (responseBody != null) {
+                                continuation.resume(responseBody)
+                            } else {
+                                continuation.resume(achievementForErrorResponse)
+                            }
+                        } else {
+                            // Handling error response from the server.
+                            Log.e("Achievements get error", response.errorBody().toString())
+                            continuation.resume(achievementForErrorResponse)
+                        }
+                    }
+
+                    // Handling error while executing the request.
+                    override fun onFailure(call: Call<List<Badge>>, t: Throwable) {
+                        Log.e("Network client error", t.message ?: "HTTP client failed to connect")
+                        continuation.resume(achievementForErrorResponse)
+                    }
+                })
+
+                // Canceling the request in case of coroutine cancellation.
+                continuation.invokeOnCancellation {
+                    call.cancel()
+                }
+            }
+        } catch (e: Exception) {
+            // Handling potential exceptions.
+            Log.e("Unknown Error", e.toString())
+        }
+
+        // Returning an empty list of achievements in case of an error.
+        return achievementForErrorResponse
+    }
+
+    override suspend fun setUserBadge(context: Context, username: String, badgeId: Long): String {
+        // Initialize the HTTP client to fetch user achievements.
+        val backendService = HttpClientIsLogin.UserService
+
+        // An empty list of achievements for potential error handling.
+        val achievementForErrorResponse = ""
+
+        try {
+            // Use a coroutine for asynchronous achievement fetching.
+            return suspendCancellableCoroutine { continuation ->
+                val call = backendService.setBadge(username, badgeId)
+
+                // Handling successful response from the server.
+                call.enqueue(object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body()
+                            if (responseBody != null) {
+                                continuation.resume(responseBody)
+                            } else {
+                                continuation.resume(achievementForErrorResponse)
+                            }
+                        } else {
+                            // Handling error response from the server.
+                            Log.e("Achievements get error", response.errorBody().toString())
+                            continuation.resume(achievementForErrorResponse)
+                        }
+                    }
+
+                    // Handling error while executing the request.
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Log.e("Network client error", t.message ?: "HTTP client failed to connect")
+                        continuation.resume(achievementForErrorResponse)
+                    }
+                })
+
+                // Canceling the request in case of coroutine cancellation.
+                continuation.invokeOnCancellation {
+                    call.cancel()
+                }
+            }
+        } catch (e: Exception) {
+            // Handling potential exceptions.
+            Log.e("Unknown Error", e.toString())
+        }
+
+        // Returning an empty list of achievements in case of an error.
+        return achievementForErrorResponse
+    }
+}

@@ -418,7 +418,7 @@ fun NickAndBadge(user: User) {
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Читатель F ранга",
+            text = user.badge.toString(),
             color = md_theme_dark_onSurfaceVariant,
             fontSize = 14.sp
         )
