@@ -32,7 +32,8 @@ data class User(
     var likes: Int?,
     var commentsCount: Int?,
     var avatarUrl: String?,
-    var backgroundUrl: String?
+    var backgroundUrl: String?,
+    var badge: Badge?
 )
 
 

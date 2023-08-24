@@ -1,9 +1,11 @@
 package com.shadow_shift_studio.aniway.data.service
 
 import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.Badge
 import com.shadow_shift_studio.aniway.model.entity.User
 import retrofit2.Call
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -45,6 +47,17 @@ interface IUserService {
         @Path("username") username: String,
         @Query("received") received: Boolean
     ): Call<List<Achievement>>
+
+    @GET("/user/badges")
+    fun userBadges(
+        @Query("username") username: String
+    ): Call<List<Badge>>
+
+    @POST("/user/set_badge")
+    fun setBadge(
+        @Query("username") username: String,
+        @Query("badge_id") badgeId: Long
+    ): Call<String>
 }
 
 

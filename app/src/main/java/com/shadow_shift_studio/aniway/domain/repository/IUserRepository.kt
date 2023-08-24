@@ -2,6 +2,7 @@ package com.shadow_shift_studio.aniway.domain.repository
 
 import android.content.Context
 import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.Badge
 import com.shadow_shift_studio.aniway.model.entity.User
 
 /**
@@ -35,5 +36,7 @@ interface IUserRepository {
      * @return A list of user achievements.
      */
     suspend fun getAchievementByUsername(context: Context, username: String, received: Boolean): List<Achievement>
+    suspend fun getUserBadges(context: Context, username: String): List<Badge>
+    suspend fun setUserBadge(context: Context, username: String, badgeId: Long): String
 }
 

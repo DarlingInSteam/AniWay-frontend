@@ -3,6 +3,7 @@ package com.shadow_shift_studio.aniway.domain.use_case
 import android.content.Context
 import com.shadow_shift_studio.aniway.domain.repository.IUserRepository
 import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.Badge
 import com.shadow_shift_studio.aniway.model.entity.User
 
 /**
@@ -47,5 +48,13 @@ class UserUseCase(private val getUserByUsernameRepository: IUserRepository) {
      */
     suspend fun getAchievementsByUsername(context: Context, username: String, received: Boolean): List<Achievement> {
         return getUserByUsernameRepository.getAchievementByUsername(context, username, received)
+    }
+
+    suspend fun getUserBadges(context: Context, username: String): List<Badge> {
+        return getUserByUsernameRepository.getUserBadges(context, username)
+    }
+
+    suspend fun setUserBadge(context: Context, username: String, badgeId: Long): String {
+        return getUserByUsernameRepository.setUserBadge(context, username, badgeId)
     }
 }

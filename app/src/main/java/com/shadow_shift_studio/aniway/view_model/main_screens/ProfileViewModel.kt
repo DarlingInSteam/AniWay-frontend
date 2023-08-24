@@ -12,6 +12,7 @@ import com.shadow_shift_studio.aniway.domain.use_case.CommentsUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.TitleUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.UserUseCase
 import com.shadow_shift_studio.aniway.model.entity.Achievement
+import com.shadow_shift_studio.aniway.model.entity.Badge
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.entity.User
@@ -26,7 +27,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
     var id: Long = 0
     var page = 0
 
-    private val getUserByUsernameUseCase: UserUseCase =
+    private val userUseCase: UserUseCase =
         UserUseCase(UserRequest())
 
     private val getUserCommentsUseCase: CommentsUseCase =
@@ -37,7 +38,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
 
     suspend fun getUserByUsername() {
         viewModelScope.launch {
-            val user = getUserByUsernameUseCase.userByUsername(context, AuthorizedUser.username)
+            val user = userUseCase.userByUsername(context, AuthorizedUser.username)
             userByUsernameLiveData.value = user
             AuthorizedUser.user = user
             AuthorizedUser.id = user.id!!
@@ -60,7 +61,7 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
 
     suspend fun getAchievement() {
         viewModelScope.launch {
-            val achievements = getUserByUsernameUseCase.getAchievementsByUsername(context, AuthorizedUser.username, true)
+            val achievements = userUseCase.getAchievementsByUsername(context, AuthorizedUser.username, true)
             userAchievementsLiveData.value = achievements
         }.join()
     }
@@ -69,6 +70,6 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
         viewModelScope.launch {
             val titles = getUserManga.getFavouritesTitles(context, AuthorizedUser.username, readingStatus)
             userTitlesLiveData.value = titles
-        }
+        }.join()
     }
 }
