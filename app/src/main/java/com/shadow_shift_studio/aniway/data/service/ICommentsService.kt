@@ -4,6 +4,7 @@ import com.shadow_shift_studio.aniway.data.credentials.CredentialsForCreateComme
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -47,6 +48,12 @@ interface ICommentsService {
      */
     @POST("/comment/create")
     fun createComment(@Body credentialsForCreateComment: CredentialsForCreateComment): Call<String>
+
+    @DELETE("/comment/delete")
+    fun deleteComment(
+        @Query("username") username: String,
+        @Query("id") id: Long
+    ): Call<String>
 }
 
 

@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.shadow_shift_studio.aniway.data.api_request.CommentsRequest
+import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.domain.use_case.CommentsUseCase
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import kotlinx.coroutines.launch
@@ -18,7 +19,13 @@ class CommentsViewModel(private val context: Context) : ViewModel() {
     var titleId: Long = 0
     var page = 0
 
+    var username: String = AuthorizedUser.username
+    var id: Long = 0
+
     private val createComment: CommentsUseCase =
+        CommentsUseCase(CommentsRequest())
+
+    private val deleteComment: CommentsUseCase =
         CommentsUseCase(CommentsRequest())
 
     suspend fun getTitleComments() {
@@ -39,6 +46,13 @@ class CommentsViewModel(private val context: Context) : ViewModel() {
         viewModelScope.launch {
             val buf = createComment.createComment(context, titleId, chapterId = 0, commentText.value)
             Log.e("Comment value", commentText.value)
+        }
+    }
+
+    suspend fun deleteTitleComment(){
+        viewModelScope.launch {
+            val buf = deleteComment.deleteComment(context, username, id)
+            Log.e("", buf)
         }
     }
 }

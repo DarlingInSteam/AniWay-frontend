@@ -216,5 +216,60 @@ class CommentsRequest : ICommentsRepository {
         return userForErrorResponse
     }
 
+
+    override suspend fun deleteComment(
+        context: Context,
+        username: String,
+        id: Long
+    ): String {
+        // Initialize the HTTP client to fetch user comments.
+        val backendService = HttpClientIsLogin.CommentsService
+
+        // An empty string for potential error handling.
+        val userForErrorResponse = ""
+
+        try {
+            // Use a coroutine for asynchronous comment creation.
+            return suspendCancellableCoroutine { continuation ->
+                val call = backendService.deleteComment(username, id)
+
+                // Handling successful response from the server.
+                call.enqueue(object : Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        if (response.isSuccessful) {
+                            val responseBody = response.body()
+                            if (responseBody != null) {
+                                continuation.resume(responseBody)
+                            } else {
+                                continuation.resume(userForErrorResponse)
+                            }
+                        } else {
+                            // Handling error response from the server.
+                            Log.e("Comments delete error", response.errorBody().toString())
+                            continuation.resume(userForErrorResponse)
+                        }
+                    }
+
+                    // Handling error while executing the request.
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Log.e("Network client error", t.message ?: "HTTP client failed to connect")
+                        continuation.resume(userForErrorResponse)
+                    }
+                })
+
+                // Canceling the request in case of coroutine cancellation.
+                continuation.invokeOnCancellation {
+                    call.cancel()
+                }
+            }
+        } catch (e: Exception) {
+            // Handling potential exceptions.
+            Log.e("Unknown Error", e.toString())
+        }
+
+        // Returning an empty string in case of an error.
+        return userForErrorResponse
+    }
+
 }
 

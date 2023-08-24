@@ -37,6 +37,8 @@ interface ICommentsRepository {
      * @return A result string indicating the success or failure of the comment creation.
      */
     suspend fun createComment(context: Context, titleId: Long, chapterId: Long, text: String): String
+
+    suspend fun deleteComment(context: Context, username: String, id: Long): String
 }
 
 

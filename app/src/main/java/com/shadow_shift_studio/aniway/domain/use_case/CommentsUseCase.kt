@@ -47,4 +47,8 @@ class CommentsUseCase(private val comment: ICommentsRepository) {
     suspend fun createComment(context: Context, titleId: Long, chapterId: Long, text: String): String {
         return comment.createComment(context, titleId, chapterId, text)
     }
+
+    suspend fun deleteComment(context: Context, username: String, id: Long): String{
+        return comment.deleteComment(context, username, id)
+    }
 }
