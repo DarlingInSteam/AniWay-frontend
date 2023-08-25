@@ -30,7 +30,7 @@ interface ITitleService {
      * @param credentialsForSetReadingStatus The credentials required to set the reading status of a title.
      * @return A `Call` object representing the asynchronous request to set the reading status.
      */
-    @POST("/title/set_reading_status")
+    @POST("/title/set/reading_status")
     fun setTitleReadingStatus(@Body credentialsForSetReadingStatus: CredentialsForSetReadingStatus): Call<String>
 
     /**
@@ -40,6 +40,6 @@ interface ITitleService {
      * @param readingStatus The reading status of the titles to be retrieved.
      * @return A `Call` object representing the asynchronous request to retrieve bookmarked titles.
      */
-    @GET("/title/get_user_titles/{username}")
+    @GET("user/{username}/titles")
     fun getUserTitles(@Path("username") username: String, @Query("readingStatus") readingStatus: ReadingStatus): Call<List<TitlePreview>>
 }

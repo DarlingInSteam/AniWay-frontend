@@ -22,7 +22,7 @@ interface IUserService {
      * @param username The username for which to retrieve information.
      * @return An object of type `Call<User>`, representing the request's result.
      */
-    @GET("/user/username/{username}")
+    @GET("/user/{username}")
     fun userByUsername(@Path("username") username: String): Call<User>
 
     /**
@@ -32,7 +32,7 @@ interface IUserService {
      * @param id The ID of the user for which to retrieve information.
      * @return An object of type `Call<User>`, representing the request's result.
      */
-    @GET("/user/username/{id}")
+    @GET("/user/{id}")
     fun userById(@Path("id") id: String): Call<User>
 
     /**
@@ -42,20 +42,20 @@ interface IUserService {
      * @param received The received status indicating whether to retrieve received or pending achievements.
      * @return A `Call` object representing the asynchronous request to retrieve achievements.
      */
-    @GET("/achievement/get_achievements/{username}")
+    @GET("/user/{username}/achievements")
     fun achievementByUsername(
         @Path("username") username: String,
         @Query("received") received: Boolean
     ): Call<List<Achievement>>
 
-    @GET("/user/badges")
+    @GET("/user/{username}/badges")
     fun userBadges(
-        @Query("username") username: String
+        @Path("username") username: String
     ): Call<List<Badge>>
 
-    @POST("/user/set_badge")
+    @POST("/user/{username}/set_badge")
     fun setBadge(
-        @Query("username") username: String,
+        @Path("username") username: String,
         @Query("badge_id") badgeId: Long
     ): Call<String>
 }

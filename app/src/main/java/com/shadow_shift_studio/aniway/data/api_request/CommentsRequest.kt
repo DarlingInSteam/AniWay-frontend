@@ -175,7 +175,7 @@ class CommentsRequest : ICommentsRepository {
             // Use a coroutine for asynchronous comment creation.
             return suspendCancellableCoroutine { continuation ->
                 val call = backendService.createComment(
-                    CredentialsForCreateComment(AuthorizedUser.id, titleId, chapterId, text)
+                    CredentialsForCreateComment(AuthorizedUser.username.toString(), titleId, chapterId, text)
                 )
 
                 // Handling successful response from the server.

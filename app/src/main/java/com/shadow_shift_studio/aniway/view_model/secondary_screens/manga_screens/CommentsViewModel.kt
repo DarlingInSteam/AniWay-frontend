@@ -19,13 +19,7 @@ class CommentsViewModel(private val context: Context) : ViewModel() {
     var titleId: Long = 0
     var page = 0
 
-    var username: String = AuthorizedUser.username
-    var id: Long = 0
-
     private val createComment: CommentsUseCase =
-        CommentsUseCase(CommentsRequest())
-
-    private val deleteComment: CommentsUseCase =
         CommentsUseCase(CommentsRequest())
 
     suspend fun getTitleComments() {
@@ -49,10 +43,10 @@ class CommentsViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    suspend fun deleteTitleComment(){
+    suspend fun deleteTitleComment(id: Long){
         viewModelScope.launch {
-            val buf = deleteComment.deleteComment(context, username, id)
+            val buf = createComment.deleteComment(context, AuthorizedUser.username, id)
             Log.e("", buf)
-        }
+        }.join()
     }
 }

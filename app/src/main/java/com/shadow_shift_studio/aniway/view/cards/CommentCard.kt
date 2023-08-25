@@ -46,7 +46,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -63,9 +62,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
@@ -87,7 +84,6 @@ import com.shadow_shift_studio.aniway.FakeAccount
 import com.shadow_shift_studio.aniway.Offense
 import com.shadow_shift_studio.aniway.Spam
 import com.shadow_shift_studio.aniway.Spoiler
-import com.shadow_shift_studio.aniway.TextIsCopy
 import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
@@ -100,6 +96,7 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_contai
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
+import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.MangaPageViewModel
 import kotlinx.coroutines.launch
 
@@ -241,7 +238,10 @@ fun ImageComment(comment: Comment) {
 fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
     val isVisible: Boolean = isUserCommentAuthor(comment)
     var reportsBottomSheetVisible by remember { mutableStateOf(false) }
-    var needCopyText by remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val viewModel: CommentsViewModel = CommentsViewModel(context)
+
     Dialog(onDismissRequest = {
         onChangeExpand()
     }) {
@@ -267,7 +267,11 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
-                    .clickable(onClick = { }),
+                    .clickable(onClick = {
+                        coroutineScope.launch {
+                            viewModel.deleteTitleComment(comment.id)
+                        }
+                    }),
                 color = md_theme_dark_onSurfaceVariant
             )}
             Text(
@@ -276,7 +280,7 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
-                    .clickable(onClick = { needCopyText = true }),
+                    .clickable(onClick = {}),
                 color = md_theme_dark_onSurfaceVariant
             )
             Text(
@@ -285,7 +289,7 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
-                    .clickable(onClick = { reportsBottomSheetVisible = true }),
+                    .clickable(onClick = {reportsBottomSheetVisible = true}),
                 color = md_theme_dark_onSurfaceVariant
             )
         }
@@ -300,26 +304,13 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
         })
         }
     )
-
-    if(needCopyText)
-        CopyText(comment = comment)
 }
 
 private fun isUserCommentAuthor(comment: Comment): Boolean{
     var res: Boolean = false
-    if(comment.author_id == AuthorizedUser.id)
+    if(comment.username == AuthorizedUser.username)
         res = true
     return res
-}
-
-@Composable
-private fun CopyText(comment: Comment){
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
-    clipboardManager.setText(AnnotatedString((comment.text.toString())))
-
-    Snackbar() {
-        Text(text = TextIsCopy)
-    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

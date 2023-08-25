@@ -21,7 +21,7 @@ interface ICommentsService {
      * @param page The page number of comments to retrieve.
      * @return A `Call` object representing the asynchronous request to retrieve comments.
      */
-    @GET("/comment/get_comments/{username}")
+    @GET("/user/{username}/comments")
     fun commentsByUsername(
         @Path("username") username: String,
         @Query("page") page: Int
@@ -34,7 +34,7 @@ interface ICommentsService {
      * @param page The page number of comments to retrieve.
      * @return A `Call` object representing the asynchronous request to retrieve comments.
      */
-    @GET("/comment/title")
+    @GET("/title/comments")
     fun titleComments(
         @Query("titleId") titleId: Long,
         @Query("page") page: Int
@@ -52,7 +52,7 @@ interface ICommentsService {
     @DELETE("/comment/delete")
     fun deleteComment(
         @Query("username") username: String,
-        @Query("id") id: Long
+        @Query("comment_id") id: Long
     ): Call<String>
 }
 
