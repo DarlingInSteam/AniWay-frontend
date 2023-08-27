@@ -51,4 +51,8 @@ class CommentsUseCase(private val comment: ICommentsRepository) {
     suspend fun deleteComment(context: Context, username: String, id: Long): String{
         return comment.deleteComment(context, username, id)
     }
+
+    suspend fun updateComment(context: Context, username: String, comment_id: Long, text: String): String {
+        return comment.updateComment(context, username, comment_id, text)
+    }
 }

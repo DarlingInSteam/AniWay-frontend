@@ -1,12 +1,14 @@
 package com.shadow_shift_studio.aniway.data.service
 
 import com.shadow_shift_studio.aniway.data.credentials.CredentialsForCreateComment
+import com.shadow_shift_studio.aniway.data.credentials.CredentialsForUpdateComment
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -54,6 +56,9 @@ interface ICommentsService {
         @Query("username") username: String,
         @Query("comment_id") id: Long
     ): Call<String>
+
+    @PUT("/comment/update")
+    fun updateComment(@Body credentialsForUpdateComment: CredentialsForUpdateComment): Call<String>
 }
 
 

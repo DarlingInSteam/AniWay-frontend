@@ -39,6 +39,8 @@ interface ICommentsRepository {
     suspend fun createComment(context: Context, titleId: Long, chapterId: Long, text: String): String
 
     suspend fun deleteComment(context: Context, username: String, id: Long): String
+
+    suspend fun updateComment(context: Context, username: String, comment_Id: Long, text: String): String
 }
 
 

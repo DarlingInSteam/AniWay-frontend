@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.animation.AnimatedVisibility
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandCircleDown
 import androidx.compose.material.icons.filled.ExpandLess
@@ -45,7 +47,9 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
@@ -60,9 +64,15 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
@@ -84,10 +94,13 @@ import com.shadow_shift_studio.aniway.FakeAccount
 import com.shadow_shift_studio.aniway.Offense
 import com.shadow_shift_studio.aniway.Spam
 import com.shadow_shift_studio.aniway.Spoiler
+import com.shadow_shift_studio.aniway.TextIsCopy
 import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
+import com.shadow_shift_studio.aniway.data.singleton_object.NeedNormalName
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
 import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.BookmarksBottomSheet
+import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.CommentTextField
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
@@ -98,12 +111,16 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVarian
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.MangaPageViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun CommentCard(comment: Comment) {
+fun CommentCard(comment: Comment, ) {
+    val context = LocalContext.current
+    val viewModel: CommentsViewModel = CommentsViewModel(context)
+    val coroutineScope = rememberCoroutineScope()
 
-    val expanded = remember { mutableStateOf(false) }
     Card(
         modifier = Modifier
             .clickable { },
@@ -146,7 +163,7 @@ fun CommentCard(comment: Comment) {
                         fontSize = 15.sp,
                     )
                     IconButton(
-                        onClick = { expanded.value = true },
+                        onClick = { NeedNormalName.expanded.value = true },
                         modifier = Modifier.height(20.dp)
                     ) {
                         Icon(
@@ -211,12 +228,28 @@ fun CommentCard(comment: Comment) {
 
             }
         }
-        if (expanded.value) {
-            CommentMenu ({
-                expanded.value = false
-            },comment)
+        if (NeedNormalName.expanded.value) {
+            CommentMenu (comment, viewModel)
+        }
+        if(NeedNormalName.needCopyText.value) {
+            CopyText(comment = comment)
+            coroutineScope.launch {
+                delay(4000)
+                NeedNormalName.snackbarVisible.value = false
+            }
         }
     }
+    AnimatedVisibility(
+        visible = NeedNormalName.reportsBottomSheetVisible.value,
+        enter = slideInVertically(initialOffsetY = { height -> height }, animationSpec = tween()),
+        exit = slideOutVertically(targetOffsetY = { height -> height }, animationSpec = tween()),
+        content = {
+            ReportsBottomSheet(onClose = {
+                NeedNormalName.reportsBottomSheetVisible.value = false
+            })
+        }
+    )
+
 }
 
 @Composable
@@ -235,15 +268,12 @@ fun ImageComment(comment: Comment) {
 }
 
 @Composable
-fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
+fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
     val isVisible: Boolean = isUserCommentAuthor(comment)
-    var reportsBottomSheetVisible by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val context = LocalContext.current
-    val viewModel: CommentsViewModel = CommentsViewModel(context)
 
     Dialog(onDismissRequest = {
-        onChangeExpand()
+        NeedNormalName.expanded.value = false
     }) {
         Column(modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
@@ -258,7 +288,9 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
-                    .clickable(onClick = {}),
+                    .clickable(onClick = {
+                        coroutineScope.launch {}
+                        }),
                 color = md_theme_dark_onSurfaceVariant
             )
             Text(
@@ -271,6 +303,7 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
                         coroutineScope.launch {
                             viewModel.deleteTitleComment(comment.id)
                         }
+                        /*onChangeExpand()*/
                     }),
                 color = md_theme_dark_onSurfaceVariant
             )}
@@ -280,7 +313,10 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
-                    .clickable(onClick = {}),
+                    .clickable(onClick = {
+                        NeedNormalName.needCopyText.value = true
+                        NeedNormalName.expanded.value = false
+                    }),
                 color = md_theme_dark_onSurfaceVariant
             )
             Text(
@@ -289,21 +325,15 @@ fun CommentMenu(onChangeExpand: () -> Unit, comment: Comment){
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
-                    .clickable(onClick = {reportsBottomSheetVisible = true}),
+                    .clickable(onClick = {
+                        NeedNormalName.reportsBottomSheetVisible.value = true
+                        NeedNormalName.expanded.value = false
+                    }),
                 color = md_theme_dark_onSurfaceVariant
             )
         }
     }
-    AnimatedVisibility(
-        visible = reportsBottomSheetVisible,
-        enter = slideInVertically(initialOffsetY = { height -> height }, animationSpec = tween()),
-        exit = slideOutVertically(targetOffsetY = { height -> height }, animationSpec = tween()),
-        content = {
-            ReportsBottomSheet(onClose = {
-                reportsBottomSheetVisible = false
-        })
-        }
-    )
+
 }
 
 private fun isUserCommentAuthor(comment: Comment): Boolean{
@@ -312,6 +342,20 @@ private fun isUserCommentAuthor(comment: Comment): Boolean{
         res = true
     return res
 }
+
+@Composable
+private fun CopyText(comment: Comment){
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
+    clipboardManager.setText(AnnotatedString((comment.text.toString())))
+
+    if(NeedNormalName.snackbarVisible.value) {
+        Snackbar() {
+            Text(text = TextIsCopy)
+        }
+    }
+}
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -330,7 +374,7 @@ fun ReportsBottomSheet(onClose: () -> Unit) {
 
 @Composable
 fun ButtonsForReports(onClose: () -> Unit) {
-    val coroutineScope = rememberCoroutineScope()
+
 
     Column {
         Button(
