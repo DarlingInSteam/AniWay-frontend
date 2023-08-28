@@ -167,7 +167,7 @@ fun Comments(comments: List<Comment>, viewModel: ProfileViewModel) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
+                        .padding(bottom = 12.dp, end = 11.dp, start = 11.dp)
                         .fillMaxWidth()
                 ) {
                     CommentCard(comments[index])
@@ -278,8 +278,6 @@ fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
         Spacer(modifier = Modifier.height(20.dp))
 
         if (selectedTabIndex == 0) {
-
-
             Favorites(navController, viewModel)
         } else if (selectedTabIndex == 1) {
             val achievementsState = remember { mutableStateOf<List<Achievement>?>(null) }
@@ -442,7 +440,7 @@ fun Wallpaper(navController: NavController, user: User) {
         ) {
             Box {
                 AsyncImage(
-                    model = user.avatarUrl.toString(),
+                    model = user.backgroundUrl.toString(),
                     contentDescription = "avatar",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -454,7 +452,7 @@ fun Wallpaper(navController: NavController, user: User) {
         }
 
         AsyncImage(
-            model = user.backgroundUrl.toString(),
+            model = user.avatarUrl.toString(),
             contentDescription = "avatar",
             contentScale = ContentScale.Crop,
             modifier = Modifier

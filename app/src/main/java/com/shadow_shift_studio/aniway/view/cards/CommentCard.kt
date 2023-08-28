@@ -47,10 +47,12 @@ import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -134,7 +136,7 @@ fun CommentCard(comment: Comment, ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(md_theme_dark_outlineVariant)
+//                .background(md_theme_dark_outlineVariant)
         ) {
             Column(
                 modifier = Modifier
@@ -145,7 +147,7 @@ fun CommentCard(comment: Comment, ) {
             ) {
                 ImageComment(comment)
             }
-            Spacer(modifier = Modifier.width(12.dp))
+            Spacer(modifier = Modifier.width(24.dp))
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -157,14 +159,26 @@ fun CommentCard(comment: Comment, ) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.Bottom
                 ) {
-                    Text(
-                        text = comment.username.toString(),
-                        color = Color.White,
-                        fontSize = 15.sp,
-                    )
+                    Row {
+                        Text(
+                            text = comment.username.toString(),
+                            color = Color.White,
+                            fontSize = 15.sp,
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Text(
+                            text = "вчера 21:21",
+                            color = Color.Gray,
+                            fontSize = 12.sp
+                        )
+                    }
+
                     IconButton(
                         onClick = { NeedNormalName.expanded.value = true },
-                        modifier = Modifier.height(20.dp)
+                        modifier = Modifier
+                            .height(20.dp)
+                            .align(Alignment.CenterVertically),
+                        colors = IconButtonColors(containerColor = md_theme_dark_background, contentColor = Color.White, disabledContainerColor = Color.White, disabledContentColor = Color.White)
                     ) {
                         Icon(
                             Icons.Default.MoreHoriz, "",
@@ -192,39 +206,48 @@ fun CommentCard(comment: Comment, ) {
                         fontSize = 15.sp,
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
                 Row(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalArrangement = Arrangement.End,
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween, // Используем SpaceBetween для размещения элементов слева и справа
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(
-                        onClick = {/*TODO*/ },
-                        modifier = Modifier
-                            .height(35.dp)
-                            .width(35.dp)
+                    Text("Ответить", color = Color.Gray, fontSize = 14.sp, modifier = Modifier.clickable {  })
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(8.dp) // Пространство между элементами
                     ) {
-                        Icon(
-                            Icons.Outlined.ExpandLess, "",
-                            tint = md_theme_dark_onSurfaceVariant
+                        IconButton(
+                            onClick = {/*TODO*/ },
+                            modifier = Modifier
+                                .height(35.dp)
+                                .width(35.dp)
+                        ) {
+                            Icon(
+                                Icons.Outlined.ExpandLess, "",
+                                tint = md_theme_dark_onSurfaceVariant
+                            )
+                        }
+                        Text(
+                            text = "24",
+                            color = md_theme_dark_onSurfaceVariant,
+                            fontSize = 15.sp
                         )
-                    }
-                    Text(
-                        text = "24",
-                        color = md_theme_dark_onSurfaceVariant,
-                        fontSize = 15.sp
-                    )
-                    IconButton(
-                        onClick = {/*TODO*/ },
-                        modifier = Modifier
-                            .height(35.dp)
-                            .width(35.dp)
-                    ) {
-                        Icon(
-                            Icons.Outlined.ExpandMore, "",
-                            tint = md_theme_dark_onSurfaceVariant
-                        )
+                        IconButton(
+                            onClick = {/*TODO*/ },
+                            modifier = Modifier
+                                .height(35.dp)
+                                .width(35.dp)
+                        ) {
+                            Icon(
+                                Icons.Outlined.ExpandMore, "",
+                                tint = md_theme_dark_onSurfaceVariant
+                            )
+                        }
                     }
                 }
+
 
             }
         }
@@ -289,8 +312,10 @@ fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
                     .fillMaxWidth()
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
                     .clickable(onClick = {
-                        coroutineScope.launch {}
-                        }),
+                        coroutineScope.launch {
+                            NeedNormalName.expanded.value = false
+                        }
+                    }),
                 color = md_theme_dark_onSurfaceVariant
             )
             Text(
@@ -301,6 +326,7 @@ fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
                     .clickable(onClick = {
                         coroutineScope.launch {
+                            NeedNormalName.expanded.value = false
                             viewModel.deleteTitleComment(comment.id)
                         }
                         /*onChangeExpand()*/

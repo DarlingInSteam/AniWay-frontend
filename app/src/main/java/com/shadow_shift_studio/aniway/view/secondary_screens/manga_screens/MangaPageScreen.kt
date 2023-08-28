@@ -1,5 +1,6 @@
 package com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens
 
+import CommentCard
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.VisibilityThreshold
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -37,11 +39,13 @@ import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RemoveRedEye
+import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -88,10 +92,10 @@ import com.shadow_shift_studio.aniway.BookmarksReading
 import com.shadow_shift_studio.aniway.BookmarksWillRead
 import com.shadow_shift_studio.aniway.ChaptersButtonText
 import com.shadow_shift_studio.aniway.GenresButtonText
-import com.shadow_shift_studio.aniway.LastCommentButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
+import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.Title
 import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
@@ -107,8 +111,10 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_contai
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
+import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.MangaPageViewModel
 import kotlinx.coroutines.launch
+import java.net.SocketAddress
 
 @Composable
 fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel, id: Long) {
@@ -116,7 +122,26 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
     var bookmarksBottomSheetVisible by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val viewModel = MangaPageViewModel(context)
+    val viewModelComment = CommentsViewModel(context)
     viewModel.id.longValue = id
+
+    val commentsState = remember { mutableStateOf<List<Comment>?>(null) }
+
+    val commentsObserver = Observer<List<Comment>> { newComments ->
+        commentsState.value = newComments
+    }
+
+    LaunchedEffect(viewModel) {
+        viewModel.getTitleComments()
+    }
+
+    DisposableEffect(viewModel) {
+        viewModel.commentsLiveData.observeForever(commentsObserver)
+
+        onDispose {
+            viewModel.commentsLiveData.removeObserver(commentsObserver)
+        }
+    }
 
     val titleState = remember { mutableStateOf<Title?>(null) }
 
@@ -194,17 +219,27 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
 
                 ExpandableText(text = description)
 
-                Spacer(modifier = Modifier.height(11.dp))
+                Spacer(modifier = Modifier.height(50.dp))
 
-                SimilarWorks(navController)
+                titleState.value?.let { it1 -> TitleRating(viewModelComment, it1) }
 
-                Spacer(modifier = Modifier.height(11.dp))
+//                Spacer(modifier = Modifier.height(11.dp))
+//
+//                SimilarWorks(navController)
 
-                CommentsMangaPage(navController = navControllerMangaPage)
+                Spacer(modifier = Modifier.height(50.dp))
+
+                commentsState.value?.let { it1 ->
+                    CommentsMangaPage(navController = navControllerMangaPage,
+                        it1
+                    )
+                }
             }
         }
         composable("commentsScreen") {
-            titleState.value?.id?.let { it1 -> AddComment(navControllerMangaPage, it1.toLong()) }
+            titleState.value?.id?.let { it1 ->
+                AddComment(navControllerMangaPage, it1.toLong())
+            }
         }
         composable("chaptersScreen")
         {
@@ -225,6 +260,140 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
         })
         }
     )
+}
+
+@Composable
+fun TitleRating(viewModel: CommentsViewModel, title: Title) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 23.dp, end = 23.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Рейтинг", fontSize = 20.sp, modifier = Modifier.align(Alignment.Start))
+        Spacer(modifier = Modifier.height(14.dp))
+        Row() {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.align(alignment = Alignment.CenterVertically)) {
+                Text(text = "4.9", fontSize = 38.sp)
+                Text(text = "156" + " голосов", fontSize = 12.sp)
+            }
+
+            Spacer(modifier = Modifier.width(20.dp))
+
+            Column(verticalArrangement = Arrangement.Center) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "5")
+                    Spacer(modifier = Modifier.width(6.dp))
+                    LinearProgressIndicator(modifier = Modifier
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(100)))
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "4")
+                    Spacer(modifier = Modifier.width(6.dp))
+                    LinearProgressIndicator(modifier = Modifier
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(100)))
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "3")
+                    Spacer(modifier = Modifier.width(6.dp))
+                    LinearProgressIndicator(modifier = Modifier
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(100)))
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "2")
+                    Spacer(modifier = Modifier.width(6.dp))
+                    LinearProgressIndicator(modifier = Modifier
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(100)))
+                }
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(text = "1")
+                    Spacer(modifier = Modifier.width(6.dp))
+                    LinearProgressIndicator(modifier = Modifier
+                        .height(6.dp)
+                        .clip(RoundedCornerShape(100)))
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = "https://remanga.org/media/users/613697/avatar.jpg",
+                contentDescription = "avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(RoundedCornerShape(100.dp))
+            )
+
+            Spacer(modifier = Modifier.width(32.dp))
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        Icons.Outlined.StarOutline,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+
+                            }
+                    )
+                    Icon(
+                        Icons.Outlined.StarOutline,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+
+                            }
+                    )
+                    Icon(
+                        Icons.Outlined.StarOutline,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+
+                            }
+                    )
+                    Icon(
+                        Icons.Outlined.StarOutline,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+
+                            }
+                    )
+                    Icon(
+                        Icons.Outlined.StarOutline,
+                        contentDescription = "",
+                        modifier = Modifier
+                            .size(30.dp)
+                            .clickable {
+
+                            }
+                    )
+                }
+            }
+        }
+
+    }
 }
 
 @Composable
@@ -740,51 +909,48 @@ fun SimilarWorks(navController: NavController) {
 }
 
 @Composable
-fun CommentsMangaPage(navController: NavController) {
+fun CommentsMangaPage(navController: NavController, value: List<Comment>) {
     Column {
-        Row {
-            Button(
-                onClick = { navController.navigate("commentsScreen") },
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 23.dp, end = 23.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Комментарии",
+                fontSize = 20.sp,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 23.dp, end = 23.dp),
-                colors = ButtonColors(
-                    md_theme_dark_bottom_sheet_bottoms,
-                    Color.White,
-                    Color.White,
-                    Color.White
-                )
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = LastCommentButtonText,
-                        fontSize = 16.sp,
-                        color = md_theme_light_surfaceVariant
-                    )
-                    Icon(Icons.Default.ArrowRight, contentDescription = "")
-                }
-            }
+                    .align(Alignment.CenterVertically),
+                color = md_theme_light_surfaceVariant
+            )
+            Text(
+                text = "Показать все",
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate("commentsScreen")
+                    }
+                    .align(Alignment.CenterVertically),
+                fontSize = 14.sp
+            )
         }
 
-        Spacer(modifier = Modifier.height(11.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .height(450.dp),
             content = {
-                items(count = 3) { index ->
+                items(count = value.size) { index ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
-                            .padding(bottom = 12.dp, end = 23.dp, start = 23.dp)
+                            .padding(bottom = 12.dp, end = 11.dp, start = 11.dp)
                             .fillMaxWidth()
                     ) {
-//                        CommentCard()
+                        CommentCard(value[index])
                     }
                 }
             }

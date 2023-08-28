@@ -3,6 +3,7 @@ package com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens
 import CommentCard
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,16 +16,21 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material.icons.filled.Sort
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -44,8 +50,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import com.shadow_shift_studio.aniway.CatalogSortingButton
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Comment
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import kotlinx.coroutines.launch
@@ -77,14 +86,19 @@ fun AddComment(navController: NavController, titleId: Long) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            Row(modifier = Modifier.fillMaxWidth()) {
-                IconButton(onClick = { navController.popBackStack() }) {
+            Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = {
+                    navController.popBackStack()
+                }
+                ) {
                     Icon(
                         Icons.Default.ArrowBack, "", modifier = Modifier
                             .height(28.dp)
                             .width(28.dp)
                     )
                 }
+                Spacer(modifier = Modifier.width(20.dp))
+                Text(text = "Комментарии", fontSize = 20.sp)
             }
         },
         bottomBar = {
@@ -93,7 +107,7 @@ fun AddComment(navController: NavController, titleId: Long) {
         content = {
             Column(
                 modifier = Modifier
-                    .padding(top = 50.dp, bottom = 100.dp),
+                    .padding(top = 50.dp, bottom = 65.dp),
             ) {
                 commentsState.value?.let { it1 -> CommentsFullScreen(viewModel, it1) }
             }
@@ -113,7 +127,7 @@ fun CommentTextField(viewModel: CommentsViewModel) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 23.dp)
+            .background(md_theme_dark_surface_container_higher)
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -143,6 +157,12 @@ fun CommentTextField(viewModel: CommentsViewModel) {
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(
                     onDone = {focusManager.clearFocus()}
+                ),
+                placeholder = { Text(text = "Ваш комментарий", color = Color.Gray) },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
                 )
             )
             IconButton(
@@ -158,15 +178,15 @@ fun CommentTextField(viewModel: CommentsViewModel) {
                 )
             }
         }
-        Row {
-            Text(
-                text = "${viewModel.commentText.value.length} / $maxLength",
-                textAlign = TextAlign.Start,
-                color = md_theme_light_surfaceVariant,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-        }
+//        Row {
+//            Text(
+//                text = "${viewModel.commentText.value.length} / $maxLength",
+//                textAlign = TextAlign.Start,
+//                color = md_theme_light_surfaceVariant,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//            )
+//        }
     }
 }
 
@@ -191,7 +211,7 @@ fun CommentsFullScreen(viewModel: CommentsViewModel, comments: List<Comment>) {
             items(count = comments.size) { index ->
                 Row(
                     modifier = Modifier
-                        .padding(end = 23.dp, start = 23.dp)
+                        .padding(end = 11.dp, start = 11.dp)
                         .fillMaxWidth()
                 ) {
                     CommentCard(comments[index])
