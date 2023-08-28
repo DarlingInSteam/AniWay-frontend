@@ -1,15 +1,12 @@
 package com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens
 
 import CommentCard
+import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.VisibilityThreshold
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,34 +17,41 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.ArrowRight
 import androidx.compose.material.icons.filled.AutoStories
 import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkAdd
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.RemoveRedEye
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.StarOutline
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -70,8 +74,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextLayoutResult
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
@@ -84,14 +92,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.shadow_shift_studio.aniway.AddBookmarkButtonText
 import com.shadow_shift_studio.aniway.BookmarksAbandoned
 import com.shadow_shift_studio.aniway.BookmarksAlreadyRead
 import com.shadow_shift_studio.aniway.BookmarksFavorite
 import com.shadow_shift_studio.aniway.BookmarksReading
 import com.shadow_shift_studio.aniway.BookmarksWillRead
 import com.shadow_shift_studio.aniway.ChaptersButtonText
-import com.shadow_shift_studio.aniway.GenresButtonText
 import com.shadow_shift_studio.aniway.ReadButtonText
 import com.shadow_shift_studio.aniway.SimilarWorksText
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
@@ -107,15 +113,15 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_secondaryContainer
-import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.MangaPageViewModel
 import kotlinx.coroutines.launch
-import java.net.SocketAddress
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewModel, id: Long) {
     val navControllerMangaPage = rememberNavController()
@@ -163,76 +169,80 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
 
     NavHost(navController = navControllerMangaPage, startDestination = "main") {
         composable("main") {
-            Navbar.setNavbarVisible(true)
-
-            val scrollState = rememberScrollState()
-            var description =
-                titleState.value?.description.toString()
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(scrollState)
+            Scaffold(
+                topBar = {
+                    TopMangaBar(navController = navController, viewModelBottom, viewModel, changeBookmarksSheetVisible = { bookmarksBottomSheetVisible = true })
+                }
             ) {
+                val scrollState = rememberScrollState()
+                var description =
+                    titleState.value?.description.toString()
 
-                Box(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
                 ) {
 
-                    Row(modifier = Modifier) {
-                        GradientImage(
-                            startColor = Color.Transparent,
-                            endColor = md_theme_dark_background
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Row(modifier = Modifier) {
+                            GradientImage(
+                                startColor = Color.Transparent,
+                                endColor = md_theme_dark_background
+                            )
+                        }
+                        Spacer(
+                            modifier = Modifier
+                                .height(100.dp)
                         )
-                    }
-                    Row {
-                        TopMangaBar(navController = navController, viewModelBottom, viewModel, changeBookmarksSheetVisible = { bookmarksBottomSheetVisible = true })
+                        Row(
+                            modifier = Modifier
+                                .padding(top = 120.dp)
+                        ) {
+                            titleState.value?.let { it1 -> MangaInfo(it1) }
+                        }
                     }
                     Spacer(
-                        modifier = Modifier
-                            .height(100.dp)
+                        modifier = Modifier.height(11.dp)
                     )
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 120.dp)
-                    ) {
-                        titleState.value?.let { it1 -> MangaInfo(it1) }
+
+                    MangaActionsButtons(navControllerMangaPage)
+
+                    Spacer(
+                        modifier = Modifier.height(22.dp)
+                    )
+
+                    titleState.value?.genres?.let { it1 ->
+                        Genres(
+                            it1
+                        )
                     }
-                }
-                Spacer(
-                    modifier = Modifier.height(11.dp)
-                )
+                    Spacer(modifier = Modifier.height(22.dp))
 
-                MangaActionsButtons(navControllerMangaPage)
+                    ExpandableText(text = description)
 
-                Spacer(
-                    modifier = Modifier.height(11.dp)
-                )
+                    Spacer(modifier = Modifier.height(50.dp))
 
-                titleState.value?.genres?.let { it1 ->
-                    Genres(
-                        it1
-                    )
-                }
-                Spacer(modifier = Modifier.height(11.dp))
-
-                ExpandableText(text = description)
-
-                Spacer(modifier = Modifier.height(50.dp))
-
-                titleState.value?.let { it1 -> TitleRating(viewModelComment, it1) }
+                    titleState.value?.let { it1 -> TitleRating(viewModelComment, it1) }
 
 //                Spacer(modifier = Modifier.height(11.dp))
 //
 //                SimilarWorks(navController)
 
-                Spacer(modifier = Modifier.height(50.dp))
+                    Spacer(modifier = Modifier.height(50.dp))
 
-                commentsState.value?.let { it1 ->
-                    CommentsMangaPage(navController = navControllerMangaPage,
-                        it1
-                    )
+                    commentsState.value?.let { it1 ->
+                        CommentsMangaPage(navController = navControllerMangaPage,
+                            it1
+                        )
+                    }
+                    
+                    Spacer(modifier = Modifier.height(15.dp))
+                    
+                    CommentTextField(navControllerMangaPage)
                 }
             }
         }
@@ -247,7 +257,6 @@ fun MangaPage(navController: NavController, viewModelBottom: BottomNavBarViewMod
         }
         composable("ReadScreen")
         {
-            Navbar.setNavbarVisible(false)
             ReadScreen(navControllerMangaPage, viewModelBottom)
         }
     }
@@ -472,22 +481,18 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
             onClick = { changeBookmarksSheetVisible() },
             shape = RoundedCornerShape(28.dp),
             modifier = Modifier
-                .height(40.dp),
+                .height(40.dp)
+                .width(60.dp)
+                .background(Color.Transparent)
+                .clip(RoundedCornerShape(100)),
             containerColor = Color.White,
             contentColor = md_theme_dark_background
         ) {
             Icon(
-                Icons.Default.Add, "",
+                Icons.Default.BookmarkAdd, "",
                 modifier = Modifier
                     .width(20.dp)
                     .height(20.dp)
-            )
-            Spacer(
-                modifier = Modifier
-                    .width(8.dp)
-            )
-            Text(
-                text = AddBookmarkButtonText,
             )
         }
     }
@@ -626,7 +631,9 @@ fun MangaActionsButtons(navController: NavController) {
         horizontalArrangement = Arrangement.Center
     ) {
         ExtendedFloatingActionButton(
-            onClick = { navController.navigate("chaptersScreen") },
+            onClick = {
+                navController.navigate("chaptersScreen")
+            },
             modifier = Modifier
                 .width(115.dp)
                 .background(Color.Transparent)
@@ -652,7 +659,10 @@ fun MangaActionsButtons(navController: NavController) {
         }
         Spacer(modifier = Modifier.width(8.dp))
         ExtendedFloatingActionButton(
-            onClick = { navController.navigate("ReadScreen") },
+            onClick = {
+                Navbar.setNavbarVisible(false)
+                navController.navigate("ReadScreen")
+            },
             modifier = Modifier
                 .width(115.dp)
                 .background(Color.Transparent)
@@ -691,66 +701,25 @@ fun Genres(genresList: List<Genre>) {
             .fillMaxWidth()
             .padding(start = 23.dp, end = 23.dp)
     ) {
-        Button(
-            onClick = { isGenreExpanded.value = !isGenreExpanded.value },
-            modifier = Modifier
-                .fillMaxWidth(),
-            colors = ButtonColors(
-                md_theme_dark_bottom_sheet_bottoms,
-                Color.White,
-                Color.White,
-                Color.White
-            )
+        ChipVerticalGrid(
+            spacing = 7.dp,
+            modifier = Modifier,
+            onRowChange = { newCurrentRow ->
+                currentRow = newCurrentRow
+                if (currentRow == 2) expended = true
+            }
         ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+            genresList.forEach { word ->
                 Text(
-                    text = GenresButtonText,
-                    fontSize = 16.sp,
-                    color = md_theme_light_surfaceVariant
+                    word.name,
+                    color = Color.White,
+                    modifier = Modifier
+                        .clickable { },
+                    textDecoration = TextDecoration.Underline,
+                    fontSize = 14.sp
                 )
-                if (!isGenreExpanded.value) Icon(Icons.Default.ArrowRight, contentDescription = "")
-                else Icon(Icons.Default.ArrowDropDown, contentDescription = "")
             }
         }
-        AnimatedVisibility(
-            visible = isGenreExpanded.value,
-            enter = expandVertically(
-                spring(
-                    stiffness = Spring.StiffnessLow,
-                    visibilityThreshold = IntSize.VisibilityThreshold
-                )
-            ),
-            exit = shrinkVertically(),
-            content = {
-                ChipVerticalGrid(
-                    spacing = 7.dp,
-                    modifier = Modifier
-                        .padding(7.dp),
-                    onRowChange = { newCurrentRow ->
-                        currentRow = newCurrentRow
-                        if (currentRow == 2) expended = true
-                    }
-                ) {
-                    genresList.forEach { word ->
-                        Text(
-                            word.name,
-                            color = md_theme_dark_onSurface,
-                            modifier = Modifier
-                                .background(
-                                    color = md_theme_dark_surface_container_high,
-                                    shape = RoundedCornerShape(20)
-                                )
-                                .padding(vertical = 3.dp, horizontal = 5.dp)
-                                .clickable { }
-                        )
-                    }
-                }
-            }
-        )
     }
 }
 
@@ -774,7 +743,7 @@ fun ChipVerticalGrid(
 
             if (currentOrigin.x > 0f && currentOrigin.x + placeable.width > constraints.maxWidth) {
                 currentRow += 1
-                onRowChange(currentRow) // Вызываем функцию высшего порядка для передачи текущего значения currentRow
+                onRowChange(currentRow)
 
                 currentOrigin =
                     currentOrigin.copy(x = 0, y = currentOrigin.y + placeable.height + spacingValue)
@@ -929,6 +898,7 @@ fun CommentsMangaPage(navController: NavController, value: List<Comment>) {
                 text = "Показать все",
                 modifier = Modifier
                     .clickable {
+                        Navbar.setNavbarVisible(false)
                         navController.navigate("commentsScreen")
                     }
                     .align(Alignment.CenterVertically),
@@ -941,7 +911,8 @@ fun CommentsMangaPage(navController: NavController, value: List<Comment>) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .height(450.dp),
+                .heightIn(0.dp, 900.dp),
+            userScrollEnabled = false,
             content = {
                 items(count = value.size) { index ->
                     Row(
@@ -1086,12 +1057,71 @@ fun ButtonsForBookmarks(viewModel: MangaPageViewModel, onClose: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CommentTextField(navController: NavController) {
+//    var comment by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+    val focusManager = LocalFocusManager.current
+    val bringIntoViewRequester = BringIntoViewRequester()
 
-
-
-
-
-
-
-
-
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(md_theme_dark_surface_container_higher)
+            .clickable {
+                Navbar.setNavbarVisible(false)
+                navController.navigate("commentsScreen")
+            }
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextField(
+                modifier = Modifier
+                    .height(60.dp)
+                    .weight(1f),
+                readOnly = true,
+                value = "",
+                enabled = false,
+                onValueChange = {  },
+                textStyle = TextStyle(
+                    color = Color.White,
+                    fontSize = 16.sp,
+                    textAlign = TextAlign.Start
+                ),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                keyboardActions = KeyboardActions(
+                    onDone = {focusManager.clearFocus()}
+                ),
+                placeholder = { Text(text = "Ваш комментарий", color = Color.Gray) },
+                colors = TextFieldDefaults.colors(
+                    focusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                ),
+            )
+            IconButton(
+                onClick = {
+                    Navbar.setNavbarVisible(false)
+                    navController.navigate("commentsScreen")
+                }
+            ) {
+                Icon(
+                    Icons.Default.Send, ""
+                )
+            }
+        }
+//        Row {
+//            Text(
+//                text = "${viewModel.commentText.value.length} / $maxLength",
+//                textAlign = TextAlign.Start,
+//                color = md_theme_light_surfaceVariant,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//            )
+//        }
+    }
+}

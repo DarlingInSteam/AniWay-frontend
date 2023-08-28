@@ -16,20 +16,16 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.filled.Sort
-import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -50,12 +46,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import com.shadow_shift_studio.aniway.CatalogSortingButton
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Comment
-import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
-import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import kotlinx.coroutines.launch
 
@@ -88,6 +81,7 @@ fun AddComment(navController: NavController, titleId: Long) {
         topBar = {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = {
+                    Navbar.setNavbarVisible(true)
                     navController.popBackStack()
                 }
                 ) {
@@ -144,7 +138,6 @@ fun CommentTextField(viewModel: CommentsViewModel) {
                                 bringIntoViewRequester.bringIntoView()
                             }
                         }
-                        Navbar.setNavbarVisible(!event.isFocused)
                     },
                 value = viewModel.commentText.value,
                 enabled = true,
@@ -167,6 +160,9 @@ fun CommentTextField(viewModel: CommentsViewModel) {
             )
             IconButton(
                 onClick = {
+                    viewModel.page = 0
+                    viewModel.commentsLiveData.value = listOf()
+
                     coroutineScope.launch {
                         viewModel.createTitleComment()
                         viewModel.getTitleComments()
