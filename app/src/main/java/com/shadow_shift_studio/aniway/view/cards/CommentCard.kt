@@ -3,6 +3,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,16 +19,21 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -34,39 +41,55 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.CallForBullying
+import com.shadow_shift_studio.aniway.Cancel
 import com.shadow_shift_studio.aniway.Complain
 import com.shadow_shift_studio.aniway.CopyComment
 import com.shadow_shift_studio.aniway.DeleteComment
 import com.shadow_shift_studio.aniway.EditComment
 import com.shadow_shift_studio.aniway.FakeAccount
 import com.shadow_shift_studio.aniway.Offense
+import com.shadow_shift_studio.aniway.Save
 import com.shadow_shift_studio.aniway.Spam
 import com.shadow_shift_studio.aniway.Spoiler
 import com.shadow_shift_studio.aniway.TextIsCopy
 import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.data.singleton_object.NeedNormalName
 import com.shadow_shift_studio.aniway.model.entity.Comment
+import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.CommentTextField
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
@@ -135,7 +158,7 @@ fun CommentCard(comment: Comment) {
                     }
 
                     IconButton(
-                        onClick = { NeedNormalName.expanded.value = true },
+                        onClick = { NeedNormalName.IsCommentMenuVisible.value = true },
                         modifier = Modifier
                             .height(20.dp)
                             .align(Alignment.CenterVertically),
@@ -212,8 +235,11 @@ fun CommentCard(comment: Comment) {
 
             }
         }
-        if (NeedNormalName.expanded.value) {
+        if (NeedNormalName.IsCommentMenuVisible.value) {
             CommentMenu (comment, viewModel)
+        }
+        if(NeedNormalName.IsEditCommentVisible.value){
+            EditComment(viewModel = viewModel, comment)
         }
         if(NeedNormalName.needCopyText.value) {
             CopyText(comment = comment)
@@ -233,6 +259,87 @@ fun CommentCard(comment: Comment) {
             })
         }
     )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun EditComment(viewModel: CommentsViewModel, comment:Comment){
+    val coroutineScope = rememberCoroutineScope()
+    val maxLength = 350
+    val focusManager = LocalFocusManager.current
+    val bringIntoViewRequester = BringIntoViewRequester()
+    var newCommentText by remember { mutableStateOf(comment.text.toString()) }
+
+    Dialog(onDismissRequest = {
+        NeedNormalName.IsEditCommentVisible.value = false
+    }) {
+        Column(
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .background(md_theme_dark_surface_container_higher)
+                .fillMaxWidth()
+        )
+        {
+            Text(
+                EditComment,
+                fontSize = 18.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 23.dp, end = 23.dp, top = 10.dp),
+                color = md_theme_dark_onSurfaceVariant
+            )
+            Row() {
+                TextField(
+                    modifier = Modifier
+                        .padding(start = 23.dp, end = 23.dp)
+                        .onFocusEvent { event ->
+                            if (event.isFocused) {
+                                coroutineScope.launch {
+                                    bringIntoViewRequester.bringIntoView()
+                                }
+                            }
+                        },
+                    maxLines = 3,
+                    value = newCommentText,
+                    enabled = true,
+                    onValueChange = { if (newCommentText.length <= maxLength) newCommentText = it },
+                    textStyle = TextStyle(
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        textAlign = TextAlign.Start
+                    ),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(
+                        onDone = { focusManager.clearFocus() }
+                    ),
+                    placeholder = { Text(text = "Ваш комментарий", color = Color.Gray) }
+                )
+            }
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .padding(top=10.dp,bottom = 10.dp),
+                horizontalArrangement = Arrangement.Center){
+                Button(
+                    onClick = {NeedNormalName.IsEditCommentVisible.value = false },
+                    border = BorderStroke(1.dp, md_theme_dark_primary),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = md_theme_dark_primary)
+                ) {
+                    Text(text= Cancel)
+                }
+                Spacer(modifier = Modifier.width(15.dp))
+                Button(onClick = {
+                    viewModel.commentsLiveData.value = listOf()
+                    coroutineScope.launch {
+                        viewModel.updateTitleComment(comment.id, newCommentText)
+                        viewModel.getTitleComments()
+                        NeedNormalName.IsEditCommentVisible.value = false
+                    }
+                }) {
+                    Text(text = Save)
+                }
+            }
+        }
+    }
 }
 
 @Composable
@@ -321,7 +428,7 @@ fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
     val coroutineScope = rememberCoroutineScope()
 
     Dialog(onDismissRequest = {
-        NeedNormalName.expanded.value = false
+        NeedNormalName.IsCommentMenuVisible.value = false
     }) {
         Column(modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
@@ -338,7 +445,8 @@ fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
                     .clickable(onClick = {
                         coroutineScope.launch {
-                            NeedNormalName.expanded.value = false
+                            NeedNormalName.IsEditCommentVisible.value = true
+                            NeedNormalName.IsCommentMenuVisible.value = false
                         }
                     }),
                 color = md_theme_dark_onSurfaceVariant
@@ -351,10 +459,9 @@ fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
                     .clickable(onClick = {
                         coroutineScope.launch {
-                            NeedNormalName.expanded.value = false
+                            NeedNormalName.IsCommentMenuVisible.value = false
                             viewModel.deleteTitleComment(comment.id)
                         }
-                        /*onChangeExpand()*/
                     }),
                 color = md_theme_dark_onSurfaceVariant
             )}
@@ -366,7 +473,7 @@ fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
                     .clickable(onClick = {
                         NeedNormalName.needCopyText.value = true
-                        NeedNormalName.expanded.value = false
+                        NeedNormalName.IsCommentMenuVisible.value = false
                     }),
                 color = md_theme_dark_onSurfaceVariant
             )
@@ -378,7 +485,7 @@ fun CommentMenu(comment: Comment, viewModel: CommentsViewModel){
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp, bottom = 10.dp)
                     .clickable(onClick = {
                         NeedNormalName.reportsBottomSheetVisible.value = true
-                        NeedNormalName.expanded.value = false
+                        NeedNormalName.IsCommentMenuVisible.value = false
                     }),
                 color = md_theme_dark_onSurfaceVariant
             )
