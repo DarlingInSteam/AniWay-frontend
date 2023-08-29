@@ -162,9 +162,11 @@ fun CommentTextField(viewModel: CommentsViewModel) {
                 onClick = {
                     viewModel.page = 0
                     viewModel.commentsLiveData.value = listOf()
+                    focusManager.clearFocus()
 
                     coroutineScope.launch {
                         viewModel.createTitleComment()
+                        viewModel.commentText.value = ""
                         viewModel.getTitleComments()
                     }
                 }

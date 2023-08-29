@@ -1,6 +1,4 @@
 import android.annotation.SuppressLint
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInVertically
@@ -9,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,71 +19,38 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandCircleDown
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.outlined.ArrowCircleDown
-import androidx.compose.material.icons.outlined.ArrowCircleUp
-import androidx.compose.material.icons.outlined.ExpandCircleDown
 import androidx.compose.material.icons.outlined.ExpandLess
 import androidx.compose.material.icons.outlined.ExpandMore
-import androidx.compose.material.icons.outlined.MoreHoriz
-import androidx.compose.material.icons.outlined.MoreVert
-import androidx.compose.material.icons.rounded.MoreHoriz
-import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
-import com.shadow_shift_studio.aniway.BookmarksAbandoned
-import com.shadow_shift_studio.aniway.BookmarksAlreadyRead
-import com.shadow_shift_studio.aniway.BookmarksFavorite
-import com.shadow_shift_studio.aniway.BookmarksReading
-import com.shadow_shift_studio.aniway.BookmarksWillRead
 import com.shadow_shift_studio.aniway.CallForBullying
 import com.shadow_shift_studio.aniway.Complain
 import com.shadow_shift_studio.aniway.CopyComment
@@ -100,25 +64,23 @@ import com.shadow_shift_studio.aniway.TextIsCopy
 import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.data.singleton_object.NeedNormalName
 import com.shadow_shift_studio.aniway.model.entity.Comment
-import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
-import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.BookmarksBottomSheet
-import com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens.CommentTextField
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
-import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_outlineVariant
-import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_high
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_surfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.surface_container_low
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
-import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.MangaPageViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun CommentCard(comment: Comment, ) {
+fun CommentCard(comment: Comment) {
     val context = LocalContext.current
     val viewModel: CommentsViewModel = CommentsViewModel(context)
     val coroutineScope = rememberCoroutineScope()
@@ -167,7 +129,7 @@ fun CommentCard(comment: Comment, ) {
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "вчера 21:21",
+                            text = formatCommentTimestamp(createdAt = comment.createdAt!!),
                             color = Color.Gray,
                             fontSize = 12.sp
                         )
@@ -272,8 +234,72 @@ fun CommentCard(comment: Comment, ) {
             })
         }
     )
-
 }
+
+@Composable
+fun formatCommentTimestamp(createdAt: Date): String {
+    val currentTime = Calendar.getInstance().time
+    val commentTime = Calendar.getInstance()
+    commentTime.time = createdAt
+
+    val now = currentTime.time
+    val differenceInMillis = now - createdAt.time
+
+    val seconds = differenceInMillis / 1000
+    val minutes = seconds / 60
+    val hours = minutes / 60
+
+    val dayMonthFormat = SimpleDateFormat("dd MMM", Locale.getDefault())
+    val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
+
+    val monthFormat = SimpleDateFormat("MMM", Locale.getDefault())
+    val monthName = monthFormat.format(createdAt)
+
+    val monthNames = mapOf(
+        "Jan" to "янв.",
+        "Feb" to "фев.",
+        "Mar" to "мар.",
+        "Apr" to "апр.",
+        "May" to "мая",
+        "Jun" to "июн.",
+        "Jul" to "июл.",
+        "Aug" to "авг.",
+        "Sep" to "сен.",
+        "Oct" to "окт.",
+        "Nov" to "ноя.",
+        "Dec" to "дек."
+    )
+
+    val formattedMonthName = monthNames[monthName] ?: monthName
+
+    return when {
+        seconds < 60 -> "$seconds сек назад"
+        minutes < 60 -> "$minutes мин назад"
+        createdAt.isSameDay(currentTime) -> "сегодня в ${timeFormat.format(createdAt)}"
+        createdAt.isYesterday(currentTime) -> "вчера в ${timeFormat.format(createdAt)}"
+        else -> "${dayMonthFormat.format(createdAt)} в ${timeFormat.format(createdAt)}"
+    }.replace(monthName, formattedMonthName)
+}
+
+fun Date.isSameDay(otherDate: Date): Boolean {
+    val cal1 = Calendar.getInstance()
+    cal1.time = this
+    val cal2 = Calendar.getInstance()
+    cal2.time = otherDate
+    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+}
+
+fun Date.isYesterday(otherDate: Date): Boolean {
+    val cal1 = Calendar.getInstance()
+    cal1.time = this
+    cal1.add(Calendar.DAY_OF_YEAR, 1)
+    val cal2 = Calendar.getInstance()
+    cal2.time = otherDate
+    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+            cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
+}
+
 
 @Composable
 fun ImageComment(comment: Comment) {
@@ -400,8 +426,6 @@ fun ReportsBottomSheet(onClose: () -> Unit) {
 
 @Composable
 fun ButtonsForReports(onClose: () -> Unit) {
-
-
     Column {
         Button(
             shape = RoundedCornerShape(7.dp),
