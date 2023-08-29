@@ -39,11 +39,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -244,25 +244,40 @@ fun Favorites(navController: NavController, viewModel: ProfileViewModel) {
 
 @Composable
 fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
-    val tabTitles = listOf("Любимое", "Ачивки", "Комментарии", "Баланс")
-    var selectedTabIndex by remember { mutableStateOf(0) }
 
-    Column(Modifier.fillMaxWidth()) {
+
+    Column(Modifier
+        .fillMaxWidth()
+        .pointerInput(Unit) {
+            detectSwipe(
+                onSwipeLeft = {
+                    if (viewModel.selectedTabIndex.value < viewModel.tabTitles.size - 1) {
+                        viewModel.selectedTabIndex.value += 1
+                    }
+                },
+                onSwipeRight = {
+                    if (viewModel.selectedTabIndex.value > 0) {
+                        viewModel.selectedTabIndex.value -= 1
+                    }
+                }
+            )
+        }
+    ) {
         TabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = viewModel.selectedTabIndex.value,
             modifier = Modifier
                 .height(60.dp),
             containerColor = md_theme_dark_background,
             divider = ({}),
             contentColor = md_theme_dark_onSurface
         ) {
-            tabTitles.forEachIndexed { index, title ->
+            viewModel.tabTitles.forEachIndexed { index, title ->
                 Tab(
                     selected = false,
                     modifier = Modifier
                         .height(60.dp),
                     onClick = {
-                        selectedTabIndex = index
+                        viewModel.selectedTabIndex.value = index
                     }
                 ) {
                     Text(
@@ -277,9 +292,9 @@ fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        if (selectedTabIndex == 0) {
+        if (viewModel.selectedTabIndex.value == 0) {
             Favorites(navController, viewModel)
-        } else if (selectedTabIndex == 1) {
+        } else if (viewModel.selectedTabIndex.value == 1) {
             val achievementsState = remember { mutableStateOf<List<Achievement>?>(null) }
 
             val achievementObserver = Observer<List<Achievement>> { newAchievements ->
@@ -300,7 +315,7 @@ fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
 
             achievementsState.value?.let { Achievements(it) }
 
-        } else if (selectedTabIndex == 2) {
+        } else if (viewModel.selectedTabIndex.value == 2) {
             val commentState = remember { mutableStateOf<List<Comment>?>(null) }
 
             val commentsObserver = Observer<List<Comment>> { newComments ->
@@ -320,7 +335,7 @@ fun UserTab(navController: NavController, viewModel: ProfileViewModel) {
             }
 
             commentState.value?.let { Comments(it, viewModel) }
-        } else if (selectedTabIndex == 3) {
+        } else if (viewModel.selectedTabIndex.value == 3) {
             Balance()
         }
     }

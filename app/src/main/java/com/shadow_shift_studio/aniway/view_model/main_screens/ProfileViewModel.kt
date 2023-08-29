@@ -1,6 +1,7 @@
 package com.shadow_shift_studio.aniway.view_model.main_screens
 
 import android.content.Context
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +13,6 @@ import com.shadow_shift_studio.aniway.domain.use_case.CommentsUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.TitleUseCase
 import com.shadow_shift_studio.aniway.domain.use_case.UserUseCase
 import com.shadow_shift_studio.aniway.model.entity.Achievement
-import com.shadow_shift_studio.aniway.model.entity.Badge
 import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
 import com.shadow_shift_studio.aniway.model.entity.User
@@ -24,6 +24,8 @@ class ProfileViewModel(private val context: Context) : ViewModel() {
     val userCommentsLiveData: MutableLiveData<List<Comment>> = MutableLiveData()
     val userAchievementsLiveData: MutableLiveData<List<Achievement>> = MutableLiveData()
     val userTitlesLiveData: MutableLiveData<List<TitlePreview>> = MutableLiveData()
+    val tabTitles = listOf("Любимое", "Ачивки", "Комментарии", "Баланс")
+    var selectedTabIndex = mutableStateOf(0)
     var id: Long = 0
     var page = 0
 

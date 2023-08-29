@@ -40,6 +40,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Observer
@@ -75,6 +76,22 @@ fun MyScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .pointerInput(Unit) {
+                detectSwipe(
+                    onSwipeLeft = {
+                        if (viewModel.selectedTabIndex.value < viewModel.tabTitles.size - 1) {
+                            viewModel.selectedTabIndex.value += 1
+                            selectedTabTitle = viewModel.tabTitles[viewModel.selectedTabIndex.value]
+                        }
+                    },
+                    onSwipeRight = {
+                        if (viewModel.selectedTabIndex.value > 0) {
+                            viewModel.selectedTabIndex.value -= 1
+                            selectedTabTitle = viewModel.tabTitles[viewModel.selectedTabIndex.value]
+                        }
+                    }
+                )
+            }
     ) {
         NavHost(navController = navController, startDestination = "main") {
             composable("main") {
@@ -124,7 +141,7 @@ fun MyScreen(
                                 viewModel.getTitles(ReadingStatus.POSTPONED)
                             }
                         }
-                    })
+                    }, viewModel)
 
                     Spacer(modifier = Modifier.height(12.dp))
                     MyScreenCards(navController, scrollState, viewModel)
@@ -192,6 +209,7 @@ fun MyScreenSearchBar(selectedTabTitle: String) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = horizontalPadding, vertical = verticalPadding)
+
     ) {
         androidx.compose.material3.SearchBar(
             modifier = Modifier.fillMaxWidth(),
@@ -233,27 +251,24 @@ fun MyScreenSearchBar(selectedTabTitle: String) {
 }
 
 @Composable
-fun TabMyScreen(onTabSelected: (String) -> Unit) {
-    val tabTitles = listOf("Читаю", "Буду читать", "Прочитано", "Брошено")
-    var selectedTabIndex by remember { mutableStateOf(0) }
-
+fun TabMyScreen(onTabSelected: (String) -> Unit, viewModel: MyViewModel) {
     Column(Modifier.fillMaxWidth()) {
         TabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = viewModel.selectedTabIndex.intValue,
             modifier = Modifier
                 .height(60.dp),
             containerColor = md_theme_dark_background,
             divider = ({}),
             contentColor = md_theme_dark_onSurface
         ) {
-            tabTitles.forEachIndexed { index, title ->
-                onTabSelected(tabTitles[selectedTabIndex])
+            viewModel.tabTitles.forEachIndexed { index, title ->
+                onTabSelected(viewModel.tabTitles[viewModel.selectedTabIndex.intValue])
                 Tab(
                     selected = false,
                     modifier = Modifier
                         .height(60.dp),
                     onClick = {
-                        selectedTabIndex = index
+                        viewModel.selectedTabIndex.intValue = index
                     }
                 ) {
                     Text(

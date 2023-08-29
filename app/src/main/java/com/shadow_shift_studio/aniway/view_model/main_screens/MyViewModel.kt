@@ -14,6 +14,9 @@ class MyViewModel(private val context: Context) : ViewModel() {
     private val _firstVisibleItemIndex = mutableIntStateOf(0)
     private val _firstVisibleItemScrollOffset = mutableIntStateOf(0)
     val titlesLiveData: MutableLiveData<List<TitlePreview>> = MutableLiveData()
+    val tabTitles = listOf("Читаю", "Буду читать", "Прочитано", "Брошено")
+    var selectedTabIndex  = mutableIntStateOf(0)
+
     var id: Long = 0
 
     var firstVisibleItemIndex = _firstVisibleItemIndex
