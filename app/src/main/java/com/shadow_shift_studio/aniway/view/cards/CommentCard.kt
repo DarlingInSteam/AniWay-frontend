@@ -98,7 +98,6 @@ fun CommentCard(comment: Comment) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-//                .background(md_theme_dark_outlineVariant)
         ) {
             Column(
                 modifier = Modifier

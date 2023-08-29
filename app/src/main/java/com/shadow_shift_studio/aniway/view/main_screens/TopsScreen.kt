@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.shadow_shift_studio.aniway.view.main_screens
 
 import androidx.compose.animation.AnimatedVisibility
@@ -8,6 +10,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,13 +29,17 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -46,6 +53,39 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurface
 import com.shadow_shift_studio.aniway.view_model.bottomnav.BottomNavBarViewModel
 import com.shadow_shift_studio.aniway.view_model.main_screens.TopsViewModel
+import java.lang.Math.abs
+
+suspend fun PointerInputScope.detectSwipe(
+    swipeState: MutableIntState = mutableIntStateOf(-1),
+    onSwipeLeft: () -> Unit = {},
+    onSwipeRight: () -> Unit = {},
+    onSwipeUp: () -> Unit = {},
+    onSwipeDown: () -> Unit = {},
+) = detectDragGestures(
+    onDrag = { change, dragAmount ->
+        change.consume()
+        val (x, y) = dragAmount
+        if (abs(x) > abs(y)) {
+            when {
+                x > 0 -> swipeState.intValue = 0
+                x < 0 -> swipeState.intValue = 1
+            }
+        } else {
+            when {
+                y > 0 -> swipeState.intValue = 2
+                y < 0 -> swipeState.intValue = 3
+            }
+        }
+    },
+    onDragEnd = {
+        when (swipeState.intValue) {
+            0 -> onSwipeRight()
+            1 -> onSwipeLeft()
+            2 -> onSwipeDown()
+            3 -> onSwipeUp()
+        }
+    }
+)
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -61,7 +101,32 @@ fun TopsScreen(
 
     Column(
         modifier = Modifier
-            .fillMaxSize(),
+            .fillMaxSize()
+//            .pointerInput(Unit) {
+//                detectHorizontalDragGestures { _, dragAmount ->
+//                    if (dragAmount.dp > 100.dp) {
+//                        // Swipe from left to right
+
+//                    } else if (dragAmount.dp < (-100).dp) {
+//                        // Swipe from right to left
+
+//                    }
+//                }
+//            }
+            .pointerInput(Unit) {
+                    detectSwipe(
+                        onSwipeLeft = {
+                            if (viewModel.selectedTabIndex.value < viewModel.tabTitles.size - 1) {
+                                viewModel.selectedTabIndex.value += 1
+                            }
+                        },
+                        onSwipeRight = {
+                            if (viewModel.selectedTabIndex.value > 0) {
+                                viewModel.selectedTabIndex.value -= 1
+                            }
+                        }
+                    )
+            },
     ) {
         Column(Modifier.fillMaxSize()) {
             NavHost(
@@ -99,11 +164,11 @@ fun TopsScreen(
                             ),
                             exit = shrinkVertically(),
                         ) {
-                            TabScreen()
+                            TabScreen(viewModel)
                         }
 
                         TopCheckBox()
-                        TopCards(navControllerTop, scrollState)
+                        TopCards(navControllerTop, scrollState, viewModel)
                     }
                 }
 
@@ -118,9 +183,10 @@ fun TopsScreen(
 }
 
 @Composable
-fun TopCards(navController: NavController, scrollState: LazyListState) {
+fun TopCards(navController: NavController, scrollState: LazyListState, viewModel: TopsViewModel) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            ,
         state = scrollState,
         content = {
             items(count = 25) { index ->
@@ -145,27 +211,27 @@ fun TopCards(navController: NavController, scrollState: LazyListState) {
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TabScreen() {
-    val tabTitles = listOf("Новинки", "Топ месяца", "Топ недели", "Топ дня")
-    var selectedTabIndex by remember { mutableStateOf(0) }
-
-    Column(Modifier.fillMaxWidth()) {
+fun TabScreen(viewModel: TopsViewModel) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
         TabRow(
-            selectedTabIndex = selectedTabIndex,
+            selectedTabIndex = viewModel.selectedTabIndex.value,
             modifier = Modifier
                 .height(60.dp),
             containerColor = md_theme_dark_background,
             divider = ({}),
             contentColor = md_theme_dark_onSurface
         ) {
-            tabTitles.forEachIndexed { index, title ->
+            viewModel.tabTitles.forEachIndexed { index, title ->
                 Tab(
-                    selected = false,
+                    selected = viewModel.selectedTabIndex.value == index,
                     modifier = Modifier
                         .height(60.dp),
                     onClick = {
-                        selectedTabIndex = index
+                        viewModel.selectedTabIndex.value = index
                     }
                 ) {
                     Text(
@@ -177,6 +243,13 @@ fun TabScreen() {
         }
     }
 }
+
+@Composable
+fun TabContent(title: String) {
+    // Implement your content for each tab here
+    Text(text = title, modifier = Modifier.padding(16.dp))
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
