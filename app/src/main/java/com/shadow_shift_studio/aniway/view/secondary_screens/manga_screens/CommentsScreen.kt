@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -48,6 +49,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Comment
+import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import kotlinx.coroutines.launch
@@ -117,7 +119,6 @@ fun CommentTextField(viewModel: CommentsViewModel) {
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = BringIntoViewRequester()
-
     Column(
         modifier = Modifier
             .fillMaxWidth()

@@ -23,4 +23,6 @@ class ProfileViewModel(private val context: Context): ViewModel() {
             userBadges.value = badges
         }.join()
     }
+
+
 }

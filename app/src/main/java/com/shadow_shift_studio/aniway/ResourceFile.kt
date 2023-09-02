@@ -48,6 +48,7 @@ val Spoiler: String = "Спойлер"
 val TextIsCopy: String = "Текст скопирован"
 val Cancel: String = "Отмена"
 val Save: String = "Сохранить"
+val ChangePassword: String = "Сменить пароль"
 
 val loginErrors: Array<String> = arrayOf(
     "Допустимая длина от 3 до 20 символов",
