@@ -8,8 +8,7 @@ import com.shadow_shift_studio.aniway.data.service.ITitleService
 import com.shadow_shift_studio.aniway.data.service.ITitlesListService
 import com.shadow_shift_studio.aniway.data.service.IUserService
 import com.shadow_shift_studio.aniway.domain.use_case.LoginUserUseCase
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -44,8 +43,8 @@ object HttpClientIsLogin {
                 if (response.code == UNAUTHORIZED || response.code == FORBIDDEN) {
                     Log.e("qwertyasdfgh", KeyStoreManager.getAccessToken().toString())
 
-                    GlobalScope.launch {
-                        a = loginUserUseCase.getRefresh()
+                    a = runBlocking {
+                        loginUserUseCase.getRefresh()
                     }
 
                     if (a == true) {
