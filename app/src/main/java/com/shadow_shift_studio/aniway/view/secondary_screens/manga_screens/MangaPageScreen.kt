@@ -105,6 +105,7 @@ import com.shadow_shift_studio.aniway.model.entity.Comment
 import com.shadow_shift_studio.aniway.model.entity.Genre
 import com.shadow_shift_studio.aniway.model.entity.Title
 import com.shadow_shift_studio.aniway.model.enum.ReadingStatus
+import com.shadow_shift_studio.aniway.model.enum.toFormattedString
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_bottom_sheet_bottoms
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onPrimary
@@ -501,9 +502,9 @@ fun TopMangaBar(navController: NavController, viewModelBottom: BottomNavBarViewM
 @Composable
 fun MangaInfo(title: Title) {
     var titleName = title.name.toString()
-    var titleType = title.type.toString()
+    var titleType = title.type!!.toFormattedString()
     var year = title.year.toString()
-    var status = title.status.toString()
+    var status = title.status!!.toFormattedString()
     var views = title.views.toString()
     var likes = "21K"
     var bookMarks = "12K"

@@ -6,3 +6,12 @@ enum class TitleStatus {
     FREEZED,
     ANNOUNCED
 }
+
+fun TitleStatus.toFormattedString(): String {
+    return when (this) {
+        TitleStatus.ONGOING -> "Онгоинг"
+        TitleStatus.FINISHED -> "Закончен"
+        TitleStatus.FREEZED -> "Заморожен"
+        TitleStatus.ANNOUNCED -> "Анонсирован"
+    }
+}

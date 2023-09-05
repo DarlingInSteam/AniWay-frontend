@@ -2,6 +2,12 @@ package com.shadow_shift_studio.aniway.view.secondary_screens.manga_screens
 
 import CommentCard
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.VisibilityThreshold
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.relocation.BringIntoViewRequester
 import androidx.compose.foundation.text.KeyboardActions
@@ -23,7 +30,6 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -31,9 +37,11 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusEvent
@@ -43,13 +51,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.model.entity.Comment
-import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import kotlinx.coroutines.launch
@@ -61,6 +69,10 @@ fun AddComment(navController: NavController, titleId: Long) {
     val viewModel: CommentsViewModel = CommentsViewModel(context)
     viewModel.titleId = titleId
     val commentsState = remember { mutableStateOf<List<Comment>?>(null) }
+    val scrollState = rememberLazyListState()
+    var prevFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var currentFirstVisibleItemIndex by remember { mutableStateOf(0) }
+    var tabBarVisible by remember { mutableStateOf(true) }
 
     val commentsObserver = Observer<List<Comment>> { newComments ->
         commentsState.value = newComments
@@ -101,14 +113,38 @@ fun AddComment(navController: NavController, titleId: Long) {
             CommentTextField(viewModel)
         },
         content = {
+            LaunchedEffect(scrollState.firstVisibleItemIndex) {
+                currentFirstVisibleItemIndex = scrollState.firstVisibleItemIndex
+
+                if (currentFirstVisibleItemIndex > prevFirstVisibleItemIndex) {
+                    tabBarVisible = false
+                } else if (currentFirstVisibleItemIndex < prevFirstVisibleItemIndex) {
+                    tabBarVisible = true
+                }
+                prevFirstVisibleItemIndex = currentFirstVisibleItemIndex
+            }
+
             Column(
                 modifier = Modifier
                     .padding(top = 50.dp, bottom = 65.dp),
             ) {
-                commentsState.value?.let { it1 -> CommentsFullScreen(viewModel, it1) }
+                commentsState.value?.let { it1 -> CommentsFullScreen(viewModel, it1, scrollState) }
             }
         }
     )
+
+    AnimatedVisibility(
+        visible = tabBarVisible,
+        enter = expandVertically(
+            spring(
+                stiffness = Spring.StiffnessLow,
+                visibilityThreshold = IntSize.VisibilityThreshold
+            )
+        ),
+        exit = shrinkVertically(),
+    ) {
+
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -190,8 +226,7 @@ fun CommentTextField(viewModel: CommentsViewModel) {
 }
 
 @Composable
-fun CommentsFullScreen(viewModel: CommentsViewModel, comments: List<Comment>) {
-    val lazyListState = rememberLazyListState()
+fun CommentsFullScreen(viewModel: CommentsViewModel, comments: List<Comment>, lazyListState: LazyListState) {
 
     LaunchedEffect(lazyListState.isScrollInProgress) {
         val lastVisibleItemIndex = lazyListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: return@LaunchedEffect

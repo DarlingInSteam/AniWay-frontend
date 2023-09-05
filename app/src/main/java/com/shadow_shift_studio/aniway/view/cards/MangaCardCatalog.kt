@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.shadow_shift_studio.aniway.model.entity.TitlePreview
+import com.shadow_shift_studio.aniway.model.enum.toFormattedString
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_background
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_tertiaryContainer
@@ -36,10 +38,10 @@ import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_light_tertiaryConta
 @Composable
 fun MangaPreviewCard(navController: NavController, title: TitlePreview, onId: (id : Long) -> Unit) {
     val titleName = title.name.toString()
-    val titleType = title.type.toString()
+    val titleType = title.type!!.toFormattedString()
     val rating = "4,9"
 
-    androidx.compose.material3.Card(
+    Card(
         modifier = Modifier
             .width(108.dp)
             .widthIn(108.dp, 108.dp)
@@ -63,7 +65,6 @@ fun MangaPreviewCard(navController: NavController, title: TitlePreview, onId: (i
                     .widthIn(108.dp, 108.dp)
                     .height(150.dp)
                     .clip(RoundedCornerShape(17.dp))
-
             ) {
                 AsyncImage(
                     model = "https://img-cdn.trendymanga.com/covers/upscaled_ab5e34f9-a69d-4d3a-8c45-d480742f9cc5.jpg",

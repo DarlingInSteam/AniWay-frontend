@@ -6,3 +6,12 @@ enum class TitleType {
     MANGA,
     CARTOON
 }
+
+fun TitleType.toFormattedString(): String {
+    return when (this) {
+        TitleType.MANHWA -> "Манхва"
+        TitleType.MANHUA -> "Маньхуа"
+        TitleType.MANGA -> "Манга"
+        TitleType.CARTOON -> "Комикс"
+    }
+}

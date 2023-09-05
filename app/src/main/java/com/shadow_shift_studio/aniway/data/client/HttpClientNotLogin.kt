@@ -12,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object HttpClientNotLogin {
     private val retrofit: Retrofit = Retrofit.Builder()
         // Replace with your computer's IP address
-        .baseUrl("http://192.168.0.159:8080") // Base URL of the remote server
+        .baseUrl("http://192.168.0.7:8080") // Base URL of the remote server
         .addConverterFactory(GsonConverterFactory.create()) // Converter for JSON processing
         .build()
 
