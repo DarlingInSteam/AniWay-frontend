@@ -35,7 +35,7 @@ class TitleRequest : ITitleRepository {
         // Create an instance of the remote service caller
         val backendService = HttpClientIsLogin.TitleService
         // Create an instance with empty fields to use in case of an error
-        val titleForErrorResponse = Title(null, null, null,  null, null, null, null, null, null, null, null, null)
+        val titleForErrorResponse = Title(null, null, null,  null, null, null, null, null, null, null, null, null,null,null,null,null)
 
         try {
             // Use suspendCancellableCoroutine for handling asynchronous code

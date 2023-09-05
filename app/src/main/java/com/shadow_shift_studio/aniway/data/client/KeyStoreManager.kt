@@ -1,48 +1,47 @@
 package com.shadow_shift_studio.aniway.data.client
 
 import android.content.Context
-import com.shadow_shift_studio.aniway.data.secure_data.TokensStore
+import android.content.SharedPreferences
 
 /**
  * The `KeyStoreManager` object manages access to the key store (KeyStore) and stores access and refresh tokens.
  */
 object KeyStoreManager {
-    var keyStore: TokensStore? = null // Key store instance
-    var accessToken: ByteArray = ByteArray(16) // Access token as a byte array
-    var refreshToken: ByteArray = ByteArray(16) // Refresh token as a byte array
+    private lateinit var preferences: SharedPreferences
 
-    /**
-     * Returns the instance of the key store (KeyStore).
-     *
-     * @param context The application context.
-     * @return The instance of the key store.
-     */
-    fun getKeyStore(context: Context): TokensStore {
-        if (keyStore == null) {
-            keyStore = TokensStore(context) // Create the key store if it hasn't been created yet
-        }
-        return keyStore!! // Return the existing key store
+    fun initialize(context: Context) {
+        preferences = context.getSharedPreferences("myPrefs", Context.MODE_PRIVATE)
     }
 
-    /**
-     * Decrypts and returns the access token using the specified key alias.
-     *
-     * @param keyAlias The key alias.
-     * @return The decrypted access token as a string.
-     */
-    fun getDecryptAccessKey(keyAlias: String): String {
-        return keyStore?.decryptData(keyAlias, accessToken) ?: ""
+    fun putAccessToken(token: String) {
+        preferences.edit().putString("accessToken", token).commit()
     }
 
-    /**
-     * Decrypts and returns the refresh token using the specified key alias.
-     *
-     * @param keyAlias The key alias.
-     * @return The decrypted refresh token as a string.
-     */
-    fun getDecryptKey(keyAlias: String): String {
-        return keyStore?.decryptData(keyAlias, refreshToken) ?: ""
+    fun getAccessToken(): String? {
+        return preferences.getString("accessToken", null)
+    }
+
+    fun putUpdateToken(token: String) {
+        preferences.edit().putString("updateToken", token).commit()
+    }
+
+    fun getUpdateToken(): String? {
+        return preferences.getString("updateToken", null)
+    }
+
+    fun putIsLogin() {
+        preferences.edit().putString("isLogin", "1").commit()
+    }
+
+    fun getIsLogin(): String? {
+        return preferences.getString("isLogin", null)
+    }
+
+    fun putUsername(username: String) {
+        preferences.edit().putString("username", username).commit()
+    }
+
+    fun getUsername(): String? {
+        return preferences.getString("username", null)
     }
 }
-
-

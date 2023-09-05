@@ -15,5 +15,7 @@ interface ILoginRepository {
      * @return `true` if authentication is successful, otherwise `false`.
      */
     suspend fun loginUser(context: Context, username: String, password: String): Boolean
+
+    suspend fun getRefresh(): Boolean
 }
 

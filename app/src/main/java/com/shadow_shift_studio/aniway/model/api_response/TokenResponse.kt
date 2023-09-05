@@ -7,5 +7,5 @@ package com.shadow_shift_studio.aniway.model.api_response
  * @property token Update token.
  * @constructor Creates an instance of the `TokenResponse` class.
  */
-data class TokenResponse(val accessToken: String, val token: String)
+data class TokenResponse(var accessToken: String, var token: String)
 

@@ -31,6 +31,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
+import com.shadow_shift_studio.aniway.data.singleton_object.AuthorizedUser
 import com.shadow_shift_studio.aniway.data.singleton_object.Navbar
 import com.shadow_shift_studio.aniway.view.authentication_screen.Authorization
 import com.shadow_shift_studio.aniway.view.bottomnav.Constants
@@ -46,16 +48,20 @@ import com.shadow_shift_studio.aniway.view_model.main_screens.MyViewModel
 import com.shadow_shift_studio.aniway.view_model.main_screens.TopsViewModel
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {0
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            KeyStoreManager.initialize(LocalContext.current)
             val viewModelBottom: BottomNavBarViewModel by lazy { BottomNavBarViewModel() }
             var isAuthorization by remember { mutableStateOf(false)}
-
             AniWayTheme(dynamicColor = false, darkTheme = true) {
                 val navController = rememberNavController()
                 Surface {
-                    if(isAuthorization) {
+                    var a = KeyStoreManager.getIsLogin()
+
+                    if(a == "1") {
+                        AuthorizedUser.username = KeyStoreManager.getUsername().toString()
+
                         Scaffold(
                             bottomBar = {
                                 if (Navbar.getNavbarVisible())

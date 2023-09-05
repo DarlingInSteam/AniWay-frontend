@@ -23,4 +23,9 @@ class LoginUserUseCase(private val userRepository: ILoginRepository) {
     suspend fun execute(context: Context, username: String, password: String): Boolean {
         return userRepository.loginUser(context, username, password)
     }
+
+    suspend fun getRefresh(): Boolean {
+        return userRepository.getRefresh()
+    }
+
 }

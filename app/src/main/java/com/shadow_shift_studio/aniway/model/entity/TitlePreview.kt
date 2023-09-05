@@ -5,7 +5,8 @@ import com.shadow_shift_studio.aniway.model.enum.TitleType
 data class TitlePreview(
     var id : Long?,
     var name : String?,
+    var originalName: String?,
     var type : TitleType?,
     var backgroundUrl : String?,
-    var rating: Float?
+    var rating: Double?
 )

@@ -1,6 +1,7 @@
 package com.shadow_shift_studio.aniway.data.service
 
 import com.shadow_shift_studio.aniway.data.credentials.CredentialsForAuthorization
+import com.shadow_shift_studio.aniway.data.credentials.CredentialsForRefreshToken
 import com.shadow_shift_studio.aniway.model.api_response.TokenResponse
 import retrofit2.Call
 import retrofit2.http.Body
@@ -19,6 +20,9 @@ interface IAuthorizationService{
      */
     @POST("/auth/login")
     fun login(@Body credentials: CredentialsForAuthorization): Call<TokenResponse>
+
+    @POST("/auth/refresh")
+    fun getRefresh(@Body credentials: CredentialsForRefreshToken): Call<TokenResponse>
 }
 
 

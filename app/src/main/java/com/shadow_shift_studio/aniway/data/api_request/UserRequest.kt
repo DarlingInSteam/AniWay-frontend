@@ -3,6 +3,7 @@ package com.shadow_shift_studio.aniway.data.api_request
 import android.content.Context
 import android.util.Log
 import com.shadow_shift_studio.aniway.data.client.HttpClientIsLogin
+import com.shadow_shift_studio.aniway.data.client.KeyStoreManager
 import com.shadow_shift_studio.aniway.domain.repository.IUserRepository
 import com.shadow_shift_studio.aniway.model.entity.Achievement
 import com.shadow_shift_studio.aniway.model.entity.Badge
@@ -47,6 +48,7 @@ class UserRequest : IUserRepository {
                     override fun onResponse(call: Call<User>, response: Response<User>) {
                         if (response.isSuccessful) {
                             val responseBody = response.body()
+                            Log.e("fsdfsd", KeyStoreManager.getAccessToken().toString())
                             if (responseBody != null) {
                                 // Create a User object based on the received data
                                 val user = User(
