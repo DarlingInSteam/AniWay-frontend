@@ -136,7 +136,7 @@ fun Registration(navController: NavController) {
                     fontSize = 12.sp,
                     color = md_theme_light_error,
                     textAlign = TextAlign.Left
-                    )
+                )
             }
         }
     }
@@ -237,7 +237,7 @@ fun EmailTextField(viewModelRegistration: RegistrationViewModel, bringIntoViewRe
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
+fun RegPasswordField(Hint: String, viewModel: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
 {
     var passwordVisability by remember { mutableStateOf(false) }
     var isPasswordError by remember { mutableStateOf(false) }
@@ -245,10 +245,10 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel,
     val focusManager = LocalFocusManager.current
 
     TextField(
-        value = viewModelRegistration.password.value,
+        value = viewModel.password.value,
         onValueChange = {
-            viewModelRegistration.password.value = it
-            isPasswordError = !viewModelRegistration.isPasswordValid(viewModelRegistration.password.value)},
+            viewModel.password.value = it
+            isPasswordError = !viewModel.isPasswordValid(viewModel.password.value)},
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
@@ -292,7 +292,7 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel,
         visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation()
     )
-    if (isPasswordError && viewModelRegistration.password.value.isNotEmpty()) {
+    if (isPasswordError && viewModel.password.value.isNotEmpty()) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = InputErrorMessage,
@@ -304,7 +304,7 @@ fun RegPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel,
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
+fun RepeatPasswordField(Hint: String, viewModel: RegistrationViewModel, bringIntoViewRequester: BringIntoViewRequester)
 {
     var passwordVisability by remember { mutableStateOf(false) }
     var isPasswordsEqual by remember { mutableStateOf(false) }
@@ -312,9 +312,9 @@ fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewMod
     val focusManager = LocalFocusManager.current
 
     TextField(
-        value = viewModelRegistration.repeatPassword.value,
-        onValueChange = { viewModelRegistration.repeatPassword.value = it
-            isPasswordsEqual =viewModelRegistration.isPasswordsMatch()},
+        value = viewModel.repeatPassword.value,
+        onValueChange = { viewModel.repeatPassword.value = it
+            isPasswordsEqual =viewModel.isPasswordsMatch()},
         maxLines = 1,
         modifier = Modifier
             .fillMaxWidth()
@@ -343,7 +343,7 @@ fun RepeatPasswordField(Hint: String, viewModelRegistration: RegistrationViewMod
         visualTransformation = if (passwordVisability) VisualTransformation.None
         else PasswordVisualTransformation()
     )
-    if (isPasswordsEqual == false && viewModelRegistration.repeatPassword.value.isNotEmpty()) {
+    if (isPasswordsEqual == false && viewModel.repeatPassword.value.isNotEmpty()) {
         Text(
             modifier = Modifier.fillMaxWidth(),
             text = PasswordsDontMatch,

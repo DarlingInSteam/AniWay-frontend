@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
@@ -47,17 +48,24 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavController
 import com.shadow_shift_studio.aniway.Cancel
+import com.shadow_shift_studio.aniway.EnterPasswordHint
+import com.shadow_shift_studio.aniway.RepeatPasswordHint
 import com.shadow_shift_studio.aniway.Save
 import com.shadow_shift_studio.aniway.data.singleton_object.NeedNormalName
 import com.shadow_shift_studio.aniway.model.entity.Comment
+import com.shadow_shift_studio.aniway.view.authentication_screen.RegPasswordField
+import com.shadow_shift_studio.aniway.view.authentication_screen.RepeatPasswordField
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_onSurfaceVariant
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_primary
 import com.shadow_shift_studio.aniway.view.ui.theme.md_theme_dark_surface_container_higher
+import com.shadow_shift_studio.aniway.view_model.authentication.RegistrationViewModel
 import com.shadow_shift_studio.aniway.view_model.secondary_screens.manga_screens.CommentsViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun SafetySettings(navController: NavController) {
+    val context = LocalContext.current
+    val viewModel: RegistrationViewModel = RegistrationViewModel(context)
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -65,7 +73,7 @@ fun SafetySettings(navController: NavController) {
         SafetySettingsButtons(navController = navController)
     }
     if(NeedNormalName.IsChangePasswordVisible.value)
-        ChangePassword()
+        ChangePassword(viewModel)
 }
 
 @Composable
@@ -152,7 +160,7 @@ fun SafetySettingsButtons(navController: NavController) {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ChangePassword(){
+fun ChangePassword(viewModel: RegistrationViewModel){
     val coroutineScope = rememberCoroutineScope()
     val focusManager = LocalFocusManager.current
     val bringIntoViewRequester = BringIntoViewRequester()
@@ -177,59 +185,13 @@ fun ChangePassword(){
                     .padding(start = 23.dp, end = 23.dp, top = 10.dp),
                 color = md_theme_dark_onSurfaceVariant
             )
-            Row() {
-                TextField(
-                    modifier = Modifier
-                        .padding(start = 23.dp, end = 23.dp)
-                        .onFocusEvent { event ->
-                            if (event.isFocused) {
-                                coroutineScope.launch {
-                                    bringIntoViewRequester.bringIntoView()
-                                }
-                            }
-                        },
-                    maxLines = 3,
-                    value = oldPassword,
-                    enabled = true,
-                    onValueChange = { oldPassword = it },
-                    textStyle = TextStyle(
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Start
-                    ),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = { focusManager.clearFocus() }
-                    ),
-                    placeholder = { Text(text = "Старый пароль", color = Color.Gray) }
-                )
+            Row(modifier = Modifier
+                .height(70.dp)) {
+                RegPasswordField(EnterPasswordHint, viewModel, bringIntoViewRequester)
             }
-            Row() {
-                TextField(
-                    modifier = Modifier
-                        .padding(start = 23.dp, end = 23.dp)
-                        .onFocusEvent { event ->
-                            if (event.isFocused) {
-                                coroutineScope.launch {
-                                    bringIntoViewRequester.bringIntoView()
-                                }
-                            }
-                        },
-                    maxLines = 3,
-                    value = newPassword,
-                    enabled = true,
-                    onValueChange = { newPassword = it },
-                    textStyle = TextStyle(
-                        color = Color.White,
-                        fontSize = 16.sp,
-                        textAlign = TextAlign.Start
-                    ),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(
-                        onDone = { focusManager.clearFocus() }
-                    ),
-                    placeholder = { Text(text = "Новый пароль", color = Color.Gray) }
-                )
+            Row(modifier = Modifier
+                .height(70.dp)) {
+                RepeatPasswordField(RepeatPasswordHint, viewModel, bringIntoViewRequester)
             }
             Row(modifier = Modifier
                 .fillMaxWidth()
